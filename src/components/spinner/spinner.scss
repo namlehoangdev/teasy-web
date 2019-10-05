@@ -1,0 +1,11 @@
+.sk-three-bounce {
+  margin: 20px auto !important;
+  background: #fdfdfd;
+  display: flex;
+
+  > div {
+    width: 15px !important;
+    height: 15px !important;
+    background-color: #c7c7cc !important;
+  }
+}

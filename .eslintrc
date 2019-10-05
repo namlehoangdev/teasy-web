@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+    // optional, if using react,
+  ],
+  "env": {
+    "es6": true,
+    // your environment, node and/or browser:
+    "node": true,
+    "browser": true
+  },
+  "plugins": [
+    "react"
+  ],
+  // optional, if using react
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+      // if using jsx,
+    }
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    // just some styling rules here or extra rules
+  }
+}
