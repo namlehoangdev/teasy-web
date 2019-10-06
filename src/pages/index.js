@@ -10,6 +10,6 @@ export {default as AdminContestsPage} from './admin-contests-page';
 export {default as AdminTestsPage} from './admin-tests-page';
 export {default as AdminQuestionsPage} from './admin-questions-page';
 
-export {default as MainPage} from './main-page';
+export {default as LandingPage} from './landing-page';
 
 
