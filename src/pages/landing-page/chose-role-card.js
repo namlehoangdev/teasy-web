@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Button, TextField, Grid, Typography, makeStyles} from '@material-ui/core';
+import React, {useEffect} from 'react';
+import {Button, Grid, makeStyles} from '@material-ui/core';
 // import {useDispatch, useSelector} from "react-redux";
 import FacebookLogin from 'react-facebook-login';
 import {TEXT} from "../../consts/text-consts";
@@ -32,7 +32,7 @@ function ChoseRoleCard() {
 
     return (
         <div className={classes.paper}>
-            <Grid container spacing={2} xs={12} sm={12}>
+            <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                     <Button fullWidth variant="contained" color="primary">
                         {TEXT.gotoAdmin}
