@@ -1,16 +1,9 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-    Paper, CssBaseline, Link,
-    Grid,
-    Box,
-    Typography,
-    makeStyles, LinearProgress, Button
-} from '@material-ui/core';
+import {Paper, Link, Grid, Box, Typography, makeStyles, LinearProgress, Button} from '@material-ui/core';
 // import {useDispatch, useSelector} from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-
 import {TEXT} from "../../consts/text-consts";
 import Logo from "../../components/logo/logo";
 import AuthenticationCard from "./authentication-card";
@@ -25,7 +18,7 @@ const useStyles = makeStyles(theme => ({
             },
         },
         root: {
-            backgroundColor: theme.palette.common.red,
+            backgroundColor: theme.palette.common.white,
             height: '100vh',
             display: 'inline-block',
             flexDirection: 'column',
@@ -65,7 +58,7 @@ function LandingPage() {
     //const promotionId = (match.params && match.params.id) || null;
     // const promotionsMap = useSelector(state => state.promotions.promotionsMap || {});
     const [isCardLoading, setCardLoading] = useState(false);
-    const [slideIndex, setSlideIndex] = useState(1);
+    const [slideIndex, setSlideIndex] = useState(0);
     const sliderRef = useRef(null);
     const classes = useStyles();
     //const dispatch = useDispatch();
@@ -74,10 +67,11 @@ function LandingPage() {
     }, []);
 
     function handleFacebookCallback(data) {
-        console.log(data);
+        // console.log(data);
         setCardLoading(false);
-        sliderRef.current.slickGoTo(1)
-
+        if (data && data.accessToken) {
+            sliderRef.current.slickGoTo(1)
+        }
     }
 
     function handleFacebookClick(data) {
@@ -92,8 +86,9 @@ function LandingPage() {
     const settings = {
         infinite: false,
         speed: 500,
-        initialSlide: 1,
+        initialSlide: 0,
         arrows: false,
+        swipe: false,
         beforeChange: (current, next) => {
             setSlideIndex(next)
         }
