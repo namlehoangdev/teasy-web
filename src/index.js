@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {
-    MainPage,
+    LandingPage,
     CreateQuestionPage,
     CreateContestPage,
     CreateTestPage,
@@ -43,7 +43,7 @@ ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter history={history}>
             <Switch>
-                <Route exact path="/" component={MainPage}/>
+                <Route exact path="/" component={LandingPage}/>
                 <Route exact path="/admin/" component={AdminSwitch}/>
                 <Route exact path="/playground/" component={PlayGroundSwitch}/>
             </Switch>

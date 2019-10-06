@@ -3,6 +3,6 @@ import Loadable from 'react-loadable';
 import {Loading} from 'components';
 
 export default Loadable({
-    loader: () => import('./main-page'),
+    loader: () => import('./landing-page'),
     loading: () => <Loading/>
 });
