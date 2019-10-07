@@ -44,7 +44,7 @@ function AuthenticationCard(props) {
     <div className={classes.paper}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={8}>
-          <TextField id="roomCode" name="roomCode" variant="outlined" fullWidth autoFocus
+          <TextField id="roomCode" name="roomCode" variant="outlined" fullWidth
             label={TEXT.roomCode} />
         </Grid>
         <Grid item xs={12} sm={4}>
