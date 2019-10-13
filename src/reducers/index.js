@@ -3,5 +3,14 @@ import {loadingBarReducer} from 'react-redux-loading-bar'
 import authReducer from './auth-reducer';
 import adminReducer from './admin-reducer';
 import playgroundReducer from './playground-reducer';
+import {connectRouter} from 'connected-react-router';
 
-export default combineReducers({authReducer, adminReducer, playgroundReducer, loadingBar: loadingBarReducer});
+export default function createRootReducer(history) {
+    return combineReducers({
+        router: connectRouter(history),
+        authReducer,
+        adminReducer,
+        playgroundReducer,
+        loadingBar: loadingBarReducer
+    });
+}

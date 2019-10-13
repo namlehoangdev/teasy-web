@@ -8,6 +8,10 @@ const LOGIN_WITH_FACEBOOK = 'Đăng nhập bằng Facebook';
 const GOTO_ADMIN_PAGE = 'Tạo cuộc thi';
 const GOTO_PLAYGROUND = 'Tham gia thi';
 const GO_BACK = 'Quay lại';
+const CONTEST = 'Cuộc thi';
+const QUESTION = 'Câu hỏi';
+const TEST = 'Đề thi';
+const ADD_NEW = 'Tạo mới';
 
 
 export const TEXT = {
@@ -20,5 +24,10 @@ export const TEXT = {
     loginWithFacebook: LOGIN_WITH_FACEBOOK,
     gotoAdmin: GOTO_ADMIN_PAGE,
     gotoPlayground: GOTO_PLAYGROUND,
-    goBack: GO_BACK
+    goBack: GO_BACK,
+    conTest: CONTEST,
+    question: QUESTION,
+    test: TEST,
+    addNew: ADD_NEW
 };
+

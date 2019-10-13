@@ -1,36 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
+import {ConnectedRouter} from "connected-react-router";
+
 import {Provider} from 'react-redux';
 import {
-    LandingPage,
-    CreateQuestionPage,
-    CreateContestPage,
-    CreateTestPage,
-    EditContestPage,
-    EditQuestionPage,
-    EditTestPage,
-    AdminContestsPage,
-    AdminQuestionsPage,
-    AdminTestsPage
+    LandingPage, AdminHomePage
 } from './pages';
 import {history, store} from './configurations';
 import * as serviceWorker from './serviceWorker';
 import './index.scss';
 
-function AdminSwitch() {
-    return (<Switch>
-        <Route path="/create/question" component={CreateQuestionPage}/>
-        <Route path="/create/test" component={CreateTestPage}/>
-        <Route path="/create/contest" component={CreateContestPage}/>
-        <Route path="/edit/question" component={EditQuestionPage}/>
-        <Route path="/edit/test" component={EditTestPage}/>
-        <Route path="/edit/contest" component={EditContestPage}/>
-        <Route path="/questions" component={AdminQuestionsPage}/>
-        <Route path="/tests" component={AdminTestsPage}/>
-        <Route path="/contests" component={AdminContestsPage}/>
-    </Switch>)
-}
 
 function PlayGroundSwitch() {
     return (<Switch>
@@ -41,13 +21,13 @@ function PlayGroundSwitch() {
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter history={history}>
+        <ConnectedRouter history={history}>
             <Switch>
                 <Route exact path="/" component={LandingPage}/>
-                <Route exact path="/admin/" component={AdminSwitch}/>
-                <Route exact path="/playground/" component={PlayGroundSwitch}/>
+                <Route path="/admin" component={AdminHomePage}/>
+                <Route path="/playground" component={PlayGroundSwitch}/>
             </Switch>
-        </BrowserRouter>
+        </ConnectedRouter>
     </Provider>,
     document.getElementById('root')
 );
