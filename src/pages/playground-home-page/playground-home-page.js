@@ -1,9 +1,9 @@
-import React, {forwardRef, useState} from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import {
     makeStyles, useTheme, CssBaseline, Typography,
     AppBar, Toolbar, IconButton, Drawer, Divider,
-    ListItem, List, ListItemIcon, ListItemText, Fab, Popover, Dialog, Slide
+    ListItem, List, ListItemIcon, ListItemText, Fab, Popover
 } from '@material-ui/core';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,8 +11,6 @@ import {TEXT} from "../../consts/text-consts";
 import {Route, Switch} from "react-router";
 import {
     AdminContestsPage, AdminQuestionsPage, AdminTestsPage,
-    CreateContestPage, CreateQuestionPage, CreateTestPage,
-    EditContestPage, EditQuestionPage, EditTestPage,
 } from "../index";
 import {
     Menu as MenuIcon,
@@ -89,13 +87,8 @@ const listNavItemMap = [
     {key: 2, name: TEXT.question, icon: <QuestionAnswerIcon/>, path: PATH.questions}
 ];
 
-// eslint-disable-next-line react/display-name
-const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
-
-export default function AdminHomePage() {
+export default function PlaygroundHomePage() {
     const classes = useStyles();
     const theme = useTheme();
     const history = useHistory();
@@ -195,18 +188,6 @@ export default function AdminHomePage() {
                     <Route path={`${path}/${PATH.contest}`} component={AdminContestsPage}/>
                 </Switch>
             </main>
-
-            <Dialog fullScreen open={isOpenAdminFullscreenDialog} TransitionComponent={Transition}
-                    onClose={() => dispatch(setOpenAdminFullscreenDialog(false))}>
-                <Switch>
-                    <Route path={`${path}/${PATH.createQuestion}`} component={CreateQuestionPage}/>
-                    <Route path={`${path}/${PATH.createTest}`} component={CreateTestPage}/>
-                    <Route path={`${path}/${PATH.createContest}`} component={CreateContestPage}/>
-                    <Route path={`${path}/${PATH.editQuestion}`} component={EditQuestionPage}/>
-                    <Route path={`${path}/${PATH.editTest}`} component={EditTestPage}/>
-                    <Route path={`${path}/${PATH.editContest}`} component={EditContestPage}/>
-                </Switch>
-            </Dialog>
         </div>
     );
 }

@@ -1,8 +1,5 @@
-import {ACTION_STATE, POST_LOGIN, POST_REGISTER} from './action-types';
+import {ACTION_STATE, POST_LOGIN, POST_REGISTER, action} from './action-types';
 
-function action(type, payload = {}) {
-    return {type, ...payload};
-}
 
 export const postLogin = {
     request: () => action(POST_LOGIN[ACTION_STATE.request]),

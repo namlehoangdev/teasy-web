@@ -1,2 +1,2 @@
-export * from './text-consts.js';
-
+export * from './text-consts';
+export * from './path-conts';

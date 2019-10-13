@@ -13,6 +13,9 @@ const CONTEST = 'Cuộc thi';
 const QUESTION = 'Câu hỏi';
 const TEST = 'Đề thi';
 const ADD_NEW = 'Tạo mới';
+const EDIT = 'Chỉnh sửa';
+const UPDATE = 'Cập nhật';
+const SAVE = 'Lưu';
 
 
 export const TEXT = {
@@ -30,6 +33,9 @@ export const TEXT = {
     conTest: CONTEST,
     question: QUESTION,
     test: TEST,
-    addNew: ADD_NEW
+    addNew: ADD_NEW,
+    save: SAVE,
+    edit: EDIT,
+    update: UPDATE
 };
 

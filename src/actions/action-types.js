@@ -16,6 +16,10 @@ function createRequestType(base) {
     }, {});
 }
 
+export function action(type, payload = {}) {
+    return {type, ...payload};
+}
+
 /*------------------------------------------------AUTHENTICATION------------------------------------------------*/
 export const POST_LOGIN = createRequestType('POST_LOGIN');
 export const POST_REGISTER = createRequestType('POST_REGISTER');
@@ -38,6 +42,8 @@ export const PUT_OWN_TESTS = createRequestType('PUT_OWN_TESTS');
 export const GET_OWN_QUESTIONS = createRequestType('GET_OWN_QUESTIONS');
 export const POST_OWN_QUESTIONS = createRequestType('POST_OWN_QUESTIONS');
 export const PUT_OWN_QUESTIONS = createRequestType('PUT_OWN_QUESTIONS');
+
+export const SET_OPEN_ADMIN_FULLSCREEN_DIALOG = 'SET_OPEN_CREATE_SWITCH_DIALOG';
 
 
 /*------------------------------------------------PLAYGROUND------------------------------------------------*/
