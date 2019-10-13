@@ -12,28 +12,28 @@ const GO_BACK = 'Quay lại';
 const CONTEST = 'Cuộc thi';
 const QUESTION = 'Câu hỏi';
 const TEST = 'Đề thi';
-const ADD_NEW = 'Tạo mới';
+const CREATE = 'Tạo mới';
 const EDIT = 'Chỉnh sửa';
 const UPDATE = 'Cập nhật';
 const SAVE = 'Lưu';
 
 
 export const TEXT = {
-  appName: APP_NAME,
-  appShortDescription: APP_SHORT_DESCRIPTION,
-  appDescription: APP_DESCRIPTION,
-  roomCode: ROOM_CODE,
-  iAgree: I_AGREE,
-  enterRoom: ENTER_ROOM,
-  loginWithFacebook: LOGIN_WITH_FACEBOOK,
-  gotoAdmin: GOTO_ADMIN_PAGE,
-  gotoPlayground: GOTO_PLAYGROUND,
-  goBack: GO_BACK,
-  or: OR
+    appName: APP_NAME,
+    appShortDescription: APP_SHORT_DESCRIPTION,
+    appDescription: APP_DESCRIPTION,
+    roomCode: ROOM_CODE,
+    iAgree: I_AGREE,
+    enterRoom: ENTER_ROOM,
+    loginWithFacebook: LOGIN_WITH_FACEBOOK,
+    gotoAdmin: GOTO_ADMIN_PAGE,
+    gotoPlayground: GOTO_PLAYGROUND,
+    goBack: GO_BACK,
+    or: OR,
     conTest: CONTEST,
     question: QUESTION,
     test: TEST,
-    addNew: ADD_NEW,
+    create: CREATE,
     save: SAVE,
     edit: EDIT,
     update: UPDATE

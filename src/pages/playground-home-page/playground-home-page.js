@@ -76,9 +76,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const listCreateButtonMap = [
-    {key: 0, name: `${TEXT.addNew} ${TEXT.contest}`, path: PATH.createContest},
-    {key: 1, name: `${TEXT.addNew} ${TEXT.test}`, path: PATH.createTest},
-    {key: 2, name: `${TEXT.addNew} ${TEXT.question}`, path: PATH.createQuestion},
+    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, path: PATH.createContest},
+    {key: 1, name: `${TEXT.create} ${TEXT.test}`, path: PATH.createTest},
+    {key: 2, name: `${TEXT.create} ${TEXT.question}`, path: PATH.createQuestion},
 ];
 
 const listNavItemMap = [
@@ -168,7 +168,7 @@ export default function PlaygroundHomePage() {
                     <div>
                         <Fab variant="extended" aria-label="delete" className={classes.fab}
                              onClick={(event) => setCreatePopAnchorEl(event.currentTarget)}>
-                            <AddIcon className={classes.extendedIcon}/> {TEXT.addNew}
+                            <AddIcon className={classes.extendedIcon}/> {TEXT.create}
                         </Fab>
                         <Popover id={createPopID} open={openCreatePop} anchorEl={createPopAnchorEl}
                                  onClose={() => setCreatePopAnchorEl(null)}

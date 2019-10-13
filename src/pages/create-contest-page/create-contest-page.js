@@ -34,7 +34,7 @@ export default function CreateContestPage() {
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                     <CloseIcon/>
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>{`${TEXT.addNew} ${TEXT.contest}`}</Typography>
+                <Typography variant="h6" className={classes.title}>{`${TEXT.create} ${TEXT.contest}`}</Typography>
                 <Button color="inherit" onClick={handleClose}>{TEXT.save}</Button>
             </Toolbar>
         </AppBar>
