@@ -1,4 +1,4 @@
-import React, {forwardRef, useState} from 'react';
+import React, {forwardRef, useState, useEffect} from 'react';
 import clsx from 'clsx';
 import {
     makeStyles, useTheme, CssBaseline, Typography,
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
-        }),
+        })
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
@@ -102,13 +102,34 @@ export default function AdminHomePage() {
     const dispatch = useDispatch();
     const {path} = useRouteMatch();
     const isOpenAdminFullscreenDialog = useSelector(state => state.adminReducer.isOpenAdminFullscreenDialog);
-    console.log(isOpenAdminFullscreenDialog);
+    const [currentFullscreenPath, setCurrentFullscreenPath] = useState('');
     const [openDrawer, setOpenDrawer] = useState(false);
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [createPopAnchorEl, setCreatePopAnchorEl] = useState(null);
     const openCreatePop = Boolean(createPopAnchorEl);
     const createPopID = openCreatePop ? 'create-pop-id' : null;
+
+    history.listen((location, action) => {
+        if (action === 'POP') {
+            switch (currentFullscreenPath) {
+                case PATH.createQuestion:
+                case PATH.createTest:
+                case PATH.createContest:
+                case PATH.editTest:
+                case PATH.editContest:
+                case PATH.editQuestion:
+                    dispatch(setOpenAdminFullscreenDialog(false));
+            }
+        }
+    });
+
+    useEffect(() => {
+        const item = listNavItemMap[0];
+        setSelectedIndex(item.key);
+        setAppBarTitle(item.name);
+        history.push(`${path}/${item.path}`);
+    }, []);
 
 
     const handleDrawerOpen = () => {
@@ -123,6 +144,7 @@ export default function AdminHomePage() {
         dispatch(setOpenAdminFullscreenDialog(true));
         setCreatePopAnchorEl(null);
         setAppBarTitle(item.name);
+        setCurrentFullscreenPath(item.path);
         history.push(`${path}/${item.path}`);
     }
 

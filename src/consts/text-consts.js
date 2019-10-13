@@ -30,7 +30,7 @@ export const TEXT = {
     gotoPlayground: GOTO_PLAYGROUND,
     goBack: GO_BACK,
     or: OR,
-    conTest: CONTEST,
+    contest: CONTEST,
     question: QUESTION,
     test: TEST,
     create: CREATE,

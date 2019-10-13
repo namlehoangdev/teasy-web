@@ -12,13 +12,8 @@ import {disabledStyleWrapper} from "../../utils";
 
 
 const useStyles = makeStyles(theme => ({
-        '@global': {
-            body: {
-                backgroundColor: theme.palette.common.white,
-            },
-        },
         root: {
-            backgroundColor: theme.palette.common.white,
+            backgroundColor: theme.palette.background.default,
             height: '100vh',
             display: 'inline-block',
             flexDirection: 'column',
@@ -35,9 +30,9 @@ const useStyles = makeStyles(theme => ({
             position: 'relative'
         },
         logo: {
-            margin: theme.spacing(1),
-            backgroundColor: theme.palette.common.white,
-            height: theme.spacing(8)
+            margin: theme.spacing(2),
+            color: theme.palette.primary.main,
+            fontFamily: 'logofont'
         },
         backBtn: {position: 'absolute', bottom: theme.spacing(2), left: theme.spacing(4)}
     }))
@@ -96,8 +91,8 @@ function LandingPage() {
 
     return (
         <Grid container component="main" className={classes.root}>
-            <Typography component="h1" variant="h1" align="center" color="textPrimary">
-                <Logo variant={classes.logo}/>
+            <Typography component="h1" variant="h1" align="center" color="textPrimary" className={classes.logo}>
+                {TEXT.appName}
             </Typography>
             <Grid item xs={12} sm={8} md={5} elevation={6} className={classes.description}>
                 <Typography variant="h5" align="center" color="textSecondary" paragraph>
