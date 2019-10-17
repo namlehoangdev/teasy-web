@@ -27,24 +27,24 @@ import {
 } from '@material-ui/icons'
 import {setOpenAdminFullscreenDialog} from "../../actions";
 
-function createData(name, isFolder, startDate, status) {
-    return {name, isFolder, startDate, status};
+function createData(id, name, isFolder, startDate, status) {
+    return {id, name, isFolder, startDate, status};
 }
 
 const rows = [
-    createData('Cupcake', true, '14/10/2019', true),
-    createData('Donut', false, '14/10/2019', false),
-    createData('Eclair', true, '14/10/2019', true),
-    createData('Frozen yoghurt', false, '14/10/2019', false),
-    createData('Gingerbread', true, '14/10/2019', false),
-    createData('Honeycomb', true, '14/10/2019', true),
-    createData('Ice cream sandwich', false, '14/10/2019', true),
-    createData('Jelly Bean', true, '14/10/2019', true),
-    createData('KitKat', false, '14/10/2019', false),
-    createData('Lollipop', false, '14/10/2019', true),
-    createData('Marshmallow', false, '14/10/2019', false),
-    createData('Nougat', false, '14/10/2019', false),
-    createData('Oreo', true, '14/10/2019', true)
+    createData(1, 'Cupcake', true, '14/10/2019', true),
+    createData(2, 'Donut', false, '14/10/2019', false),
+    createData(3, 'Eclair', true, '14/10/2019', true),
+    createData(4, 'Frozen yoghurt', false, '14/10/2019', false),
+    createData(5, 'Gingerbread', true, '14/10/2019', false),
+    createData(6, 'Honeycomb', true, '14/10/2019', true),
+    createData(7, 'Ice cream sandwich', false, '14/10/2019', true),
+    createData(8, 'Jelly Bean', true, '14/10/2019', true),
+    createData(9, 'KitKat', false, '14/10/2019', false),
+    createData(10, 'Lollipop', false, '14/10/2019', true),
+    createData(11, 'Marshmallow', false, '14/10/2019', false),
+    createData(12, 'Nougat', false, '14/10/2019', false),
+    createData(13, 'Oreo', true, '14/10/2019', true)
 ];
 
 function desc(a, b, orderBy) {
@@ -141,8 +141,7 @@ export default function AdminContestPage() {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelecteds = rows.map(n => n.name);
-            setSelectedItems(newSelecteds);
+            setSelectedItems(rows.map(newItem => newItem.name));
             return;
         }
         setSelectedItems([]);
@@ -183,8 +182,7 @@ export default function AdminContestPage() {
                       tabIndex={-1}
                       selected={isItemSelected}>
                 <TableCell padding="checkbox">
-                    {enableSelectMode ? (
-                        <Checkbox checked={isItemSelected} inputProps={{'aria-labelledby': labelId}}/>)}
+                    {enableSelectMode && <Checkbox checked={isItemSelected} inputProps={{'aria-labelledby': labelId}}/>}
                 </TableCell>
                 <TableCell component="th" id={labelId} scope="row" padding="none">
                     {row.name}
@@ -198,11 +196,13 @@ export default function AdminContestPage() {
 
 
     return (<div className={classes.root}>
-            <Backdrop open={openSpeedDial}/>
+            <Backdrop open={openSpeedDial} timeout={Infinity}/>
             <SpeedDial ariaLabel="Tạo mới" open={openSpeedDial} className={classes.speedDial} icon={<SpeedDialIcon/>}
                        onClose={() => setOpenSpeedDial(false)} onOpen={() => setOpenSpeedDial(true)}>
-                <SpeedDialAction key={0} icon={<CreateNewFolderIcon/>} onClick={handleCreateNewFolderClick}/>
-                <SpeedDialAction key={1} icon={<PostAddIcon/>} onClick={handleCreateNewContestClick}/>
+                <SpeedDialAction key={0} title={TEXT.folder} icon={<CreateNewFolderIcon/>}
+                                 onClick={handleCreateNewFolderClick}/>
+                <SpeedDialAction key={1} title={TEXT.contest} icon={<PostAddIcon/>}
+                                 onClick={handleCreateNewContestClick}/>
             </SpeedDial>
             <div className={classes.header}>
             </div>
@@ -213,14 +213,10 @@ export default function AdminContestPage() {
             <CssBaseline/>
             <EnhancedTableToolbar numSelected={selectedItems.length} title={TEXT.contest}/>
             <div className={classes.tableWrapper}>
-                <Table className={classes.table}
-                       aria-labelledby="tableTitle"
-                       aria-label="enhanced table"
-                       size='medium'>
+                <Table className={classes.table} aria-labelledby="tableTitle" aria-label="enhanced table" size='medium'>
                     <EnhancedTableHead classes={classes}
                                        numSelected={selectedItems.length}
-                                       order={order}
-                                       orderBy={orderBy}
+                                       order={order} orderBy={orderBy}
                                        onSelectAllClick={handleSelectAllClick}
                                        onRequestSort={handleRequestSort}
                                        rowCount={rows.length}/>

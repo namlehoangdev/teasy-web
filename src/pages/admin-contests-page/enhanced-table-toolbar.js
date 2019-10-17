@@ -74,5 +74,5 @@ export default function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
-    title: PropTypes.ReactElement
+    title: PropTypes.node
 };

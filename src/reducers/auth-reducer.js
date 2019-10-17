@@ -1,16 +1,17 @@
-import {ACTION_STATE} from '../actions/action-types';
+import {LOGIN} from '../actions/action-types';
 
 const initialState = {
-    isLoading: false,
+    isLogin: false,
     error: null,
+    profile: null,
+    token: null
 };
 
 export default function authReducer(state = initialState, action) {
-    switch (action.type) {
-        case 0:
-            return state;
-        case 1:
-            return state;
+    const {type, payload} = action;
+    switch (type) {
+        case LOGIN:
+            return {...state, isLogin: true, profile: payload, token: payload.token};
         default:
             return state;
     }

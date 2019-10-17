@@ -1,4 +1,4 @@
-import {ACTION_STATE, SET_OPEN_ADMIN_FULLSCREEN_DIALOG} from '../actions/action-types';
+import {API_STATUS, SET_OPEN_ADMIN_FULLSCREEN_DIALOG} from '../actions/action-types';
 
 const initialState = {
     isLoading: false,
@@ -7,9 +7,10 @@ const initialState = {
 };
 
 export default function adminReducer(state = initialState, action) {
-    switch (action.type) {
+    const {type, payload} = action;
+    switch (type) {
         case SET_OPEN_ADMIN_FULLSCREEN_DIALOG:
-            return {...state, isOpenAdminFullscreenDialog: action.value};
+            return {...state, isOpenAdminFullscreenDialog: payload.value};
         case 1:
             return state;
         default:

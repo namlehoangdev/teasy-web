@@ -1,19 +1,48 @@
-import {takeLatest, takeEvery, call, put} from 'redux-saga/effects';
+import {takeLatest, call, put} from 'redux-saga/effects';
 import {showLoading, hideLoading} from 'react-redux-loading-bar'
-import {postLoginRequest} from '../apis';
-import {postLogin} from '../actions';
-import {ACTION_STATE, LOGIN, POST_LOGIN} from "../actions/action-types";
+import {postLoginByFacebookAPI, postRegisterByFacebookAPI} from '../apis';
+import {postRegisterByFacebook, login} from '../actions';
+import {POST_LOGIN_BY_FACEBOOK, POST_REGISTER_BY_FACEBOOK} from "../actions/action-types";
+
+const NOT_HAVE_ACCOUNT = 499;
 
 /*-----saga effects-----*/
-function* postLoginEffectSaga() {
+function* postLoginByFacebookEffectSaga(params) {
     try {
         yield put(showLoading());
-        const response = yield call(postLoginRequest);
-        if (response) {
-            yield put(postLogin.success(response));
+        const {payload} = params;
+        const {id: facebookId, accessToken: token} = payload;
+        const response = yield call(postLoginByFacebookAPI, {facebookId, token});
+        if (response.error) {
+            const {error} = response;
+            if (error.errorCode && error.errorCode === NOT_HAVE_ACCOUNT) {
+                console.log('postSignUpByFacebook with response: ', response);
+                yield put(postRegisterByFacebook(payload));
+            } else {
+                console.log('postLoginByFacebook failed: ', error);
+            }
+        } else {
+            yield put(login(response.data));
         }
-    } catch (err) {
-        yield put(postLogin.failure(err));
+    } catch (error) {
+        console.log('postLoginByFacebook failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+
+export function* postRegisterFacebookSaga(facebookData) {
+    try {
+        yield put(showLoading());
+        const response = yield call(postRegisterByFacebookAPI, facebookData);
+        if (response.error) {
+            const error = response.error;
+            console.log('postRegisterByFacebook error', error);
+        } else
+            yield put(login(response.data));
+    } catch (error) {
+        console.log('postRegisterByFacebook failed: ', error);
     } finally {
         yield put(hideLoading());
     }
@@ -21,10 +50,15 @@ function* postLoginEffectSaga() {
 
 
 /*-----saga watchers-----*/
-function* postLoginWatcherSaga() {
-    yield takeLatest(POST_LOGIN[ACTION_STATE.request], postLoginEffectSaga);
+function* postLoginByFacebookWatcherSaga() {
+    yield takeLatest(POST_LOGIN_BY_FACEBOOK, postLoginByFacebookEffectSaga);
+}
+
+function* postRegisterByFacebookWatcherSaga() {
+    yield takeLatest(POST_REGISTER_BY_FACEBOOK, postRegisterFacebookSaga);
 }
 
 export default [
-    takeEvery(LOGIN, postLoginWatcherSaga),
+    postLoginByFacebookWatcherSaga(),
+    postRegisterByFacebookWatcherSaga(),
 ];

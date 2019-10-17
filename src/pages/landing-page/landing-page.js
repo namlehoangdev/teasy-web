@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Paper, Link, Grid, Box, Typography, makeStyles, LinearProgress, Button} from '@material-ui/core';
-// import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -9,6 +9,7 @@ import Logo from "../../components/logo/logo";
 import AuthenticationCard from "./authentication-card";
 import ChoseRoleCard from "./chose-role-card";
 import {disabledStyleWrapper} from "../../utils";
+import {postLoginByFacebook} from "../../actions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -56,7 +57,7 @@ function LandingPage() {
     const [slideIndex, setSlideIndex] = useState(0);
     const sliderRef = useRef(null);
     const classes = useStyles();
-    //const dispatch = useDispatch();
+    const dispatch = useDispatch();
     useEffect(() => {
         //promotionId && dispatch(readPromotion(promotionId));
     }, []);
@@ -65,7 +66,8 @@ function LandingPage() {
         // console.log(data);
         setCardLoading(false);
         if (data && data.accessToken) {
-            sliderRef.current.slickGoTo(1)
+            console.log(data);
+            dispatch(postLoginByFacebook(data));
         }
     }
 

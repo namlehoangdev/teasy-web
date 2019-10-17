@@ -1,1 +1,1 @@
-import {ACTION_STATE, action} from './action-types';
+import {API_STATUS, action} from './action-types';

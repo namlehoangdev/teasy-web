@@ -3,7 +3,7 @@ const REQUEST = "REQUEST";
 const SUCCESS = "SUCCESS";
 const FAILURE = "FAILURE";
 
-export const ACTION_STATE = {
+export const API_STATUS = {
     request: REQUEST,
     success: SUCCESS,
     failure: FAILURE
@@ -17,12 +17,12 @@ function createRequestType(base) {
 }
 
 export function action(type, payload = {}) {
-    return {type, ...payload};
+    return {type, payload};
 }
 
 /*------------------------------------------------AUTHENTICATION------------------------------------------------*/
-export const POST_LOGIN = createRequestType('POST_LOGIN');
-export const POST_REGISTER = createRequestType('POST_REGISTER');
+export const POST_LOGIN_BY_FACEBOOK = 'POST_LOGIN_BY_FACEBOOK';
+export const POST_REGISTER_BY_FACEBOOK = 'POST_REGISTER_BY_FACEBOOK';
 export const LOGIN = 'LOGIN';
 
 /*------------------------------------------------USERS------------------------------------------------*/

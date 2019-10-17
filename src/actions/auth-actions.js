@@ -1,14 +1,8 @@
-import {ACTION_STATE, POST_LOGIN, POST_REGISTER, action} from './action-types';
+import {API_STATUS, POST_LOGIN_BY_FACEBOOK, POST_REGISTER_BY_FACEBOOK, action, LOGIN} from './action-types';
 
 
-export const postLogin = {
-    request: () => action(POST_LOGIN[ACTION_STATE.request]),
-    success: (response) => action(POST_LOGIN[ACTION_STATE.success], response),
-    failure: (error) => action(POST_LOGIN[ACTION_STATE.failure], {error})
-};
+export const postLoginByFacebook = (facebookData) => action(POST_LOGIN_BY_FACEBOOK, facebookData);
 
-export const postRegister = {
-    request: () => action(POST_REGISTER[ACTION_STATE.request]),
-    success: (response) => action(POST_REGISTER[ACTION_STATE.success], response),
-    failure: (error) => action(POST_REGISTER[ACTION_STATE.failure], {error})
-};
+export const postRegisterByFacebook = (facebookData) => action(POST_REGISTER_BY_FACEBOOK, facebookData);
+
+export const login = (payload) => action(LOGIN, payload);

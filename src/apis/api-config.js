@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const BASE_URL = {
-    development: '',//'https://qcpromotion.zalopay.vn',
+    development: 'https://serverblockchain.azurewebsites.net/api/',
     production: 'https://promotion.zalopay.vn'
 };
 
