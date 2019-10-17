@@ -16,6 +16,9 @@ const CREATE = 'Tạo mới';
 const EDIT = 'Chỉnh sửa';
 const UPDATE = 'Cập nhật';
 const SAVE = 'Lưu';
+const FOLDER = 'Thư mục';
+const KIND = 'Loại';
+const START_DATE = 'Ngày bắt đầu';
 
 
 export const TEXT = {
@@ -36,6 +39,9 @@ export const TEXT = {
     create: CREATE,
     save: SAVE,
     edit: EDIT,
-    update: UPDATE
+    update: UPDATE,
+    folder: FOLDER,
+    kind: KIND,
+    startDate: START_DATE
 };
 

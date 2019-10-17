@@ -21,7 +21,6 @@ ReactDOM.render(
                     <Route path="/admin" component={AdminHomePage}/>
                     <Route path="/playground" component={PlaygroundHomePage}/>
                 </Switch>
-
             </ConnectedRouter>
         </MuiThemeProvider>
     </Provider>,

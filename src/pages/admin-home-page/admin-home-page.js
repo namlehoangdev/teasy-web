@@ -78,9 +78,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const listCreateButtonMap = [
-    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, path: PATH.createContest},
-    {key: 1, name: `${TEXT.create} ${TEXT.test}`, path: PATH.createTest},
-    {key: 2, name: `${TEXT.create} ${TEXT.question}`, path: PATH.createQuestion},
+    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, icon: <ListAltIcon/>, path: PATH.createContest},
+    {key: 1, name: `${TEXT.create} ${TEXT.test}`, icon: <LibraryBooksIcon/>, path: PATH.createTest},
+    {key: 2, name: `${TEXT.create} ${TEXT.question}`, icon: <QuestionAnswerIcon/>, path: PATH.createQuestion},
 ];
 
 const listNavItemMap = [
@@ -143,7 +143,6 @@ export default function AdminHomePage() {
     function handleCreateItemClick(event, item) {
         dispatch(setOpenAdminFullscreenDialog(true));
         setCreatePopAnchorEl(null);
-        setAppBarTitle(item.name);
         setCurrentFullscreenPath(item.path);
         history.push(`${path}/${item.path}`);
     }
@@ -155,9 +154,10 @@ export default function AdminHomePage() {
     }
 
     function renderCreateButton(item, index) {
-        const {key, name} = item;
+        const {key, name, icon} = item;
         return (<ListItem key={key} button
                           onClick={event => handleCreateItemClick(event, item, index)}>
+            <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText primary={name}/>
         </ListItem>)
     }

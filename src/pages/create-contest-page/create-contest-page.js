@@ -11,6 +11,10 @@ const useStyles = makeStyles(theme => ({
     appBar: {
         position: 'relative',
     },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
