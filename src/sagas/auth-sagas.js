@@ -2,7 +2,7 @@ import {takeLatest, call, put} from 'redux-saga/effects';
 import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import {postLoginByFacebookAPI, postRegisterByFacebookAPI} from '../apis';
 import {postRegisterByFacebook, login} from '../actions';
-import {POST_LOGIN_BY_FACEBOOK, POST_REGISTER_BY_FACEBOOK} from "../actions/action-types";
+import {POST_LOGIN_BY_FACEBOOK_API, POST_REGISTER_BY_FACEBOOK_API} from "../actions/action-types";
 
 const NOT_HAVE_ACCOUNT = 499;
 
@@ -51,11 +51,11 @@ export function* postRegisterFacebookSaga(facebookData) {
 
 /*-----saga watchers-----*/
 function* postLoginByFacebookWatcherSaga() {
-    yield takeLatest(POST_LOGIN_BY_FACEBOOK, postLoginByFacebookEffectSaga);
+    yield takeLatest(POST_LOGIN_BY_FACEBOOK_API, postLoginByFacebookEffectSaga);
 }
 
 function* postRegisterByFacebookWatcherSaga() {
-    yield takeLatest(POST_REGISTER_BY_FACEBOOK, postRegisterFacebookSaga);
+    yield takeLatest(POST_REGISTER_BY_FACEBOOK_API, postRegisterFacebookSaga);
 }
 
 export default [

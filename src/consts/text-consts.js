@@ -6,6 +6,7 @@ const ROOM_CODE = 'Nhập mã thi nhanh..';
 const I_AGREE = 'Tôi đồng ý';
 const ENTER_ROOM = 'Thi nhanh';
 const LOGIN_WITH_FACEBOOK = 'Đăng nhập bằng Facebook';
+const LOGIN_WITH_GOOGLE = 'Đăng nhập bằng Google';
 const GOTO_ADMIN_PAGE = 'Tạo cuộc thi';
 const GOTO_PLAYGROUND = 'Tham gia thi';
 const GO_BACK = 'Quay lại';
@@ -29,6 +30,7 @@ export const TEXT = {
     iAgree: I_AGREE,
     enterRoom: ENTER_ROOM,
     loginWithFacebook: LOGIN_WITH_FACEBOOK,
+    loginWithGoogle: LOGIN_WITH_GOOGLE,
     gotoAdmin: GOTO_ADMIN_PAGE,
     gotoPlayground: GOTO_PLAYGROUND,
     goBack: GO_BACK,

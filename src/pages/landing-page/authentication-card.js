@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, TextField, Grid, Typography, makeStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 import {TEXT} from "../../consts/text-consts";
 
 
@@ -12,9 +13,17 @@ const useStyles = makeStyles(theme => ({
             ...theme.typography.button,
             ...theme.shape,
             padding: '6px 16px',
-            backgroundColor: '#3B5998',
+            backgroundColor: '#445EA9',
             color: theme.palette.common.white,
             width: '100%',
+            height: '100%',
+            justifyContent: 'space-between'
+        },
+        google: {
+            ...theme.typography.button,
+            ...theme.shape,
+            width: '100%',
+            justifyContent: 'space-between'
         },
         paper: {
             backgroundColor: theme.palette.background,
@@ -40,6 +49,14 @@ function AuthenticationCard(props) {
         onFacebookClick && onFacebookClick(data)
     }
 
+    function handleGoogleSuccess(data) {
+        console.log('google success: ', data);
+    }
+
+    function handleGoogleFailure(data) {
+        console.log('google failure: ', data);
+    }
+
     return (
         <div className={classes.paper}>
             <Grid container spacing={2}>
@@ -57,13 +74,24 @@ function AuthenticationCard(props) {
                                 align="center">{TEXT.or}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12}>
+                    <GoogleLogin
+                        clientId="224551668607-ruki7e85h10fo8pjs3llnbhk16ah8chg.apps.googleusercontent.com"
+                        onSuccess={handleGoogleSuccess}
+                        onFailure={handleGoogleFailure}
+                        className={classes.google}
+                        cookiePolicy={'single_host_origin'}
+                        buttonText={TEXT.loginWithGoogle}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12}>
                     <FacebookLogin
                         appId="1913479075393450" className={classes.submit}
                         autoLoad={false} disableMobileRedirect={true}
                         fields="name,email,picture"
                         callback={handleFacebookCallBack}
                         onClick={handleFacebookLoginClick}
-                        icon="fa-facebook" cssClass={classes.facebook}
+                        icon="fa-facebook"
+                        cssClass={classes.facebook}
                         textButton={` ${TEXT.loginWithFacebook}`}
                     />
                 </Grid>

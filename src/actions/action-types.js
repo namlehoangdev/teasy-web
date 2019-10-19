@@ -21,8 +21,8 @@ export function action(type, payload = {}) {
 }
 
 /*------------------------------------------------AUTHENTICATION------------------------------------------------*/
-export const POST_LOGIN_BY_FACEBOOK = 'POST_LOGIN_BY_FACEBOOK';
-export const POST_REGISTER_BY_FACEBOOK = 'POST_REGISTER_BY_FACEBOOK';
+export const POST_LOGIN_BY_FACEBOOK_API = 'POST_LOGIN_BY_FACEBOOK_API';
+export const POST_REGISTER_BY_FACEBOOK_API = 'POST_REGISTER_BY_FACEBOOK_API';
 export const LOGIN = 'LOGIN';
 
 /*------------------------------------------------USERS------------------------------------------------*/
@@ -31,7 +31,8 @@ export const GET_USER_BY_ID = createRequestType('GET_USER_BY_ID');
 
 
 /*------------------------------------------------ADMIN------------------------------------------------*/
-export const GET_OWN_CONTESTS = createRequestType('GET_OWN_CONTESTS');
+export const GET_OWN_CONTESTS_API = 'GET_OWN_CONTESTS_API';
+export const UPDATE_OWNED_CONTESTS = 'UPDATE_OWNED_CONTESTS';
 export const POST_OWN_CONTEST = createRequestType('POST_OWN_CONTEST');
 export const PUT_OWN_CONTEST = createRequestType('PUT_OWN_CONTEST');
 

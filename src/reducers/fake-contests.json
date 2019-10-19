@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "name": "De so 1",
+    "ownerId": "123",
+    "ownerName": "nam",
+    "testIds": [],
+    "test": {
+      "id": "string",
+      "name": "string",
+      "ownerId": "string",
+      "ownerName": "string",
+      "questions": [],
+      "directory": "/VNG/So 1",
+      "type": 0,
+      "importedImageUrl": "string"
+    },
+    "startAt": "2019-10-18T17:04:10.321Z",
+    "endAt": "2019-10-18T17:04:10.321Z",
+    "useSEB": true,
+    "permittedUsers": [],
+    "isPublic": true,
+    "description": "Cuoc thi tri tue",
+    "password": "1234",
+    "isSecured": true,
+    "code": 123,
+    "directory": "/VNG/NAM"
+  },
+  {
+    "id": 2,
+    "name": "De so 2",
+    "ownerId": "123",
+    "ownerName": "nam",
+    "testIds": [],
+    "test": {
+      "id": "string",
+      "name": "string",
+      "ownerId": "string",
+      "ownerName": "string",
+      "questions": [],
+      "directory": "/VNG/So 1",
+      "type": 0,
+      "importedImageUrl": "string"
+    },
+    "startAt": "2019-10-18T17:04:10.321Z",
+    "endAt": "2019-10-18T17:04:10.321Z",
+    "useSEB": true,
+    "permittedUsers": [],
+    "isPublic": true,
+    "description": "Cuoc thi tri tue",
+    "password": "1234",
+    "isSecured": true,
+    "code": 123,
+    "directory": "/VNG/KIEN"
+  },
+  {
+    "id": 3,
+    "name": "De so 3",
+    "ownerId": "123",
+    "ownerName": "nam",
+    "testIds": [],
+    "test": {
+      "id": "string",
+      "name": "string",
+      "ownerId": "string",
+      "ownerName": "string",
+      "questions": [],
+      "directory": "/VNG/So 1",
+      "type": 0,
+      "importedImageUrl": "string"
+    },
+    "startAt": "2019-10-18T17:04:10.321Z",
+    "endAt": "2019-10-18T17:04:10.321Z",
+    "useSEB": true,
+    "permittedUsers": [],
+    "isPublic": true,
+    "description": "Cuoc thi tri tue",
+    "password": "1234",
+    "isSecured": true,
+    "code": 123,
+    "directory": "/Zalo"
+  }
+]

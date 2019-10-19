@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './admin-contests-page.scss'
 import {
     Button,
@@ -10,22 +10,22 @@ import {
     TableRow,
     TableCell,
     TableBody,
-    TablePagination,
     Checkbox
 } from "@material-ui/core";
 import EnhancedTableHead from "./enhanced-table-head";
 import EnhancedTableToolbar from "./enhanced-table-toolbar";
 import {PATH} from "../../consts";
 import {SpeedDial, SpeedDialIcon, SpeedDialAction} from '@material-ui/lab';
-import {useHistory, useRouteMatch} from "react-router";
+import {useHistory} from "react-router";
 import {TEXT} from "../../consts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     CreateNewFolder as CreateNewFolderIcon,
     PostAdd as PostAddIcon,
     NavigateNext as NavigateNextIcon
 } from '@material-ui/icons'
-import {setOpenAdminFullscreenDialog} from "../../actions";
+import {getOwnContests, setOpenAdminFullscreenDialog} from "../../actions";
+import adminReducer from "../../reducers/admin-reducer";
 
 function createData(id, name, isFolder, startDate, status) {
     return {id, name, isFolder, startDate, status};
@@ -110,6 +110,10 @@ const useStyles = makeStyles(theme => ({
 export default function AdminContestPage() {
     //const {path} = useRouteMatch();
     const [openSpeedDial, setOpenSpeedDial] = useState(false);
+    const {contests: contestReducer} = useSelector(state => state.adminReducer);
+    const {entities, result: ownedContestIds} = contestReducer;
+    const {contests} = entities;
+
     const [selectedItems, setSelectedItems] = React.useState([]);
     const [enableSelectMode, setEnableSelectMode] = React.useState(false);
     const [order, setOrder] = React.useState('asc');
@@ -118,10 +122,9 @@ export default function AdminContestPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
 
-    // function handleClose() {
-    //     history.goBack();
-    //     dispatch(setOpenAdminFullscreenDialog(false));
-    // }
+    useEffect(() => {
+        dispatch(getOwnContests());
+    }, []);
 
     function handleCreateNewFolderClick() {
     }
@@ -149,7 +152,7 @@ export default function AdminContestPage() {
 
     const handleClick = (event, name) => {
         if (!enableSelectMode) {
-
+            console.log('not enable selected mode');
         } else {
             const selectedIndex = selectedItems.indexOf(name);
             let newSelected = [];
@@ -219,7 +222,7 @@ export default function AdminContestPage() {
                                        order={order} orderBy={orderBy}
                                        onSelectAllClick={handleSelectAllClick}
                                        onRequestSort={handleRequestSort}
-                                       rowCount={rows.length}/>
+                                       rowCount={ownedContestIds.length}/>
                     <TableBody> {stableSort(rows, getSorting(order, orderBy)).map(renderContestTableRows)} </TableBody>
                 </Table>
             </div>
