@@ -1,6 +1,6 @@
 import {takeLatest, call, put} from 'redux-saga/effects';
 import {showLoading, hideLoading} from 'react-redux-loading-bar'
-import {getOwnedContestsAPI} from '../apis';
+import APIs from '../apis';
 import {} from '../actions';
 import {POST_LOGIN_BY_THIRD_PARTY,} from "../actions/action-types";
 import {updateOwnedContests} from "../actions";
@@ -11,7 +11,7 @@ import {updateOwnedContests} from "../actions";
 export function* getOwnContestsSaga() {
     try {
         yield put(showLoading());
-        const response = yield call(getOwnedContestsAPI);
+        const response = yield call(APIs.getOwnedContestsAPI);
         if (!response.error) {
             yield put(updateOwnedContests(response.data));
         }

@@ -4,8 +4,7 @@ import APIs from '../apis';
 import {postRegisterThirdParty, login, showMiniLoading, hideMiniLoading} from '../actions';
 import {POST_LOGIN_BY_THIRD_PARTY, POST_REGISTER_BY_THIRD_PARTY} from "../actions/action-types";
 import {THIRD_PARTY, THIRD_PARTY_TOKEN_PREFIX} from "../consts";
-
-const STATUS_NOT_HAVE_ACCOUNT = 499;
+import {HTTP_STATUS_CODES} from "../consts/http-status-codes-consts";
 
 function mapDataFromThirdParty(data) {
     const {accessToken: thirdPartyToken, thirdParty, ...otherData} = data;
@@ -33,12 +32,10 @@ function* postLoginByThirdPartyEffectSaga({payload}) {
         yield put(login(response.data));
     } catch (error) {
         console.log('postLoginByFacebook failed: ', error);
-        const {status, data} = error;
-        if (status === 404) {
-            const {errorCode} = data;
-            if (errorCode && errorCode === STATUS_NOT_HAVE_ACCOUNT) {
-                yield put(postRegisterThirdParty(payload));
-            }
+        const {status} = error;
+        if (status === HTTP_STATUS_CODES.unauthorized) {
+            console.log('prepare to call register');
+            yield put(postRegisterThirdParty(payload));
         }
     } finally {
         yield put(hideMiniLoading());
@@ -47,6 +44,7 @@ function* postLoginByThirdPartyEffectSaga({payload}) {
 
 
 export function* postRegisterThirdPartySaga({payload}) {
+    console.log(payload);
     const thirdPartyData = mapDataFromThirdParty(payload);
     const {thirdPartyId, token, name} = thirdPartyData;
     try {

@@ -1,7 +1,6 @@
 import ApiInstance from './api-config';
 
-const getOwnedContestsAPI = () => ApiInstance.get('Contests/MyOwn');
+export const getOwnedContestsAPI = () => ApiInstance.get('Contests/MyOwn');
 
-export default [getOwnedContestsAPI];
 
 

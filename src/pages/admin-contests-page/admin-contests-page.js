@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import './admin-contests-page.scss'
 import {
     Button,
     CssBaseline,
@@ -26,6 +25,7 @@ import {
 } from '@material-ui/icons'
 import {getOwnContests, setOpenAdminFullscreenDialog} from "../../actions";
 import adminReducer from "../../reducers/admin-reducer";
+import useClickAndDoubleClick from "../../utils/use-click-and-double-click";
 
 function createData(id, name, isFolder, startDate, status) {
     return {id, name, isFolder, startDate, status};
@@ -110,6 +110,7 @@ const useStyles = makeStyles(theme => ({
 export default function AdminContestPage() {
     //const {path} = useRouteMatch();
     const [openSpeedDial, setOpenSpeedDial] = useState(false);
+
     const {contests: contestReducer} = useSelector(state => state.adminReducer);
     const {entities, result: ownedContestIds} = contestReducer;
     const {contests} = entities;
@@ -150,7 +151,7 @@ export default function AdminContestPage() {
         setSelectedItems([]);
     };
 
-    const handleClick = (event, name) => {
+    const handleItemClick = (event, name) => {
         if (!enableSelectMode) {
             console.log('not enable selected mode');
         } else {
@@ -180,7 +181,9 @@ export default function AdminContestPage() {
         return (
             <TableRow key={row.name}
                       hover role="checkbox"
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={event => handleEnhancedClick(event, row)}
+                      onDoubleClick={handleEnhanceDoubleClick}
+                //onClick={event => handleClick(event, row.name)}
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       selected={isItemSelected}>
@@ -197,6 +200,11 @@ export default function AdminContestPage() {
         );
     }
 
+    function handleItemDoubleClick(event) {
+        console.log(event);
+    }
+
+    const [handleEnhancedClick, handleEnhanceDoubleClick] = useClickAndDoubleClick(handleItemClick, handleItemDoubleClick);
 
     return (<div className={classes.root}>
             <Backdrop open={openSpeedDial} timeout={Infinity}/>

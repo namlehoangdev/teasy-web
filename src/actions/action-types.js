@@ -39,6 +39,9 @@ export const GET_USER_BY_ID = createRequestType('GET_USER_BY_ID');
 /*------------------------------------------------ADMIN------------------------------------------------*/
 export const GET_OWN_CONTESTS_API = 'GET_OWN_CONTESTS_API';
 export const UPDATE_OWNED_CONTESTS = 'UPDATE_OWNED_CONTESTS';
+export const OPEN_CREATE_QUESTION_DIALOG = 'OPEN_CREATE_QUESTION_DIALOG';
+
+
 export const POST_OWN_CONTEST = createRequestType('POST_OWN_CONTEST');
 export const PUT_OWN_CONTEST = createRequestType('PUT_OWN_CONTEST');
 

@@ -101,9 +101,9 @@ export default function AdminHomePage() {
     const history = useHistory();
     const dispatch = useDispatch();
     const {path} = useRouteMatch();
-    const isOpenAdminFullscreenDialog = useSelector(state => state.adminReducer.isOpenAdminFullscreenDialog);
+    const {isOpenAdminFullscreenDialog} = useSelector(state => state.adminReducer);
     const [currentFullscreenPath, setCurrentFullscreenPath] = useState('');
-    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(true);
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [createPopAnchorEl, setCreatePopAnchorEl] = useState(null);
@@ -144,6 +144,9 @@ export default function AdminHomePage() {
         dispatch(setOpenAdminFullscreenDialog(true));
         setCreatePopAnchorEl(null);
         setCurrentFullscreenPath(item.path);
+        if (item.key === 2) {
+
+        }
         history.push(`${path}/${item.path}`);
     }
 
@@ -229,6 +232,7 @@ export default function AdminHomePage() {
                     <Route path={`${path}/${PAGE_PATHS.editContest}`} component={EditContestPage}/>
                 </Switch>
             </Dialog>
+
         </div>
     );
 }

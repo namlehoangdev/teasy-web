@@ -22,6 +22,8 @@ const KIND = 'Loại';
 const START_DATE = 'Ngày bắt đầu';
 const YOUR_PAGE_NOT_EXISTS = 'Trang của bạn tìm kiếm không tồn tại';
 const NOT_FOUND_NOTE = 'Có vẻ như liên kết đã bị hỏng hoặc đã bị quản trị viên xóa bỏ';
+const CANCEL = 'Huỷ bỏ';
+const DISMISS = 'Bỏ qua';
 
 
 export const TEXT = {
@@ -48,6 +50,8 @@ export const TEXT = {
     kind: KIND,
     startDate: START_DATE,
     yourPageNotExist: YOUR_PAGE_NOT_EXISTS,
-    notFoundNote: NOT_FOUND_NOTE
+    notFoundNote: NOT_FOUND_NOTE,
+    cancel: CANCEL,
+    dismiss: DISMISS
 };
 

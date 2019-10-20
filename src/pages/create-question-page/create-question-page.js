@@ -38,5 +38,7 @@ export default function CreateQuestionPage() {
                 <Button color="inherit" onClick={handleClose}>{TEXT.save}</Button>
             </Toolbar>
         </AppBar>
+
+
     </div>);
 }
