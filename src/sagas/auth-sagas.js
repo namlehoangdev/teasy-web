@@ -1,64 +1,76 @@
 import {takeLatest, call, put} from 'redux-saga/effects';
-import {showLoading, hideLoading} from 'react-redux-loading-bar'
-import {postLoginByFacebookAPI, postRegisterByFacebookAPI} from '../apis';
-import {postRegisterByFacebook, login} from '../actions';
-import {POST_LOGIN_BY_FACEBOOK_API, POST_REGISTER_BY_FACEBOOK_API} from "../actions/action-types";
+//import {showLoading, hideLoading} from 'react-redux-loading-bar'
+import APIs from '../apis';
+import {postRegisterThirdParty, login, showMiniLoading, hideMiniLoading} from '../actions';
+import {POST_LOGIN_BY_THIRD_PARTY, POST_REGISTER_BY_THIRD_PARTY} from "../actions/action-types";
+import {THIRD_PARTY, THIRD_PARTY_TOKEN_PREFIX} from "../consts";
 
-const NOT_HAVE_ACCOUNT = 499;
+const STATUS_NOT_HAVE_ACCOUNT = 499;
+
+function mapDataFromThirdParty(data) {
+    const {accessToken: thirdPartyToken, thirdParty, ...otherData} = data;
+    const token = `${THIRD_PARTY_TOKEN_PREFIX[thirdParty]}${thirdPartyToken}`;
+    switch (thirdParty) {
+        case THIRD_PARTY.facebook: {
+            const {id: thirdPartyId} = data;
+            return {thirdPartyId, thirdPartyToken, token, ...otherData};
+        }
+        case THIRD_PARTY.google: {
+            const {profileObj} = data;
+            const {googleId: thirdPartyId, googleName: name, ...otherGoogleProfileData} = profileObj;
+            return {thirdPartyId, name, token, ...otherGoogleProfileData};
+        }
+    }
+}
 
 /*-----saga effects-----*/
-function* postLoginByFacebookEffectSaga(params) {
+function* postLoginByThirdPartyEffectSaga({payload}) {
+    const thirdPartyData = mapDataFromThirdParty(payload);
+    const {thirdPartyId, token} = thirdPartyData;
     try {
-        yield put(showLoading());
-        const {payload} = params;
-        const {id: facebookId, accessToken: token} = payload;
-        const response = yield call(postLoginByFacebookAPI, {facebookId, token});
-        if (response.error) {
-            const {error} = response;
-            if (error.errorCode && error.errorCode === NOT_HAVE_ACCOUNT) {
-                console.log('postSignUpByFacebook with response: ', response);
-                yield put(postRegisterByFacebook(payload));
-            } else {
-                console.log('postLoginByFacebook failed: ', error);
-            }
-        } else {
-            yield put(login(response.data));
-        }
+        yield put(showMiniLoading());
+        const response = yield call(APIs.postLoginByThirdParty, {thirdPartyId, token});
+        yield put(login(response.data));
     } catch (error) {
         console.log('postLoginByFacebook failed: ', error);
+        const {status, data} = error;
+        if (status === 404) {
+            const {errorCode} = data;
+            if (errorCode && errorCode === STATUS_NOT_HAVE_ACCOUNT) {
+                yield put(postRegisterThirdParty(payload));
+            }
+        }
     } finally {
-        yield put(hideLoading());
+        yield put(hideMiniLoading());
     }
 }
 
 
-export function* postRegisterFacebookSaga(facebookData) {
+export function* postRegisterThirdPartySaga({payload}) {
+    const thirdPartyData = mapDataFromThirdParty(payload);
+    const {thirdPartyId, token, name} = thirdPartyData;
     try {
-        yield put(showLoading());
-        const response = yield call(postRegisterByFacebookAPI, facebookData);
-        if (response.error) {
-            const error = response.error;
-            console.log('postRegisterByFacebook error', error);
-        } else
-            yield put(login(response.data));
+        yield put(showMiniLoading());
+        const response = yield call(APIs.postRegisterByThirdPartyAPI, {thirdPartyId, token, name});
+        yield put(login(response.data));
     } catch (error) {
         console.log('postRegisterByFacebook failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideMiniLoading());
     }
 }
 
 
 /*-----saga watchers-----*/
-function* postLoginByFacebookWatcherSaga() {
-    yield takeLatest(POST_LOGIN_BY_FACEBOOK_API, postLoginByFacebookEffectSaga);
+function* postLoginByThirdPartyWatcherSaga() {
+    yield takeLatest(POST_LOGIN_BY_THIRD_PARTY, postLoginByThirdPartyEffectSaga);
 }
 
-function* postRegisterByFacebookWatcherSaga() {
-    yield takeLatest(POST_REGISTER_BY_FACEBOOK_API, postRegisterFacebookSaga);
+function* postRegisterByThirdPartyWatcherSaga() {
+    yield takeLatest(POST_REGISTER_BY_THIRD_PARTY, postRegisterThirdPartySaga);
 }
 
 export default [
-    postLoginByFacebookWatcherSaga(),
-    postRegisterByFacebookWatcherSaga(),
+    postLoginByThirdPartyWatcherSaga(),
+    postRegisterByThirdPartyWatcherSaga(),
 ];

@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import EnhancedTableHead from "./enhanced-table-head";
 import EnhancedTableToolbar from "./enhanced-table-toolbar";
-import {PATH} from "../../consts";
+import {PAGE_PATHS} from "../../consts";
 import {SpeedDial, SpeedDialIcon, SpeedDialAction} from '@material-ui/lab';
 import {useHistory} from "react-router";
 import {TEXT} from "../../consts";
@@ -131,7 +131,7 @@ export default function AdminContestPage() {
 
     function handleCreateNewContestClick() {
         dispatch(setOpenAdminFullscreenDialog(true));
-        history.push(`${PATH.createContest}`)
+        history.push(`${PAGE_PATHS.createContest}`)
     }
 
     const handleRequestSort = (event, property) => {

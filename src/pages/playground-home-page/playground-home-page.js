@@ -23,7 +23,7 @@ import {
 } from '@material-ui/icons';
 import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
-import {PATH} from "../../consts";
+import {PAGE_PATHS} from "../../consts";
 import {setOpenAdminFullscreenDialog} from "../../actions";
 
 const drawerWidth = 240;
@@ -76,15 +76,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const listCreateButtonMap = [
-    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, path: PATH.createContest},
-    {key: 1, name: `${TEXT.create} ${TEXT.test}`, path: PATH.createTest},
-    {key: 2, name: `${TEXT.create} ${TEXT.question}`, path: PATH.createQuestion},
+    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, path: PAGE_PATHS.createContest},
+    {key: 1, name: `${TEXT.create} ${TEXT.test}`, path: PAGE_PATHS.createTest},
+    {key: 2, name: `${TEXT.create} ${TEXT.question}`, path: PAGE_PATHS.createQuestion},
 ];
 
 const listNavItemMap = [
-    {key: 0, name: TEXT.contest, icon: <ListAltIcon/>, path: PATH.contest},
-    {key: 1, name: TEXT.test, icon: <LibraryBooksIcon/>, path: PATH.tests},
-    {key: 2, name: TEXT.question, icon: <QuestionAnswerIcon/>, path: PATH.questions}
+    {key: 0, name: TEXT.contest, icon: <ListAltIcon/>, path: PAGE_PATHS.contest},
+    {key: 1, name: TEXT.test, icon: <LibraryBooksIcon/>, path: PAGE_PATHS.tests},
+    {key: 2, name: TEXT.question, icon: <QuestionAnswerIcon/>, path: PAGE_PATHS.questions}
 ];
 
 
@@ -183,9 +183,9 @@ export default function PlaygroundHomePage() {
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <div className={classes.drawerHeader}/>
                 <Switch>
-                    <Route path={`${path}/${PATH.questions}`} component={AdminQuestionsPage}/>
-                    <Route path={`${path}/${PATH.tests}`} component={AdminTestsPage}/>
-                    <Route path={`${path}/${PATH.contest}`} component={AdminContestsPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.questions}`} component={AdminQuestionsPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.tests}`} component={AdminTestsPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.contest}`} component={AdminContestsPage}/>
                 </Switch>
             </main>
         </div>

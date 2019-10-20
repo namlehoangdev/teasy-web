@@ -1,7 +1,14 @@
-import {POST_LOGIN_BY_FACEBOOK_API, POST_REGISTER_BY_FACEBOOK_API, action, LOGIN} from './action-types';
+import {
+    POST_LOGIN_BY_THIRD_PARTY,
+    POST_REGISTER_BY_THIRD_PARTY,
+    action,
+    LOGIN, UPDATE_LOGIN_MODE,
+} from './action-types';
 
-export const postLoginByFacebook = (facebookData) => action(POST_LOGIN_BY_FACEBOOK_API, facebookData);
+export const postLoginByThirdParty = (data) => action(POST_LOGIN_BY_THIRD_PARTY, data);
 
-export const postRegisterByFacebook = (facebookData) => action(POST_REGISTER_BY_FACEBOOK_API, facebookData);
+export const postRegisterThirdParty = (data) => action(POST_REGISTER_BY_THIRD_PARTY, data);
 
 export const login = (payload) => action(LOGIN, payload);
+
+export const updateLoginMode = (payload) => action(UPDATE_LOGIN_MODE, payload);

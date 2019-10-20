@@ -25,7 +25,7 @@ import {
 } from '@material-ui/icons';
 import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
-import {PATH} from "../../consts";
+import {PAGE_PATHS} from "../../consts";
 import {setOpenAdminFullscreenDialog} from "../../actions";
 
 const drawerWidth = 240;
@@ -78,15 +78,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const listCreateButtonMap = [
-    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, icon: <ListAltIcon/>, path: PATH.createContest},
-    {key: 1, name: `${TEXT.create} ${TEXT.test}`, icon: <LibraryBooksIcon/>, path: PATH.createTest},
-    {key: 2, name: `${TEXT.create} ${TEXT.question}`, icon: <QuestionAnswerIcon/>, path: PATH.createQuestion},
+    {key: 0, name: `${TEXT.create} ${TEXT.contest}`, icon: <ListAltIcon/>, path: PAGE_PATHS.createContest},
+    {key: 1, name: `${TEXT.create} ${TEXT.test}`, icon: <LibraryBooksIcon/>, path: PAGE_PATHS.createTest},
+    {key: 2, name: `${TEXT.create} ${TEXT.question}`, icon: <QuestionAnswerIcon/>, path: PAGE_PATHS.createQuestion},
 ];
 
 const listNavItemMap = [
-    {key: 0, name: TEXT.contest, icon: <ListAltIcon/>, path: PATH.contest},
-    {key: 1, name: TEXT.test, icon: <LibraryBooksIcon/>, path: PATH.tests},
-    {key: 2, name: TEXT.question, icon: <QuestionAnswerIcon/>, path: PATH.questions}
+    {key: 0, name: TEXT.contest, icon: <ListAltIcon/>, path: PAGE_PATHS.contest},
+    {key: 1, name: TEXT.test, icon: <LibraryBooksIcon/>, path: PAGE_PATHS.tests},
+    {key: 2, name: TEXT.question, icon: <QuestionAnswerIcon/>, path: PAGE_PATHS.questions}
 ];
 
 // eslint-disable-next-line react/display-name
@@ -113,12 +113,12 @@ export default function AdminHomePage() {
     history.listen((location, action) => {
         if (action === 'POP') {
             switch (currentFullscreenPath) {
-                case PATH.createQuestion:
-                case PATH.createTest:
-                case PATH.createContest:
-                case PATH.editTest:
-                case PATH.editContest:
-                case PATH.editQuestion:
+                case PAGE_PATHS.createQuestion:
+                case PAGE_PATHS.createTest:
+                case PAGE_PATHS.createContest:
+                case PAGE_PATHS.editTest:
+                case PAGE_PATHS.editContest:
+                case PAGE_PATHS.editQuestion:
                     dispatch(setOpenAdminFullscreenDialog(false));
             }
         }
@@ -212,21 +212,21 @@ export default function AdminHomePage() {
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <div className={classes.drawerHeader}/>
                 <Switch>
-                    <Route path={`${path}/${PATH.questions}`} component={AdminQuestionsPage}/>
-                    <Route path={`${path}/${PATH.tests}`} component={AdminTestsPage}/>
-                    <Route path={`${path}/${PATH.contest}`} component={AdminContestsPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.questions}`} component={AdminQuestionsPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.tests}`} component={AdminTestsPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.contest}`} component={AdminContestsPage}/>
                 </Switch>
             </main>
 
             <Dialog fullScreen open={isOpenAdminFullscreenDialog} TransitionComponent={Transition}
                     onClose={() => dispatch(setOpenAdminFullscreenDialog(false))}>
                 <Switch>
-                    <Route path={`${path}/${PATH.createQuestion}`} component={CreateQuestionPage}/>
-                    <Route path={`${path}/${PATH.createTest}`} component={CreateTestPage}/>
-                    <Route path={`${path}/${PATH.createContest}`} component={CreateContestPage}/>
-                    <Route path={`${path}/${PATH.editQuestion}`} component={EditQuestionPage}/>
-                    <Route path={`${path}/${PATH.editTest}`} component={EditTestPage}/>
-                    <Route path={`${path}/${PATH.editContest}`} component={EditContestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.createQuestion}`} component={CreateQuestionPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.createTest}`} component={CreateTestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.createContest}`} component={CreateContestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.editQuestion}`} component={EditQuestionPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.editTest}`} component={EditTestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.editContest}`} component={EditContestPage}/>
                 </Switch>
             </Dialog>
         </div>

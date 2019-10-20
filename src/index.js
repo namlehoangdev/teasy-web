@@ -4,25 +4,30 @@ import {Switch, Route} from 'react-router-dom';
 import {ConnectedRouter} from "connected-react-router";
 
 import {Provider} from 'react-redux';
-import {LandingPage, AdminHomePage, PlaygroundHomePage} from './pages';
+import {LandingPage, AdminHomePage, PlaygroundHomePage, NotFoundPage} from './pages';
+import {PersistGate} from 'redux-persist/integration/react'
 import {MuiThemeProvider} from '@material-ui/core';
 import themes from './themes';
-import {history, store} from './configurations';
+import {history, store, persistor} from './configurations';
 import * as serviceWorker from './serviceWorker';
 import './index.scss';
+import {PAGE_PATHS} from "./consts";
 
 
 ReactDOM.render(
     <Provider store={store}>
-        <MuiThemeProvider theme={themes.default}>
-            <ConnectedRouter history={history}>
-                <Switch>
-                    <Route exact path="/" component={LandingPage}/>
-                    <Route path="/admin" component={AdminHomePage}/>
-                    <Route path="/playground" component={PlaygroundHomePage}/>
-                </Switch>
-            </ConnectedRouter>
-        </MuiThemeProvider>
+        <PersistGate loading={null} persistor={persistor}>
+            <MuiThemeProvider theme={themes.default}>
+                <ConnectedRouter history={history}>
+                    <Switch>
+                        <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
+                        <Route path={PAGE_PATHS.admin} component={AdminHomePage}/>
+                        <Route path={PAGE_PATHS.playground} component={PlaygroundHomePage}/>
+                        <Route path="*" component={NotFoundPage}/>
+                    </Switch>
+                </ConnectedRouter>
+            </MuiThemeProvider>
+        </PersistGate>
     </Provider>,
     document.getElementById('root')
 );

@@ -20,6 +20,8 @@ const SAVE = 'Lưu';
 const FOLDER = 'Thư mục';
 const KIND = 'Loại';
 const START_DATE = 'Ngày bắt đầu';
+const YOUR_PAGE_NOT_EXISTS = 'Trang của bạn tìm kiếm không tồn tại';
+const NOT_FOUND_NOTE = 'Có vẻ như liên kết đã bị hỏng hoặc đã bị quản trị viên xóa bỏ';
 
 
 export const TEXT = {
@@ -44,6 +46,8 @@ export const TEXT = {
     update: UPDATE,
     folder: FOLDER,
     kind: KIND,
-    startDate: START_DATE
+    startDate: START_DATE,
+    yourPageNotExist: YOUR_PAGE_NOT_EXISTS,
+    notFoundNote: NOT_FOUND_NOTE
 };
 

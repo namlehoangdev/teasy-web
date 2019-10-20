@@ -1,8 +1,10 @@
 import ApiInstance from './api-config';
 
-export const postLoginByFacebookAPI = (params) => ApiInstance.post('Users/Login', params);
+export const postLoginByThirdParty = (params) => ApiInstance.post('Users/Login', params);
+
+export const postRegisterByThirdPartyAPI = (params) => ApiInstance.post('Users/Register', params);
 
 
-export const postRegisterByFacebookAPI = (params) => ApiInstance.post('Users/Login', params);
+
 
 

@@ -2,7 +2,7 @@ import {takeLatest, call, put} from 'redux-saga/effects';
 import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import {getOwnedContestsAPI} from '../apis';
 import {} from '../actions';
-import {POST_LOGIN_BY_FACEBOOK_API,} from "../actions/action-types";
+import {POST_LOGIN_BY_THIRD_PARTY,} from "../actions/action-types";
 import {updateOwnedContests} from "../actions";
 
 
@@ -25,7 +25,7 @@ export function* getOwnContestsSaga() {
 
 /*-----saga watchers-----*/
 function* getOwnContestsWatcherSaga() {
-    yield takeLatest(POST_LOGIN_BY_FACEBOOK_API, getOwnContestsSaga);
+    yield takeLatest(POST_LOGIN_BY_THIRD_PARTY, getOwnContestsSaga);
 }
 
 export default [

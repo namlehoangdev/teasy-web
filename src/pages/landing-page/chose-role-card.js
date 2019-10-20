@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Button, Grid, makeStyles} from '@material-ui/core';
-// import {useDispatch, useSelector} from "react-redux";
-import {TEXT, PATH} from "../../consts";
+import {TEXT, PAGE_PATHS, LOGIN_MODE} from "../../consts";
 import {useHistory} from "react-router";
+import {updateLoginMode} from "../../actions";
+import {useDispatch} from "react-redux";
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,16 +21,16 @@ const useStyles = makeStyles(theme => ({
 function ChoseRoleCard() {
     const classes = useStyles();
     const history = useHistory();
-    useEffect(() => {
-        //promotionId && dispatch(readPromotion(promotionId));
-    }, []);
+    const dispatch = useDispatch();
 
     function handleAdminPageClick() {
-        history.push(PATH.admin);
+        dispatch(updateLoginMode(LOGIN_MODE.admin));
+        history.push(PAGE_PATHS.admin);
     }
 
     function handlePlaygroundClick() {
-        history.push(PATH.playground);
+        dispatch(updateLoginMode(LOGIN_MODE.playground));
+        history.push(PAGE_PATHS.playground);
     }
 
 
