@@ -1,8 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Paper, Link, Grid, Box, Typography, makeStyles, LinearProgress, Button} from '@material-ui/core';
 import {useDispatch, useSelector} from "react-redux";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import {TEXT} from "../../consts/text-consts";
 import AuthenticationCard from "./authentication-card";

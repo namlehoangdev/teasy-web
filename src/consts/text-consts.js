@@ -24,6 +24,7 @@ const YOUR_PAGE_NOT_EXISTS = 'Trang của bạn tìm kiếm không tồn tại';
 const NOT_FOUND_NOTE = 'Có vẻ như liên kết đã bị hỏng hoặc đã bị quản trị viên xóa bỏ';
 const CANCEL = 'Huỷ bỏ';
 const DISMISS = 'Bỏ qua';
+const TYPE = 'Loại';
 
 
 export const TEXT = {
@@ -52,6 +53,7 @@ export const TEXT = {
     yourPageNotExist: YOUR_PAGE_NOT_EXISTS,
     notFoundNote: NOT_FOUND_NOTE,
     cancel: CANCEL,
-    dismiss: DISMISS
+    dismiss: DISMISS,
+    type: TYPE
 };
 

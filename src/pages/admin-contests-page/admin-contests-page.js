@@ -24,7 +24,6 @@ import {
     NavigateNext as NavigateNextIcon
 } from '@material-ui/icons'
 import {getOwnContests, setOpenAdminFullscreenDialog} from "../../actions";
-import adminReducer from "../../reducers/admin-reducer";
 import useClickAndDoubleClick from "../../utils/use-click-and-double-click";
 
 function createData(id, name, isFolder, startDate, status) {
@@ -112,8 +111,8 @@ export default function AdminContestPage() {
     const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
     const {contests: contestReducer} = useSelector(state => state.adminReducer);
-    const {entities, result: ownedContestIds} = contestReducer;
-    const {contests} = entities;
+    // const {entities, result: ownedContestIds} = contestReducer;
+    // const {contests} = entities;
 
     const [selectedItems, setSelectedItems] = React.useState([]);
     const [enableSelectMode, setEnableSelectMode] = React.useState(false);
@@ -230,7 +229,7 @@ export default function AdminContestPage() {
                                        order={order} orderBy={orderBy}
                                        onSelectAllClick={handleSelectAllClick}
                                        onRequestSort={handleRequestSort}
-                                       rowCount={ownedContestIds.length}/>
+                                       rowCount={rows.length}/>
                     <TableBody> {stableSort(rows, getSorting(order, orderBy)).map(renderContestTableRows)} </TableBody>
                 </Table>
             </div>
