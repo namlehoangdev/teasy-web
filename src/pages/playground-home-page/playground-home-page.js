@@ -5,8 +5,6 @@ import {
     AppBar, Toolbar, IconButton, Drawer, Divider,
     ListItem, List, ListItemIcon, ListItemText, Fab, Popover
 } from '@material-ui/core';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import {TEXT} from "../../consts/text-consts";
 import {Route, Switch} from "react-router";
 import {

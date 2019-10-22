@@ -28,7 +28,8 @@
     "redux": "^4.0.4",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.1.1",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "slick-carousel": "^1.8.1"
   },
   "scripts": {
     "start": "HTTPS=true react-scripts start",
