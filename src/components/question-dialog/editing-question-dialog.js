@@ -18,6 +18,9 @@ import {
 import {useSelector, useDispatch} from "react-redux";
 import {QUESTION_DIALOG_MODE, QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
 import {updateEditingQuestion} from "../../actions";
+import RichEditor from "../rich-editor/rich-editor";
+import {EditorState, convertFromRaw, ContentState} from 'draft-js';
+import EditingQuiz from "./editing-quiz";
 
 
 const QUESTION_DIALOG_TITLE = {
@@ -31,28 +34,49 @@ const useStyles = makeStyles(theme => ({
     selectTypeBox: {width: '100%'}
 }));
 
-export default function QuestionDialog() {
+export default function EditingQuestionDialog() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {editingQuestion, questionDialog} = useSelector(state => state.adminReducer);
-    const {mode: questionDialogMode, isOpen} = questionDialog;
-    const {type: questionTypeCode = ''} = editingQuestion;
+    const {mode: questionDialogMode, isOpen,} = questionDialog;
+    const {type: questionTypeCode = '', content} = editingQuestion;
 
     function handleCloseDialog() {
         console.log('close question dialog');
     }
 
     function handleChangeQuestionType(event) {
-        // setValues(oldValues => ({
-        //     ...oldValues,
-        //     [event.target.name]: event.target.value,
-        // }));
         dispatch(updateEditingQuestion({type: event.target.value}))
     }
 
     function renderQuestionTypeMenu(questionTypeCode) {
         return (<MenuItem value={questionTypeCode}>{QUESTION_TYPE_TEXT[questionTypeCode]}</MenuItem>)
     }
+
+
+    if (!content) {
+        dispatch(updateEditingQuestion({content: EditorState.createEmpty()}));
+    }
+
+    function handleEditorChange(event) {
+        dispatch(updateEditingQuestion({content: event}));
+    }
+
+    function renderQuestionFormByType() {
+        switch (questionTypeCode) {
+            case QUESTION_TYPE_CODES.quiz:
+                return <EditingQuiz/>;
+            case QUESTION_TYPE_CODES.essay:
+                return <div/>;
+            case QUESTION_TYPE_CODES.fillBlank:
+                return <div/>;
+            case QUESTION_TYPE_CODES.matching:
+                return <div/>;
+            case QUESTION_TYPE_CODES.quizMulti:
+                return <div/>;
+        }
+    }
+
 
     return (
         <Dialog open={isOpen} onClose={handleCloseDialog} aria-labelledby="create-dialog-title"
@@ -73,6 +97,8 @@ export default function QuestionDialog() {
                     </Grid>
                 </Grid>
                 <TextField autoFocus margin="dense" label="lk" type="email" fullWidth/>
+                <RichEditor editorState={content || null} onChange={handleEditorChange}/>
+                {renderQuestionFormByType()}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>
