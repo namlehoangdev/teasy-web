@@ -1,17 +1,14 @@
-import {ACTION_STATE, POST_LOGIN, POST_REGISTER} from './action-types';
+import {
+    POST_LOGIN_BY_THIRD_PARTY,
+    POST_REGISTER_BY_THIRD_PARTY,
+    action,
+    LOGIN, UPDATE_LOGIN_MODE,
+} from './action-types';
 
-function action(type, payload = {}) {
-    return {type, ...payload};
-}
+export const postLoginByThirdParty = (data) => action(POST_LOGIN_BY_THIRD_PARTY, data);
 
-export const postLogin = {
-    request: () => action(POST_LOGIN[ACTION_STATE.request]),
-    success: (response) => action(POST_LOGIN[ACTION_STATE.success], response),
-    failure: (error) => action(POST_LOGIN[ACTION_STATE.failure], {error})
-};
+export const postRegisterThirdParty = (data) => action(POST_REGISTER_BY_THIRD_PARTY, data);
 
-export const postRegister = {
-    request: () => action(POST_REGISTER[ACTION_STATE.request]),
-    success: (response) => action(POST_REGISTER[ACTION_STATE.success], response),
-    failure: (error) => action(POST_REGISTER[ACTION_STATE.failure], {error})
-};
+export const login = (payload) => action(LOGIN, payload);
+
+export const updateLoginMode = (payload) => action(UPDATE_LOGIN_MODE, payload);

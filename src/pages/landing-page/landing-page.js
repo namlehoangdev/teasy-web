@@ -1,24 +1,21 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Paper, Link, Grid, Box, Typography, makeStyles, LinearProgress, Button} from '@material-ui/core';
-// import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import {TEXT} from "../../consts/text-consts";
-import Logo from "../../components/logo/logo";
 import AuthenticationCard from "./authentication-card";
 import ChoseRoleCard from "./chose-role-card";
 import {disabledStyleWrapper} from "../../utils";
+import {postLoginByThirdParty} from "../../actions";
+import {THIRD_PARTY} from "../../consts";
+import {showMiniLoading} from "../../actions/ui-effect-actions";
 
 
 const useStyles = makeStyles(theme => ({
-        '@global': {
-            body: {
-                backgroundColor: theme.palette.common.white,
-            },
-        },
         root: {
-            backgroundColor: theme.palette.common.white,
+            backgroundColor: theme.palette.background.default,
             height: '100vh',
             display: 'inline-block',
             flexDirection: 'column',
@@ -35,9 +32,9 @@ const useStyles = makeStyles(theme => ({
             position: 'relative'
         },
         logo: {
-            margin: theme.spacing(1),
-            backgroundColor: theme.palette.common.white,
-            height: theme.spacing(8)
+            margin: theme.spacing(2),
+            color: theme.palette.primary.main,
+            fontFamily: 'logofont'
         },
         backBtn: {position: 'absolute', bottom: theme.spacing(2), left: theme.spacing(4)}
     }))
@@ -47,7 +44,7 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://fb.com//phanmemtienichsinhvien"> {TEXT.appName} </Link>{' '}
+            <Link color="inherit" href="https://fb.com/phanmemtienichsinhvien"> {TEXT.appName} </Link>{' '}
             {new Date().getFullYear()} {'.'}
         </Typography>
     );
@@ -56,32 +53,46 @@ function Copyright() {
 
 function LandingPage() {
     //const promotionId = (match.params && match.params.id) || null;
-    // const promotionsMap = useSelector(state => state.promotions.promotionsMap || {});
-    const [isCardLoading, setCardLoading] = useState(false);
+    const {isShowMiniLoading} = useSelector(state => state.uiEffectReducer);
+    const {token} = useSelector(state => state.authReducer);
     const [slideIndex, setSlideIndex] = useState(0);
     const sliderRef = useRef(null);
     const classes = useStyles();
-    //const dispatch = useDispatch();
+    const dispatch = useDispatch();
     useEffect(() => {
         //promotionId && dispatch(readPromotion(promotionId));
     }, []);
 
+
     function handleFacebookCallback(data) {
-        // console.log(data);
-        setCardLoading(false);
         if (data && data.accessToken) {
-            sliderRef.current.slickGoTo(1)
+            console.log(data);
+            dispatch(postLoginByThirdParty({...data, thirdParty: THIRD_PARTY.facebook}));
         }
     }
 
-    function handleFacebookClick(data) {
-        setCardLoading(true);
+    function handleGoogleSuccess(data) {
+        console.log('google login success: ', data);
+        dispatch(postLoginByThirdParty({...data, thirdParty: THIRD_PARTY.google}));
+    }
+
+    function handleGoogleFailure(data) {
+        console.log('google login failure: ', data);
+    }
+
+    function handleThirdPartyClick(data) {
+        dispatch(showMiniLoading());
         console.log(data);
     }
 
     function handleGoBack() {
-        sliderRef.current.slickGoTo(0)
+        sliderRef.current && sliderRef.current.slickGoTo(0)
     }
+
+    if (token) {
+        sliderRef.current && sliderRef.current.slickGoTo(1)
+    }
+
 
     const settings = {
         infinite: false,
@@ -96,8 +107,8 @@ function LandingPage() {
 
     return (
         <Grid container component="main" className={classes.root}>
-            <Typography component="h1" variant="h1" align="center" color="textPrimary">
-                <Logo variant={classes.logo}/>
+            <Typography component="h1" variant="h1" align="center" color="textPrimary" className={classes.logo}>
+                {TEXT.appName}
             </Typography>
             <Grid item xs={12} sm={8} md={5} elevation={6} className={classes.description}>
                 <Typography variant="h5" align="center" color="textSecondary" paragraph>
@@ -105,10 +116,13 @@ function LandingPage() {
                 </Typography>
             </Grid>
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.paper}>
-                {isCardLoading && <LinearProgress/>}
-                <Slider ref={sliderRef} {...settings} style={disabledStyleWrapper(isCardLoading)}>
+                {isShowMiniLoading && <LinearProgress/>}
+                <Slider ref={sliderRef} {...settings} style={disabledStyleWrapper(isShowMiniLoading)}>
                     <AuthenticationCard onFacebookCallback={handleFacebookCallback}
-                                        onFacebookClick={handleFacebookClick}/>
+                                        onThirdPartyClick={handleThirdPartyClick}
+                                        onGoogleSuccess={handleGoogleSuccess}
+                                        onGoogleFailure={handleGoogleFailure}
+                    />
                     <ChoseRoleCard onGoBack={handleGoBack}/>
                 </Slider>
                 {slideIndex === 1 && <Button

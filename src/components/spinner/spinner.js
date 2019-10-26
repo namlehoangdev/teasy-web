@@ -1,5 +1,4 @@
 import React from 'react';
-import 'spinkit/css/spinners/7-three-bounce.css';
 import './spinner.scss';
 
 export default function Spinner() {

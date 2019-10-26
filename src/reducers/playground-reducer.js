@@ -1,4 +1,4 @@
-import {ACTION_STATE} from '../actions/action-types';
+import {API_STATUS} from '../actions/action-types';
 
 const initialState = {
     isLoading: false,

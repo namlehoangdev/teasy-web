@@ -1,40 +1,54 @@
 import axios from 'axios';
+import {store} from '../configurations';
+import _ from 'lodash';
 
+export const TEASY_URL = 'https://serverblockchain.azurewebsites.net/api/';
 export const BASE_URL = {
-    development: '',//'https://qcpromotion.zalopay.vn',
-    production: 'https://promotion.zalopay.vn'
+    development: 'https://serverblockchain.azurewebsites.net/api/',
+    production: 'https://google.com.vn'
 };
 
 function getUrl(config) {
     return config.baseURL ? config.url.replace(config.baseURL, '') : config.url;
 }
 
-let instance = axios.create({
-    baseURL: BASE_URL[process.env.NODE_ENV],
+const axiosInstance = axios.create({
+    baseURL: TEASY_URL,
     timeout: 10000,
+    // validateStatus: function (status) {
+    //     return status >= 200 && status < 300;
+    // },
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
     }
 });
 
-instance.interceptors.request.use(
+axiosInstance.interceptors.request.use(
     function (config) {
-        //for development
-        console.log('%c ' + config.method.toUpperCase() + ' - ' + getUrl(config), 'color: #0086b3; font-weight: bold', config);
+        console.log('%c ' + config.method.toUpperCase() + ' - ' + config.baseURL + config.url, 'color: #0086b3; font-weight: bold', config);
+        const storeState = store.getState();
+        const token = _.get(storeState, "authReducer.profile.token", null);
+        if (token) {
+            config.headers.Authorization = token;
+        }
         return config;
     },
     function (error) {
+        console.log('%cAPI REQUEST FAILURE: ', 'color: #ff5c20; font-weight: bold', error);
         return Promise.reject(error);
     }
 );
 
-instance.interceptors.response.use(
+axiosInstance.interceptors.response.use(
     function (response) {
-        return response.data;
+        console.log('%cAPI RESPONSE SUCCESS: ', 'color: #2dff70; font-weight: bold', response);
+        return {data: response.data};
     },
     function (error) {
-        return Promise.reject(error);
-    }
-);
+        console.error('%cAPI RESPONSE FAILURE: ', 'color: #B00020; font-weight: bold', error.response);
+        return Promise.reject(error.response);
+    });
 
-export default instance;
+
+export default axiosInstance;

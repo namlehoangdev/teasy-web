@@ -11,5 +11,8 @@ export {default as AdminTestsPage} from './admin-tests-page';
 export {default as AdminQuestionsPage} from './admin-questions-page';
 
 export {default as LandingPage} from './landing-page';
+export {default as AdminHomePage} from './admin-home-page';
+export {default as PlaygroundHomePage} from './playground-home-page';
+export {default as NotFoundPage} from './not-found-page';
 
 
