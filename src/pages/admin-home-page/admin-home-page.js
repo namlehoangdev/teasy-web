@@ -142,6 +142,7 @@ export default function AdminHomePage() {
 
     function handleCreateItemClick(event, item) {
         if (item.key === 2) {
+            setCreatePopAnchorEl(null);
             dispatch(openCreateQuestionDialog());
             return;
         }

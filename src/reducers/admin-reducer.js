@@ -1,4 +1,5 @@
 import {
+    CANCEL_CREATE_QUESTION_DIALOG,
     OPEN_CREATE_QUESTION_DIALOG,
     SET_OPEN_ADMIN_FULLSCREEN_DIALOG, UPDATE_EDITING_CONTEST, UPDATE_EDITING_QUESTION, UPDATE_EDITING_TEST,
     UPDATE_OWNED_CONTESTS
@@ -22,7 +23,7 @@ const initialState = {
     questions: {},
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
-        isOpen: true
+        isOpen: false
     },
     editingContest: {},
     editingTest: {},
@@ -44,6 +45,10 @@ export default function adminReducer(state = initialState, action) {
                 return;
             case OPEN_CREATE_QUESTION_DIALOG:
                 draft.questionDialog = {isOpen: true, mode: QUESTION_DIALOG_MODE.create};
+                draft.editingQuestion = {};
+                return;
+            case CANCEL_CREATE_QUESTION_DIALOG:
+                draft.questionDialog = {isOpen: false, mode: null};
                 draft.editingQuestion = {};
                 return;
             case UPDATE_EDITING_QUESTION:
