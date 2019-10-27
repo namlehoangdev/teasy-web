@@ -25,6 +25,7 @@ const NOT_FOUND_NOTE = 'Có vẻ như liên kết đã bị hỏng hoặc đã b
 const CANCEL = 'Huỷ bỏ';
 const DISMISS = 'Bỏ qua';
 const TYPE = 'Loại';
+const ADD_MORE_ANSWER = 'Thêm câu trả lời';
 
 
 export const TEXT = {
@@ -54,6 +55,7 @@ export const TEXT = {
     notFoundNote: NOT_FOUND_NOTE,
     cancel: CANCEL,
     dismiss: DISMISS,
-    type: TYPE
+    type: TYPE,
+    addMoreAnswer: ADD_MORE_ANSWER
 };
 

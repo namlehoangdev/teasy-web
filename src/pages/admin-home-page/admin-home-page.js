@@ -26,7 +26,7 @@ import {useRouteMatch, useHistory} from "react-router-dom";
 import {PAGE_PATHS} from "../../consts";
 import {openCreateQuestionDialog, setOpenAdminFullscreenDialog} from "../../actions";
 import {disabledStyleWrapper} from "../../utils";
-import QuestionDialog from "../../components/question-dialog/question-dialog";
+import EditingQuestionDialog from "../../components/question-dialog/editing-question-dialog";
 
 const drawerWidth = 240;
 
@@ -142,6 +142,7 @@ export default function AdminHomePage() {
 
     function handleCreateItemClick(event, item) {
         if (item.key === 2) {
+            setCreatePopAnchorEl(null);
             dispatch(openCreateQuestionDialog());
             return;
         }
@@ -233,7 +234,7 @@ export default function AdminHomePage() {
                     <Route path={`${path}/${PAGE_PATHS.editContest}`} component={EditContestPage}/>
                 </Switch>
             </Dialog>
-            <QuestionDialog/>
+            <EditingQuestionDialog/>
         </div>
     );
 }
