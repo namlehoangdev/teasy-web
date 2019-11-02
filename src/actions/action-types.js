@@ -63,4 +63,5 @@ export const SET_OPEN_ADMIN_FULLSCREEN_DIALOG = 'SET_OPEN_CREATE_SWITCH_DIALOG';
 /*------------------------------------------------SETTING------------------------------------------------*/
 
 export const UPDATE_THEME_MODE = 'UPDATE_THEME_MODE';
+export const UPDATE_LANGUAGE_MODE = 'UPDATE_LANGUAGE_MODE';
 

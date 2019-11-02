@@ -13,9 +13,10 @@ import { THIRD_PARTY } from "../../consts";
 import { showMiniLoading } from "../../actions/ui-effect-actions";
 import { ToggleButton } from '@material-ui/lab';
 import { Brightness7 as Brightness7Icon, Brightness4 as Brightness4Icon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
-import { updateThemeMode } from '../../actions/setting-actions';
+import { updateThemeMode, updateLanguageMode } from '../../actions/setting-actions';
+import { LANGUAGE } from '../../consts/index';
 
-const options = ['VN', 'EN']
+const options = Object.keys(LANGUAGE).reverse();
 
 
 const useStyles = makeStyles(theme => ({
@@ -70,13 +71,30 @@ const useStyles = makeStyles(theme => ({
   ;
 
 function Copyright() {
+  const { language } = useSelector(state => state.settingReducer);
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://fb.com/phanmemtienichsinhvien"> {TEXT.appName} </Link>{' '}
+      <Link color="inherit" href="https://fb.com/phanmemtienichsinhvien"> {language.appName} </Link>{' '}
       {new Date().getFullYear()} {'.'}
     </Typography>
   );
+}
+
+function ThemeSetting() {
+  const { isDark } = useSelector(state => state.settingReducer);
+  const dispatch = useDispatch();
+  const classes = useStyles();
+  return <ToggleButton
+    className={classes.themeSetting}
+    value="check"
+    selected={isDark}
+    onChange={() => {
+      dispatch(updateThemeMode({ isDark: !isDark }))
+    }}
+  >
+    {isDark === true ? <Brightness4Icon color="primary" /> : <Brightness7Icon color="primary" />}
+  </ToggleButton>
 }
 
 
@@ -84,7 +102,7 @@ function LandingPage() {
   //const promotionId = (match.params && match.params.id) || null;
   const { isShowMiniLoading } = useSelector(state => state.uiEffectReducer);
   const { token } = useSelector(state => state.authReducer);
-  const { isDark } = useSelector(state => state.settingReducer);
+  const { language } = useSelector(state => state.settingReducer);
   const [slideIndex, setSlideIndex] = useState(0);
   const sliderRef = useRef(null);
   const classes = useStyles();
@@ -131,6 +149,7 @@ function LandingPage() {
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
+    dispatch(updateLanguageMode({ language: LANGUAGE[event.target.innerText] }))
     setOpen(false);
   };
 
@@ -162,16 +181,7 @@ function LandingPage() {
   return (
     <Grid container component="main" className={classes.root}>
       <Grid item xs={12} sm={8} md={5} elevation={6} className={classes.setting}>
-        <ToggleButton
-          className={classes.themeSetting}
-          value="check"
-          selected={isDark}
-          onChange={() => {
-            dispatch(updateThemeMode({ isDark: !isDark }))
-          }}
-        >
-          {isDark === true ? <Brightness4Icon color="primary" /> : <Brightness7Icon color="primary" />}
-        </ToggleButton>
+        <ThemeSetting />
         <Button className={classes.languageSetting} variant="outlined" color={"primary"} onClick={handleToggle}>{options[selectedIndex]}</Button>
         <Popper className={classes.languageOptions} open={open} anchorEl={anchorRef.current} transition disablePortal>
           {({ TransitionProps, placement }) => (
@@ -202,11 +212,11 @@ function LandingPage() {
         </Popper>
       </Grid>
       <Typography component="h1" variant="h1" align="center" color="textPrimary" className={classes.logo}>
-        {TEXT.appName}
+        {language.appName}
       </Typography>
       <Grid item xs={12} sm={8} md={5} elevation={6} className={classes.description}>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          {TEXT.appDescription}
+          {language.appDescription}
         </Typography>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.paper}>
@@ -221,7 +231,7 @@ function LandingPage() {
         </Slider>
         {slideIndex === 1 && <Button
           onClick={handleGoBack}
-          color="primary" className={classes.backBtn}>{TEXT.goBack}</Button>}
+          color="primary" className={classes.backBtn}>{language.goBack}</Button>}
       </Grid>
       <Box align='center' mt={5}> <Copyright /> </Box>
     </Grid>
