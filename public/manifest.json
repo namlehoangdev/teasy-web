@@ -1,8 +1,8 @@
 {
   "short_name": "Teasy",
-  "name": "Teasy - Test Easy",
+  "name": "Online Test | TEASY | Vietnam",
   "icons": [],
-  "start_url": ".",
+  "start_url": "https://teasy-1571463510829.firebaseapp.com/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
