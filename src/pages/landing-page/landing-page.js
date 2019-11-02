@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Paper, Link, Grid, Box, Typography, makeStyles, LinearProgress, Button, ButtonGroup, Grow, Popper, ClickAwayListener, MenuList, MenuItem } from '@material-ui/core';
+import { Paper, Link, Grid, Box, Typography, makeStyles, LinearProgress, Button, ButtonGroup, Grow, Popper, ClickAwayListener, MenuList, MenuItem, Fab, IconButton } from '@material-ui/core';
 import { useDispatch, useSelector } from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -44,11 +44,8 @@ const useStyles = makeStyles(theme => ({
   backBtn: { position: 'absolute', bottom: theme.spacing(2), left: theme.spacing(4) },
   themeSetting: {
     position: 'absolute',
-    top: theme.spacing(2),
-    right: theme.spacing(11),
-    width: theme.spacing(4.5),
-    height: theme.spacing(4.5),
-    borderColor: 'rgba(25, 118, 210, 0.5)',
+    top: theme.spacing(0.75),
+    right: theme.spacing(5.3),
   },
   languageSetting: {
     position: 'absolute',
@@ -85,16 +82,16 @@ function ThemeSetting() {
   const { isDark } = useSelector(state => state.settingReducer);
   const dispatch = useDispatch();
   const classes = useStyles();
-  return <ToggleButton
+  return <IconButton
+    color={"primary"}
     className={classes.themeSetting}
     value="check"
-    selected={isDark}
-    onChange={() => {
+    onClick={() => {
       dispatch(updateThemeMode({ isDark: !isDark }))
     }}
   >
     {isDark === true ? <Brightness4Icon color="primary" /> : <Brightness7Icon color="primary" />}
-  </ToggleButton>
+  </IconButton>
 }
 
 
@@ -182,7 +179,7 @@ function LandingPage() {
     <Grid container component="main" className={classes.root}>
       <Grid item xs={12} sm={8} md={5} elevation={6} className={classes.setting}>
         <ThemeSetting />
-        <Button className={classes.languageSetting} variant="outlined" color={"primary"} onClick={handleToggle}>{options[selectedIndex]}</Button>
+        <IconButton size={'small'} className={classes.languageSetting} color={"primary"} onClick={handleToggle}>{options[selectedIndex]}</IconButton>
         <Popper className={classes.languageOptions} open={open} anchorEl={anchorRef.current} transition disablePortal>
           {({ TransitionProps, placement }) => (
             <Grow
