@@ -15,6 +15,7 @@ import { ToggleButton } from '@material-ui/lab';
 import { Brightness7 as Brightness7Icon, Brightness4 as Brightness4Icon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 import { updateThemeMode, updateLanguageMode } from '../../actions/setting-actions';
 import { LANGUAGE } from '../../consts/index';
+import { Helmet } from "react-helmet";
 
 const options = Object.keys(LANGUAGE).reverse();
 
@@ -177,6 +178,11 @@ function LandingPage() {
 
   return (
     <Grid container component="main" className={classes.root}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Online Test | TEASY | Vietnam</title>
+        <link rel="canonical" href="https://teasy-1571463510829.firebaseapp.com/" />
+      </Helmet>
       <Grid item xs={12} sm={8} md={5} elevation={6} className={classes.setting}>
         <ThemeSetting />
         <IconButton size={'small'} className={classes.languageSetting} color={"primary"} onClick={handleToggle}>{options[selectedIndex]}</IconButton>
