@@ -4,20 +4,20 @@ const SUCCESS = "SUCCESS";
 const FAILURE = "FAILURE";
 
 export const API_STATUS = {
-    request: REQUEST,
-    success: SUCCESS,
-    failure: FAILURE
+  request: REQUEST,
+  success: SUCCESS,
+  failure: FAILURE
 };
 
 function createRequestType(base) {
-    return [REQUEST, SUCCESS, FAILURE].reduce((accumulator, currentActionState) => {
-        accumulator[currentActionState] = `${base}_${currentActionState}`;
-        return accumulator;
-    }, {});
+  return [REQUEST, SUCCESS, FAILURE].reduce((accumulator, currentActionState) => {
+    accumulator[currentActionState] = `${base}_${currentActionState}`;
+    return accumulator;
+  }, {});
 }
 
 export function action(type, payload = {}) {
-    return {type, payload};
+  return { type, payload };
 }
 
 /*------------------------------------------------UI-EFFECTS------------------------------------------------*/
@@ -60,8 +60,7 @@ export const PUT_OWN_QUESTIONS = createRequestType('PUT_OWN_QUESTIONS');
 export const SET_OPEN_ADMIN_FULLSCREEN_DIALOG = 'SET_OPEN_CREATE_SWITCH_DIALOG';
 
 
-/*------------------------------------------------PLAYGROUND------------------------------------------------*/
+/*------------------------------------------------SETTING------------------------------------------------*/
 
-
-
+export const UPDATE_THEME_MODE = 'UPDATE_THEME_MODE';
 
