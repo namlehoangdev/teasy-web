@@ -2,7 +2,7 @@ import {
     CANCEL_CREATE_QUESTION_DIALOG,
     OPEN_CREATE_QUESTION_DIALOG,
     SET_OPEN_ADMIN_FULLSCREEN_DIALOG, UPDATE_EDITING_CONTEST, UPDATE_EDITING_QUESTION, UPDATE_EDITING_TEST,
-    UPDATE_OWNED_CONTESTS
+    UPDATE_OWNED_CONTESTS, LOGOUT
 } from '../actions/action-types';
 // import {normalize, schema} from 'normalizr';
 // import fakeContests from './fake-contests';
@@ -59,6 +59,8 @@ export default function adminReducer(state = initialState, action) {
                 return;
             case UPDATE_EDITING_TEST:
                 draft.editingTest = {...draft.editingTest, ...payload};
+            case LOGOUT:
+                return initialState;
                 return;
         }
     });
