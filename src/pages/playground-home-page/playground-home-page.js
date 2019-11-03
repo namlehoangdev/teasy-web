@@ -224,7 +224,6 @@ export default function PlaygroundHomePage() {
                         {options.map((option, index) => (
                           <MenuItem
                             key={option}
-                            disabled={index === 2}
                             selected={index === selectedAvatarOptions}
                             onClick={event => handleMenuItemClick(event, index)}
                           >
