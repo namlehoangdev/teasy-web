@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import {
   makeStyles, useTheme, CssBaseline, Typography,
   AppBar, Toolbar, IconButton, Drawer, Divider,
-  ListItem, List, ListItemIcon, ListItemText, Fab, Popover
+  ListItem, List, ListItemIcon, ListItemText, Fab, Popover, Avatar, Button, Popper, Grow, Paper, ClickAwayListener, MenuList, MenuItem
 } from '@material-ui/core';
 import { Route, Switch } from "react-router";
 import {
@@ -26,8 +26,12 @@ import settingReducer from '../../reducers/setting-reducer';
 import PlaygroundAllContestsPage from '../playground-all-contests-page';
 import PlaygroundContestsHistoryPage from '../playground-contests-history-page';
 import PlaygroundMySharedContestsPage from '../playground-my-shared-contests-page';
+import authReducer from '../../reducers/auth-reducer';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
+
+const options = ['Edit profile', 'Settings', 'Sign out'];
 
 const useStyles = makeStyles(theme => ({
   root: { display: 'flex' },
@@ -54,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end'
+    justifyContent: 'center'
   },
   content: {
     flexGrow: 1,
@@ -73,7 +77,22 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 0,
   },
   fab: { margin: theme.spacing(1) },
-  extendedIcon: { marginRight: theme.spacing(1) }
+  extendedIcon: { marginRight: theme.spacing(1) },
+  avatar: {
+    marginLeft: 'auto',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatarOptions: {
+    position: 'absolute',
+    top: theme.spacing(8),
+    right: theme.spacing(0)
+  },
+  goback: {
+    marginTop: 'auto'
+  }
 }));
 
 
@@ -92,6 +111,30 @@ export default function PlaygroundHomePage() {
   const openCreatePop = Boolean(createPopAnchorEl);
   const createPopID = openCreatePop ? 'create-pop-id' : null;
   const { language } = useSelector(state => state.settingReducer)
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+  const [selectedAvatarOptions, setselectedAvatarOptions] = useState(0);
+  const { profile } = useSelector(state => state.authReducer);
+
+
+  const handleMenuItemClick = (event, index) => {
+    setselectedAvatarOptions(index);
+    setOpen(false);
+    console.log(profile.name)
+  };
+
+  const handleToggle = () => {
+    setOpen(prevOpen => !prevOpen);
+  };
+
+  const handleClose = event => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
 
 
   const listCreateButtonMap = [
@@ -156,13 +199,53 @@ export default function PlaygroundHomePage() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>{appBarTitle}</Typography>
+          <div className={classes.avatar}>
+            <Typography variant="h6" noWrap>{profile.name}</Typography>
+            <Button
+              color="primary"
+              size="small"
+              aria-owns={open ? 'menu-list-grow' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+            >
+              <Avatar alt="Remy Sharp" src='https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg' />
+            </Button>
+            <Popper className={classes.avatarOptions} open={open} anchorEl={anchorRef.current} transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                  }}
+                >
+                  <Paper id="menu-list-grow">
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList>
+                        {options.map((option, index) => (
+                          <MenuItem
+                            key={option}
+                            disabled={index === 2}
+                            selected={index === selectedAvatarOptions}
+                            onClick={event => handleMenuItemClick(event, index)}
+                          >
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer className={classes.drawer} classes={{ paper: classes.drawerPaper }}
         variant="persistent" anchor="left" open={openDrawer}>
         <div className={classes.drawerHeader}>
+          <Avatar alt="Remy Sharp" src='https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg' />
           <Typography variant="h6" noWrap align='left'>{language.appName}</Typography>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton size={'medium'} onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
@@ -170,6 +253,10 @@ export default function PlaygroundHomePage() {
         <List>
           {listNavItemMap.map(renderNavButton)}
         </List>
+        <Fab size='small' variant="extended" aria-label="like" className={classes.goback}>
+          <ExitToAppIcon className={classes.extendedIcon} />
+          Quay lại
+        </Fab>
       </Drawer>
       <main className={clsx(classes.content, { [classes.contentShift]: openDrawer })}>
         <div className={classes.drawerHeader} />
