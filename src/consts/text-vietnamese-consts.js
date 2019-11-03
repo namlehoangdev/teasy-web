@@ -26,6 +26,9 @@ const CANCEL = 'Huỷ bỏ';
 const DISMISS = 'Bỏ qua';
 const TYPE = 'Loại';
 const ADD_MORE_ANSWER = 'Thêm câu trả lời';
+const ALL_CONTESTS = 'Tất cả cuộc thi';
+const MY_SHARED_CONTESTS = 'Được chia sẻ với tôi';
+const CONTESTS_HISTORY = 'Kết quả thi'
 
 
 export default {
@@ -56,6 +59,9 @@ export default {
   cancel: CANCEL,
   dismiss: DISMISS,
   type: TYPE,
-  addMoreAnswer: ADD_MORE_ANSWER
+  addMoreAnswer: ADD_MORE_ANSWER,
+  allContests: ALL_CONTESTS,
+  mySharedContests: MY_SHARED_CONTESTS,
+  contestsHistory: CONTESTS_HISTORY
 };
 
