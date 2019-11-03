@@ -1,5 +1,5 @@
 import {
-    LOGIN,
+    LOGIN, LOGOUT,
     UPDATE_LOGIN_MODE
 } from '../actions/action-types';
 
@@ -20,6 +20,9 @@ export default function authReducer(state = initialState, action) {
         }
         case UPDATE_LOGIN_MODE:
             return {...state, loginMode: payload};
+
+        case LOGOUT:
+            return initialState;
         default:
             return state;
     }

@@ -1,4 +1,4 @@
-import {API_STATUS} from '../actions/action-types';
+import {API_STATUS, LOGOUT} from '../actions/action-types';
 
 const initialState = {
     isLoading: false,
@@ -11,6 +11,8 @@ export default function playgroundReducer(state = initialState, action) {
             return state;
         case 1:
             return state;
+        case LOGOUT:
+            return initialState;
         default:
             return state;
     }

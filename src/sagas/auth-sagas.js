@@ -31,7 +31,7 @@ function* postLoginByThirdPartyEffectSaga({payload}) {
         const response = yield call(APIs.postLoginByThirdParty, {thirdPartyId, token});
         yield put(login(response.data));
     } catch (error) {
-        console.log('postLoginByFacebook failed: ', error);
+        console.log('Post login by third party failed: ', error);
         const {status} = error;
         if (status === HTTP_STATUS_CODES.unauthorized) {
             console.log('prepare to call register');
@@ -52,7 +52,7 @@ export function* postRegisterThirdPartySaga({payload}) {
         const response = yield call(APIs.postRegisterByThirdPartyAPI, {thirdPartyId, token, name});
         yield put(login(response.data));
     } catch (error) {
-        console.log('postRegisterByFacebook failed: ', error);
+        console.log('Post register by third party failed: ', error);
     } finally {
         yield put(hideMiniLoading());
     }

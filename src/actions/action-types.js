@@ -4,20 +4,20 @@ const SUCCESS = "SUCCESS";
 const FAILURE = "FAILURE";
 
 export const API_STATUS = {
-  request: REQUEST,
-  success: SUCCESS,
-  failure: FAILURE
+    request: REQUEST,
+    success: SUCCESS,
+    failure: FAILURE
 };
 
 function createRequestType(base) {
-  return [REQUEST, SUCCESS, FAILURE].reduce((accumulator, currentActionState) => {
-    accumulator[currentActionState] = `${base}_${currentActionState}`;
-    return accumulator;
-  }, {});
+    return [REQUEST, SUCCESS, FAILURE].reduce((accumulator, currentActionState) => {
+        accumulator[currentActionState] = `${base}_${currentActionState}`;
+        return accumulator;
+    }, {});
 }
 
 export function action(type, payload = {}) {
-  return { type, payload };
+    return {type, payload};
 }
 
 /*------------------------------------------------UI-EFFECTS------------------------------------------------*/
@@ -30,6 +30,7 @@ export const POST_LOGIN_BY_THIRD_PARTY = 'POST_LOGIN_BY_FACEBOOK';
 export const POST_REGISTER_BY_THIRD_PARTY = 'POST_REGISTER_BY_FACEBOOK';
 export const LOGIN = 'LOGIN';
 export const UPDATE_LOGIN_MODE = 'UPDATE_LOGIN_MODE';
+export const LOGOUT = 'LOGOUT';
 
 /*------------------------------------------------USERS------------------------------------------------*/
 export const GET_ALL_USERS = createRequestType('GET_ALL_USERS');
