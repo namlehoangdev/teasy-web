@@ -2,12 +2,13 @@ import {
     CANCEL_CREATE_QUESTION_DIALOG,
     OPEN_CREATE_QUESTION_DIALOG,
     SET_OPEN_ADMIN_FULLSCREEN_DIALOG, UPDATE_EDITING_CONTEST, UPDATE_EDITING_QUESTION, UPDATE_EDITING_TEST,
-    UPDATE_OWNED_CONTESTS, LOGOUT
+    UPDATE_OWNED_CONTESTS, LOGOUT, UPDATE_ADMIN_QUESTIONS, UPDATE_ADMIN_QUESTION_BY_ID
 } from '../actions/action-types';
 // import {normalize, schema} from 'normalizr';
 // import fakeContests from './fake-contests';
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
+import fakeQuestions from './fake-questions';
 
 
 //const contestSchema = new schema.Entity('contest');
@@ -20,7 +21,7 @@ const initialState = {
     isOpenAdminFullscreenDialog: false,
     contest: {},
     tests: {},
-    questions: {},
+    questions: fakeQuestions,
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
@@ -59,8 +60,21 @@ export default function adminReducer(state = initialState, action) {
                 return;
             case UPDATE_EDITING_TEST:
                 draft.editingTest = {...draft.editingTest, ...payload};
+                return;
+
+
+            case UPDATE_ADMIN_QUESTIONS:
+                draft.questions = payload.questions;
+                return;
+
+            case UPDATE_ADMIN_QUESTION_BY_ID: {
+                const index = draft.questions.findIndex(question => question.id === payload.id);
+                console.log(payload);
+                draft.questions[index] = payload.question;
+                return;
+            }
             case LOGOUT:
-                return initialState;
+                draft = initialState;
                 return;
         }
     });

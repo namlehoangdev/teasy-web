@@ -105,7 +105,7 @@ export default function AdminHomePage() {
     const [currentFullscreenPath, setCurrentFullscreenPath] = useState('');
     const [openDrawer, setOpenDrawer] = useState(true);
     const [appBarTitle, setAppBarTitle] = useState('');
-    const [selectedIndex, setSelectedIndex] = useState(1);
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const [createPopAnchorEl, setCreatePopAnchorEl] = useState(null);
     const openCreatePop = Boolean(createPopAnchorEl);
     const createPopID = openCreatePop ? 'create-pop-id' : null;
@@ -125,7 +125,13 @@ export default function AdminHomePage() {
     });
 
     useEffect(() => {
-        const item = listNavItemMap[0];
+        dispatch(setOpenAdminFullscreenDialog(true));
+        setCreatePopAnchorEl(null);
+        setCurrentFullscreenPath(PAGE_PATHS.createContest);
+        history.push(`${path}/${PAGE_PATHS.createContest}`);
+
+        return;
+        const item = listNavItemMap[2];
         setSelectedIndex(item.key);
         setAppBarTitle(item.name);
         history.push(`${path}/${item.path}`);

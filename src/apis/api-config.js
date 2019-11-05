@@ -1,6 +1,9 @@
 import axios from 'axios';
 import {store} from '../configurations';
+import {history} from "../configurations";
 import _ from 'lodash';
+import {logout, updateUnauthorizedDialog} from "../actions";
+import {HTTP_STATUS_CODES} from "../consts/http-status-codes-consts";
 
 export const TEASY_URL = 'https://serverblockchain.azurewebsites.net/api/';
 export const BASE_URL = {
@@ -31,6 +34,8 @@ axiosInstance.interceptors.request.use(
         const token = _.get(storeState, "authReducer.profile.token", null);
         if (token) {
             config.headers.Authorization = token;
+        } else {
+            store.dispatch(updateUnauthorizedDialog(true));
         }
         return config;
     },
@@ -47,6 +52,9 @@ axiosInstance.interceptors.response.use(
     },
     function (error) {
         console.error('%cAPI RESPONSE FAILURE: ', 'color: #B00020; font-weight: bold', error.response);
+        if (error.response.status === HTTP_STATUS_CODES.unauthorized) {
+            store.dispatch(updateUnauthorizedDialog(true))
+        }
         return Promise.reject(error.response);
     });
 

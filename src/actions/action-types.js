@@ -31,8 +31,11 @@ export const POST_REGISTER_BY_THIRD_PARTY = 'POST_REGISTER_BY_FACEBOOK';
 export const LOGIN = 'LOGIN';
 export const UPDATE_LOGIN_MODE = 'UPDATE_LOGIN_MODE';
 export const LOGOUT = 'LOGOUT';
+export const UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG = 'UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG';
 
 /*------------------------------------------------USERS------------------------------------------------*/
+export const GET_ALL_USER_API = 'GET_ALL_USER_API';
+export const UPDATE_ALL_USERS = 'UPDATE_ALL_USER';
 export const GET_ALL_USERS = createRequestType('GET_ALL_USERS');
 export const GET_USER_BY_ID = createRequestType('GET_USER_BY_ID');
 
@@ -45,6 +48,8 @@ export const CANCEL_CREATE_QUESTION_DIALOG = 'CANCEL_CREATE_QUESTION_DIALOG';
 export const UPDATE_EDITING_QUESTION = 'UPDATE_EDITING_QUESTION';
 export const UPDATE_EDITING_TEST = 'UPDATE_EDITING_TEST';
 export const UPDATE_EDITING_CONTEST = 'UPDATE_EDITING_CONTEST';
+export const UPDATE_ADMIN_QUESTIONS = 'UPDATE_ADMIN_QUESTIONS';
+export const UPDATE_ADMIN_QUESTION_BY_ID = 'UPDATE_ADMIN_QUESTION_BY_ID';
 
 
 export const POST_OWN_CONTEST = createRequestType('POST_OWN_CONTEST');

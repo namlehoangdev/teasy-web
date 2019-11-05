@@ -1,9 +1,10 @@
-import {takeLatest, call, put} from 'redux-saga/effects';
+import {takeLatest, call, put, takeEvery} from 'redux-saga/effects';
 //import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
-import {postRegisterThirdParty, login, showMiniLoading, hideMiniLoading} from '../actions';
-import {POST_LOGIN_BY_THIRD_PARTY, POST_REGISTER_BY_THIRD_PARTY} from "../actions/action-types";
-import {THIRD_PARTY, THIRD_PARTY_TOKEN_PREFIX} from "../consts";
+import {history} from "../configurations";
+import {postRegisterThirdParty, login, showMiniLoading, hideMiniLoading, updateUnauthorizedDialog} from '../actions';
+import {POST_LOGIN_BY_THIRD_PARTY, POST_REGISTER_BY_THIRD_PARTY, LOGOUT} from "../actions/action-types";
+import {PAGE_PATHS, THIRD_PARTY, THIRD_PARTY_TOKEN_PREFIX} from "../consts";
 import {HTTP_STATUS_CODES} from "../consts/http-status-codes-consts";
 
 function mapDataFromThirdParty(data) {
@@ -58,6 +59,11 @@ export function* postRegisterThirdPartySaga({payload}) {
     }
 }
 
+export function* logoutSaga() {
+    yield put(updateUnauthorizedDialog(false));
+    history.replace(PAGE_PATHS.landing);
+}
+
 
 /*-----saga watchers-----*/
 function* postLoginByThirdPartyWatcherSaga() {
@@ -68,7 +74,12 @@ function* postRegisterByThirdPartyWatcherSaga() {
     yield takeLatest(POST_REGISTER_BY_THIRD_PARTY, postRegisterThirdPartySaga);
 }
 
+function* postLogoutWatcherSaga() {
+    yield takeEvery(LOGOUT, logoutSaga)
+}
+
 export default [
     postLoginByThirdPartyWatcherSaga(),
     postRegisterByThirdPartyWatcherSaga(),
+    postLogoutWatcherSaga()
 ];

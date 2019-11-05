@@ -1,5 +1,5 @@
 import ApiInstance from './api-config';
 
-export default [];
+export const getAllUsers = () => ApiInstance.get('Users');
 
 
