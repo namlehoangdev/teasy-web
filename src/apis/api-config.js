@@ -34,8 +34,6 @@ axiosInstance.interceptors.request.use(
         const token = _.get(storeState, "authReducer.profile.token", null);
         if (token) {
             config.headers.Authorization = token;
-        } else {
-            store.dispatch(updateUnauthorizedDialog(true));
         }
         return config;
     },
