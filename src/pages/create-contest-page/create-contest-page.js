@@ -33,7 +33,12 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
     },
     page: {
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+        minHeight: '100%',
+        backgroundColor: 'red'
+    },
+    autoCompleteText: {
+        zIndex: 200
     }
 }));
 
@@ -46,6 +51,10 @@ export default function CreateContestPage() {
     useEffect(() => {
         dispatch(getAllUsers());
     }, []);
+
+    useEffect(() => {
+        console.log('alll users : ', users);
+    }, [users]);
 
     function handleClose() {
         history.goBack();
@@ -62,22 +71,15 @@ export default function CreateContestPage() {
                 <Button color="inherit" onClick={handleClose}>{TEXT.save}</Button>
             </Toolbar>
         </AppBar>
+
         <Grid container className={classes.page}>
             <Grid item xs={12} sm={8} md={8}>
                 <TextField required label="Tên cuộc thi" fullWidth margin="normal" variant="outlined"/>
             </Grid>
-            <Grid item xs={12} sm={8} md={8}>
-                <Autocomplete
-                    multiple
-                    options={users}
-                    getOptionLabel={option => option.name}
-                    defaultValue={users[0]}
-                    renderInput={params => (
-                        <TextField {...params} variant="standard" margin="normal" fullWidth
-                                   placeholder="Chia sẻ với"/>
-                    )}
-                />
-            </Grid>
+
+
         </Grid>
+
     </div>);
 }
+

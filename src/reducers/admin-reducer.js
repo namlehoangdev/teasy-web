@@ -8,7 +8,7 @@ import {
 // import fakeContests from './fake-contests';
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
-import fakeQuestions from './fake-questions';
+import fakeQuestions from '../fake-data/fake-questions';
 
 
 //const contestSchema = new schema.Entity('contest');
