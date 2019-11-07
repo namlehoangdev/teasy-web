@@ -26,7 +26,7 @@ const initialState = {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
     },
-    editingContest: {},
+    editingContest: {isPublic: false, permittedUsers: []},
     editingTest: {},
     editingQuestion: {type: 0},
 
