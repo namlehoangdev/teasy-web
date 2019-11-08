@@ -9,6 +9,7 @@ import {
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
 import fakeQuestions from '../fake-data/fake-questions';
+import {normalize} from "../utils/byid-utils";
 
 
 //const contestSchema = new schema.Entity('contest');
@@ -21,7 +22,7 @@ const initialState = {
     isOpenAdminFullscreenDialog: false,
     contest: {},
     tests: {},
-    questions: fakeQuestions,
+    questions: normalize({questions: fakeQuestions}, {questions: {}}).questions,
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
@@ -68,9 +69,10 @@ export default function adminReducer(state = initialState, action) {
                 return;
 
             case UPDATE_ADMIN_QUESTION_BY_ID: {
-                const index = draft.questions.findIndex(question => question.id === payload.id);
-                console.log(payload);
-                draft.questions[index] = payload.question;
+                // const index = draft.questions.findIndex(question => question.id === payload.id);
+                // console.log(payload);
+                const {id, question} = payload;
+                draft.questions.byHash[id] = question;
                 return;
             }
             case LOGOUT:

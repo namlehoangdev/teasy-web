@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router";
 import {updateAdminQuestionById, updateAdminQuestions} from "../../actions";
+import WorkingTableV2 from "../../components/working-table/working-table-v2";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -52,9 +53,9 @@ export default function AdminQuestionsPage() {
     }
 
 
-    function renderFiles(file) {
+    function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {content, type, point} = file;
+        const {content, type, point} = questions.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{content}</TableCell>
@@ -92,13 +93,13 @@ export default function AdminQuestionsPage() {
 
     return (<div className={classes.root}>
         <div className={classes.header}>
-            <WorkingTable files={questions}
-                          dragDisplayProperty="content"
-                          setFiles={handleFilesChange}
-                          setFileById={handleFileByIdChange}
-                          renderFiles={renderFiles}
-                          renderFolders={renderFolders}
-                          renderHeaders={renderHeaders}/>
+            <WorkingTableV2 files={questions}
+                            dragDisplayProperty="content"
+                            setFiles={handleFilesChange}
+                            setFileById={handleFileByIdChange}
+                            renderFiles={renderFiles}
+                            renderFolders={renderFolders}
+                            renderHeaders={renderHeaders}/>
         </div>
     </div>)
 }

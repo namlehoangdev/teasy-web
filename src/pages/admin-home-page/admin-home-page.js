@@ -125,12 +125,12 @@ export default function AdminHomePage() {
     });
 
     useEffect(() => {
-        dispatch(setOpenAdminFullscreenDialog(true));
-        setCreatePopAnchorEl(null);
-        setCurrentFullscreenPath(PAGE_PATHS.createContest);
-        history.push(`${path}/${PAGE_PATHS.createContest}`);
+        // dispatch(setOpenAdminFullscreenDialog(true));
+        // setCreatePopAnchorEl(null);
+        // setCurrentFullscreenPath(PAGE_PATHS.createContest);
+        // history.push(`${path}/${PAGE_PATHS.createContest}`);
+        //return;
 
-        return;
         const item = listNavItemMap[2];
         setSelectedIndex(item.key);
         setAppBarTitle(item.name);

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles, fade} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {
@@ -68,8 +68,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function ChooseUserDialog(props) {
     const {open, handleClose, users, onSelectedUsersChange, selectedUserIds} = props;
-    const {searchValue, setSearchValue} = useState('');
+    const [searchValue, setSearchValue] = useState('');
     const classes = useStyles();
+
 
     function isSelected(id) {
         return selectedUserIds.indexOf(id) !== -1;
@@ -83,41 +84,30 @@ export default function ChooseUserDialog(props) {
         setSearchValue(event.target.value);
     }
 
-    function handleUserClick(event, user) {
-        const {id} = user;
-        const selectedIndex = selectedUserIds.indexOf(id);
-        let newSelected = [];
+    function handleUserClick(event, userId) {
+        const selectedIndex = selectedUserIds.indexOf(userId);
+        let newSelected = [...selectedUserIds];
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selectedUserIds, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selectedUserIds.slice(1));
-        } else if (selectedIndex === selectedUserIds.length - 1) {
-            newSelected = newSelected.concat(selectedUserIds.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selectedUserIds.slice(0, selectedIndex),
-                selectedUserIds.slice(selectedIndex + 1),
-            );
+            newSelected.push(userId);
         }
         onSelectedUsersChange(newSelected);
     }
 
-    function renderUsers(user) {
-        const {name, email, id} = user;
-        const isItemSelected = isSelected(id);
+    function renderUsers(userId) {
+        const {name, email} = users.byHash(userId);
+        const isItemSelected = isSelected(userId);
         return (
             <TableRow
                 hover
-                onClick={event => handleUserClick(event, user)}
+                onClick={event => handleUserClick(event, userId)}
                 role="checkbox"
                 aria-checked={isItemSelected}
-                tabIndex={-1}
-                key={id}
+                key={userId}
                 selected={isItemSelected}>
                 <TableCell padding="checkbox">
                     <Checkbox
                         checked={isItemSelected}
-                        inputProps={{'aria-labelledby': id}}
+                        inputProps={{'aria-labelledby': userId}}
                     />
                 </TableCell>
                 <TableCell align="left">{name}</TableCell>
@@ -128,18 +118,24 @@ export default function ChooseUserDialog(props) {
 
     function handleSelectAll(event) {
         if (event.target.checked) {
-            const selectedIds = users.map(user => user.id);
+            const selectedIds = users.byId.map(user => user.id);
             onSelectedUsersChange(selectedIds);
             return;
         }
         onSelectedUsersChange([]);
     }
 
+    function renderTableBody() {
+        if (searchValue.length === 0) {
+            return (users.byId.map(renderUsers))
+        }
+        return users.byId.filter(id => users.byHash[id].name.includes(searchValue)).map(renderUsers);
+    }
+
     return (<Dialog
         fullWidth={true}
         maxWidth={true}
         open={open}
-        onClose={handleCloseDialog}
         aria-labelledby="max-width-dialog-title">
         <DialogTitle id="max-width-dialog-title">Chọn những thí sinh được chia sẻ</DialogTitle>
         <DialogContent>
@@ -148,7 +144,7 @@ export default function ChooseUserDialog(props) {
                     <SearchIcon/>
                 </div>
                 <InputBase
-                    placeholder="Search…"
+                    placeholder="Tìm kiếm…"
                     classes={{
                         root: classes.inputRoot,
                         input: classes.inputInput,
@@ -174,14 +170,14 @@ export default function ChooseUserDialog(props) {
                         <TableCell component="th" align="left">Email</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    {users.filter(item => item.name.includes(searchValue)).map(renderUsers)}
-                </TableBody>
+                <TableBody style={{minHeight: '500px'}}>
+                    {renderTableBody()}
+                </TableBody>)
             </Table>
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose} color="primary">
-                Close
+            <Button onClick={handleCloseDialog} color="primary">
+                Xong
             </Button>
         </DialogActions>
     </Dialog>);

@@ -3,6 +3,8 @@ import {
     UPDATE_LOGIN_MODE
 } from '../actions/action-types';
 import {produce} from "immer";
+import {normalize} from "../utils/byid-utils";
+
 
 const initialState = {
     users: []
@@ -13,7 +15,7 @@ export default function userReducer(state = initialState, action) {
         const {type, payload} = action;
         switch (type) {
             case UPDATE_ALL_USERS:
-                draft.users = payload;
+                draft.users = normalize(payload);
                 return;
             case LOGOUT:
                 draft = initialState;
