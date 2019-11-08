@@ -125,11 +125,12 @@ export default function AdminHomePage() {
     });
 
     useEffect(() => {
-        // dispatch(setOpenAdminFullscreenDialog(true));
-        // setCreatePopAnchorEl(null);
-        // setCurrentFullscreenPath(PAGE_PATHS.createContest);
-        // history.push(`${path}/${PAGE_PATHS.createContest}`);
-        //return;
+        //TODO: remove these lines
+        dispatch(setOpenAdminFullscreenDialog(true));
+        setCreatePopAnchorEl(null);
+        setCurrentFullscreenPath(PAGE_PATHS.createTest);
+        history.push(`${path}/${PAGE_PATHS.createTest}`);
+        return;
 
         const item = listNavItemMap[2];
         setSelectedIndex(item.key);

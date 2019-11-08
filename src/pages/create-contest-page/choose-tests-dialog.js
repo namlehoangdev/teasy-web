@@ -66,8 +66,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function ChooseUserDialog(props) {
-    const {open, handleClose, users, onSelectedUsersChange, selectedUserIds} = props;
+export default function ChooseTestDialog(props) {
+    const {open, handleClose, tests, onSelectedUsersChange, selectedUserIds} = props;
     const [searchValue, setSearchValue] = useState('');
     const classes = useStyles();
 
@@ -94,7 +94,7 @@ export default function ChooseUserDialog(props) {
     }
 
     function renderUsers(userId) {
-        const {name, email} = users.byHash[userId];
+        const {name, email} = tests.byHash[userId];
         const isItemSelected = isSelected(userId);
         return (
             <TableRow
@@ -118,7 +118,7 @@ export default function ChooseUserDialog(props) {
 
     function handleSelectAll(event) {
         if (event.target.checked) {
-            onSelectedUsersChange(users.byId);
+            onSelectedUsersChange(tests.byId);
             return;
         }
         onSelectedUsersChange([]);
@@ -126,9 +126,9 @@ export default function ChooseUserDialog(props) {
 
     function renderTableBody() {
         if (searchValue.length === 0) {
-            return (users.byId.map(renderUsers))
+            return (tests.byId.map(renderUsers))
         }
-        return users.byId.filter(id => users.byHash[id].name.includes(searchValue)).map(renderUsers);
+        return tests.byId.filter(id => tests.byHash[id].name.includes(searchValue)).map(renderUsers);
     }
 
     return (<Dialog
@@ -158,14 +158,14 @@ export default function ChooseUserDialog(props) {
                     <TableRow>
                         <TableCell padding="checkbox">
                             <Checkbox
-                                indeterminate={selectedUserIds.length > 0 && selectedUserIds.length < users.length}
-                                checked={selectedUserIds.length === users.length}
+                                indeterminate={selectedUserIds.length > 0 && selectedUserIds.length < tests.length}
+                                checked={selectedUserIds.length === tests.length}
                                 onChange={handleSelectAll}
                                 inputProps={{'aria-label': 'select all desserts'}}
                             />
                         </TableCell>
                         <TableCell component="th" align="left"> </TableCell>
-                        <TableCell component="th" align="left">Tên thí sinh</TableCell>
+                        <TableCell component="th" align="left">Tên đề thi</TableCell>
                         <TableCell component="th" align="left">Email</TableCell>
                     </TableRow>
                 </TableHead>
@@ -182,8 +182,8 @@ export default function ChooseUserDialog(props) {
     </Dialog>);
 }
 
-ChooseUserDialog.propTypes = {
-    users: PropTypes.func,
+ChooseTestDialog.propTypes = {
+    tests: PropTypes.func,
     onSelectedUsersChange: PropTypes.func,
     open: PropTypes.bool,
     handleClose: PropTypes.func,

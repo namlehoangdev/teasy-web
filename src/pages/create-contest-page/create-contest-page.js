@@ -7,15 +7,17 @@ import {
     IconButton,
     makeStyles,
     Toolbar,
+    FormLabel,
     Typography,
     TextField,
     Grid,
     Chip,
     Avatar,
+    InputAdornment,
     FormGroup,
     Checkbox,
     FormControlLabel,
-    FormControl, InputLabel, Select, DialogContent, RadioGroup, Radio
+    FormControl, InputLabel, Select, DialogContent, RadioGroup, Radio, FormHelperText
 } from "@material-ui/core";
 import {Close as CloseIcon} from "@material-ui/icons";
 import {Autocomplete} from '@material-ui/lab';
@@ -50,11 +52,11 @@ const useStyles = makeStyles(theme => ({
     },
     permittedUserContainer: {
         display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'center',
-        flexWrap: 'wrap',
         '& > *': {
             margin: theme.spacing(0.5),
-        },
+        }
     },
 }));
 
@@ -93,6 +95,7 @@ export default function CreateContestPage() {
     }
 
     function handleClosePermittedUsersDialog() {
+        console.log('close', openChosePermittedUserDialog);
         setOpenChosePermittedUserDialog(false);
     }
 
@@ -101,9 +104,13 @@ export default function CreateContestPage() {
     }
 
 
-    function handleDeleteUserClick(user) {
-        const {id: removingUserId} = user;
-        dispatch(updateEditingContest(produce(editingContest, draft => draft.permittedUsers.filter(user => user.id !== removingUserId))));
+    function handleDeleteUserClick(userId) {
+        dispatch(updateEditingContest(produce(editingContest, draft => {
+                console.log('draft: ', draft);
+                console.log(userId);
+                draft.permittedUsers = editingContest.permittedUsers.filter(id => id !== userId);
+            }
+        )));
     }
 
     function renderPermittedUsers() {
@@ -112,17 +119,21 @@ export default function CreateContestPage() {
         }
 
         return (<div className={classes.permittedUserContainer}>
-            {permittedUsers.map((user) => {
-                const {id, name} = user;
+            {permittedUsers.map((userId) => {
+                const {id, name} = users.byHash[userId];
                 // if (permittedUsers.indexOf(id) === -1)
                 //     return null;
                 return (<Chip key={id} avatar={<Avatar>{name.charAt(0)}</Avatar>}
                               label={name}
-                              onDelete={() => handleDeleteUserClick(user)}
+                              onDelete={() => handleDeleteUserClick(userId)}
                               variant="outlined"
                 />)
             })}
         </div>)
+    }
+
+    function renderTests() {
+        return null;
     }
 
 
@@ -145,22 +156,55 @@ export default function CreateContestPage() {
 
         <Grid container className={classes.page}>
             <Grid item xs={12} sm={8} md={8}>
-                <TextField required label="Tên cuộc thi" fullWidth margin="normal" variant="outlined"/>
+                <TextField required label="Tên cuộc thi" fullWidth margin="normal" fullWidth/>
             </Grid>
             <Grid item xs={12} sm={8} md={8}>
+                <FormLabel component="legend">Quyền truy cập</FormLabel>
                 <RadioGroup name="isPublic-radio" value={isPublic ? 'public' : 'share'}
                             className={classes.radioGroup}
                             aria-label="edit-answer-radio-1"
                             onChange={handleAccessiblePermissionChange}>
                     <FormControlLabel value={'public'} control={<Radio className={classes.radio}/>} label='Công khai'/>
+                    <span style={{flexDirection: 'row', display: 'flex'}}>
                     <FormControlLabel value={'share'} control={<Radio className={classes.radio}/>} label='Chia sẻ với'/>
+                        {
+                            !isPublic && (<Grid item xs={12} sm={8} md={8}>
+                                <TextField
+                                    fullWidth
+                                    placholder="Chọn thí sinh"
+                                    className={classes.margin}
+                                    multiline
+                                    onClick={() => setOpenChosePermittedUserDialog(true)}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                {renderPermittedUsers()}
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Grid>)
+                        }
+                    </span>
                 </RadioGroup>
             </Grid>
-            <Grid item xs={12} sm={8} md={8}>
-                {renderPermittedUsers()}
-            </Grid>
-            <Grid item xs={12} sm={8} md={8}>
 
+            <Grid item xs={12} sm={8} md={8}>
+                <TextField
+                    className={classes.margin}
+                    multiline
+                    label="Đề thi"
+                    placeholder="Chọn đề thi"
+                    onClick={() => setOpenChosePermittedUserDialog(true)}
+                    fullWidth
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                {renderTests()}
+                            </InputAdornment>
+                        ),
+                    }}
+                />
             </Grid>
 
         </Grid>

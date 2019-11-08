@@ -9,7 +9,7 @@ import {
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
 import fakeQuestions from '../fake-data/fake-questions';
-import {normalize} from "../utils/byid-utils";
+import {normalizer} from "../utils/byid-utils";
 
 
 //const contestSchema = new schema.Entity('contest');
@@ -22,7 +22,7 @@ const initialState = {
     isOpenAdminFullscreenDialog: false,
     contest: {},
     tests: {},
-    questions: normalize({questions: fakeQuestions}, {questions: {}}).questions,
+    questions: normalizer(fakeQuestions),
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false

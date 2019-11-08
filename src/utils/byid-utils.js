@@ -50,7 +50,7 @@ export function normalize(data, schema) {
             } = schema[key];
 
             if (childSchema) {
-                const child = normalize(data[key], childSchema)
+                const child = normalize(data[key], childSchema);
                 result[key] = normalizer(child, childId)
             } else {
                 result[key] = normalizer(data[key], childId)
@@ -86,3 +86,6 @@ export function denormalize(data, schema) {
         return result
     }
 }
+
+
+export const defaultNormalizer = {byId: [], byHash: {}};
