@@ -21,6 +21,7 @@ import {cancelCreateQuestionDialog, updateEditingQuestion} from "../../actions";
 import RichEditor from "../rich-editor/rich-editor";
 import {EditorState, convertFromRaw, ContentState} from 'draft-js';
 import EditingQuiz from "./editing-quiz";
+import EditingQuestionContent from "./editing-question-content";
 
 
 const QUESTION_DIALOG_TITLE = {
@@ -35,51 +36,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EditingQuestionDialog() {
-    const classes = useStyles();
     const dispatch = useDispatch();
-    const {editingQuestion, questionDialog} = useSelector(state => state.adminReducer);
+    const {questionDialog} = useSelector(state => state.adminReducer);
     const {mode: questionDialogMode, isOpen,} = questionDialog;
-    const {type: questionTypeCode = '', content} = editingQuestion;
 
     function handleCloseDialog() {
         dispatch(cancelCreateQuestionDialog());
-    }
-
-    function handleDone() {
-
-    }
-
-    function handleChangeQuestionType(event) {
-        dispatch(updateEditingQuestion({type: event.target.value}))
-    }
-
-    function renderQuestionTypeMenu(questionTypeCode) {
-        return (
-            <MenuItem key={questionTypeCode} value={questionTypeCode}>{QUESTION_TYPE_TEXT[questionTypeCode]}</MenuItem>)
-    }
-
-
-    if (!content) {
-        dispatch(updateEditingQuestion({content: EditorState.createEmpty()}));
-    }
-
-    function handleEditorChange(event) {
-        dispatch(updateEditingQuestion({content: event}));
-    }
-
-    function renderQuestionFormByType() {
-        switch (questionTypeCode) {
-            case QUESTION_TYPE_CODES.quiz:
-                return <EditingQuiz/>;
-            case QUESTION_TYPE_CODES.essay:
-                return <div/>;
-            case QUESTION_TYPE_CODES.fillBlank:
-                return <div/>;
-            case QUESTION_TYPE_CODES.matching:
-                return <div/>;
-            case QUESTION_TYPE_CODES.quizMulti:
-                return <div/>;
-        }
     }
 
 
@@ -88,21 +50,7 @@ export default function EditingQuestionDialog() {
                 fullWidth maxWidth='lg'>
             <DialogTitle id="create-dialog-title">{QUESTION_DIALOG_TITLE[questionDialogMode]}</DialogTitle>
             <DialogContent dividers>
-                <Grid item xs={12} sm={8} md={5}>
-                    <Grid item xs>
-                        <FormControl className={classes.selectTypeBox}>
-                            <InputLabel htmlFor="question-type-selector">{`${TEXT.type} ${TEXT.question}`}</InputLabel>
-                            <Select value={questionTypeCode} onChange={handleChangeQuestionType}
-                                    inputProps={{
-                                        name: 'question-type-selector', id: 'question-type-selector',
-                                    }}>
-                                {Object.values(QUESTION_TYPE_CODES).map(renderQuestionTypeMenu)}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-                <RichEditor editorState={content || null} onChange={handleEditorChange}/>
-                {renderQuestionFormByType()}
+                <EditingQuestionContent/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>

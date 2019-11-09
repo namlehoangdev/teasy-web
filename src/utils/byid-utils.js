@@ -88,4 +88,22 @@ export function denormalize(data, schema) {
 }
 
 
-export const defaultNormalizer = {byId: [], byHash: {}};
+export function DefaultNormalizer() {
+    this.byId = [];
+    this.byHash = {};
+}
+
+export function addToNormalizedList(list, newObject, key = 'id') {
+    if (!list.byHash[newObject[key]]) {
+        list.byId.push(newObject[key]);
+        list.byHash[newObject[key]] = newObject;
+    }
+}
+
+export function removeFromNormalizedList(list, removedId) {
+    if (list.byHash[removedId]) {
+        list.byId.splice(list.indexOf(removedId), 1);
+        list.byHash[removedId] = undefined;
+    }
+}
+

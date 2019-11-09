@@ -3,11 +3,11 @@ import {
     UPDATE_LOGIN_MODE
 } from '../actions/action-types';
 import {produce} from "immer";
-import {normalizer, defaultNormalizer} from "../utils/byid-utils";
+import {normalizer, DefaultNormalizer} from "../utils/byid-utils";
 
 
 const initialState = {
-    users: defaultNormalizer
+    users: new DefaultNormalizer()
 };
 
 export default function userReducer(state = initialState, action) {
@@ -15,7 +15,7 @@ export default function userReducer(state = initialState, action) {
         const {type, payload} = action;
         switch (type) {
             case UPDATE_ALL_USERS:
-                draft.users = normalizer(payload) || defaultNormalizer;
+                draft.users = normalizer(payload) || new DefaultNormalizer();
                 return;
             case LOGOUT:
                 draft = initialState;

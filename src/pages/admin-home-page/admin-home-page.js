@@ -131,6 +131,8 @@ export default function AdminHomePage() {
         setCurrentFullscreenPath(PAGE_PATHS.createTest);
         history.push(`${path}/${PAGE_PATHS.createTest}`);
         return;
+        //dispatch(openCreateQuestionDialog());
+        return
 
         const item = listNavItemMap[2];
         setSelectedIndex(item.key);
