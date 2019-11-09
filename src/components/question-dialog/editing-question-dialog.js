@@ -1,26 +1,17 @@
 import React from 'react';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import {
     Button,
     Dialog,
-    InputLabel,
-    Select,
-    MenuItem,
-    FormControl,
     DialogTitle,
     DialogContent,
     DialogActions,
-    Typography,
-    DialogContentText,
-    TextField, Paper, Grid,
 } from '@material-ui/core';
 import {useSelector, useDispatch} from "react-redux";
-import {QUESTION_DIALOG_MODE, QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
+import {QUESTION_DIALOG_MODE, TEXT} from "../../consts";
 import {cancelCreateQuestionDialog, updateEditingQuestion} from "../../actions";
-import RichEditor from "../rich-editor/rich-editor";
-import {EditorState, convertFromRaw, ContentState} from 'draft-js';
-import EditingQuiz from "./editing-quiz";
+
 import EditingQuestionContent from "./editing-question-content";
 
 
@@ -37,11 +28,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function EditingQuestionDialog() {
     const dispatch = useDispatch();
-    const {questionDialog} = useSelector(state => state.adminReducer);
+    const {questionDialog, editingQuestion} = useSelector(state => state.adminReducer);
     const {mode: questionDialogMode, isOpen,} = questionDialog;
 
     function handleCloseDialog() {
         dispatch(cancelCreateQuestionDialog());
+    }
+
+    function handleQuestionChange(changedData) {
+        dispatch(updateEditingQuestion(changedData));
     }
 
 
@@ -50,7 +45,7 @@ export default function EditingQuestionDialog() {
                 fullWidth maxWidth='lg'>
             <DialogTitle id="create-dialog-title">{QUESTION_DIALOG_TITLE[questionDialogMode]}</DialogTitle>
             <DialogContent dividers>
-                <EditingQuestionContent/>
+                <EditingQuestionContent data={editingQuestion} onChange={handleQuestionChange}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>

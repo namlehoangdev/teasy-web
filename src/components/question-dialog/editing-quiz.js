@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Radio,
     RadioGroup,
@@ -11,15 +11,14 @@ import {
     IconButton, Grid
 } from "@material-ui/core";
 import {TEXT} from "../../consts/text-consts";
-import {useDispatch, useSelector} from "react-redux";
-import {updateEditingQuestion} from "../../actions";
-import {Close as CloseIcon, Done as DoneIcon, Edit as EditIcon} from "@material-ui/icons";
+import {Close as CloseIcon} from "@material-ui/icons";
 import produce from "immer";
 import {
     addToNormalizedList,
     DefaultNormalizer,
     removeFromNormalizedList
 } from "../../utils/byid-utils";
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -40,26 +39,37 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function EditingQuiz() {
-    const dispatch = useDispatch();
-    const {editingQuestion} = useSelector(state => state.adminReducer);
-    const {answers = new DefaultNormalizer()} = editingQuestion;
+export default function EditingQuiz(props) {
+    const {data, onChange} = props;
+    const {answers} = data;
     const [answerRadioValue, setAnswerRadioValue] = useState('');
+
+    useEffect(() => {
+        if (!answers || !answers.byId) {
+            onChange({answers: new DefaultNormalizer()});
+        }
+    }, []);
 
     const classes = useStyles();
 
 
     function handleAnswerContentChange(event, answerId) {
-        dispatch(updateEditingQuestion(produce(editingQuestion, draft => {
-            draft.answers.byHash[answerId].content = event.target.value
-        })));
+        const {answers} = data;
+        onChange({
+            answers: produce(answers, draftState => {
+                draftState.byHash[answerId].content = event.target.value
+            })
+        });
     }
 
 
     function handleRemoveAnswerClick(answerId) {
-        dispatch(updateEditingQuestion(produce(editingQuestion, draftState => {
-            removeFromNormalizedList(draftState.answers, answerId);
-        })));
+        const {answers} = data;
+        onChange({
+            answers: produce(answers, draftState => {
+                removeFromNormalizedList(draftState, answerId)
+            })
+        });
     }
 
 
@@ -67,7 +77,7 @@ export default function EditingQuiz() {
         const currentSmallestId = answers.byId.reduce((minKey, curKey) =>
             (parseInt(curKey) < 0 && parseInt(curKey) < minKey ? curKey : minKey), 0);
 
-        dispatch(updateEditingQuestion(produce(editingQuestion, draftState => {
+        onChange(produce(data, draftState => {
             console.log('draft state: ', draftState);
             if (!draftState.answers) {
                 const newAnswers = new DefaultNormalizer();
@@ -76,16 +86,16 @@ export default function EditingQuiz() {
             } else {
                 addToNormalizedList(draftState.answers, {id: currentSmallestId - 1, content: ''});
             }
-        })));
+        }));
     }
-
 
     function renderAnswers(answerId) {
         const {content} = answers.byHash[answerId];
         const answerInputProps = {
             endAdornment:
                 (<InputAdornment position="end">
-                    <IconButton edge="end" onClick={() => handleRemoveAnswerClick(answerId)}><CloseIcon/></IconButton>
+                    <IconButton edge="end"
+                                onClick={() => handleRemoveAnswerClick(answerId)}><CloseIcon/></IconButton>
                 </InputAdornment>)
         };
 
@@ -105,11 +115,22 @@ export default function EditingQuiz() {
                         className={classes.radioGroup}
                         aria-label="edit-answer-radio-1"
                         onChange={(event) => setAnswerRadioValue(event.target.value)}>
-                {answers.byId.map(renderAnswers)}
+                {answers && answers.byId && answers.byId.map(renderAnswers)}
                 {/*{renderAddNewAnswerInput()}*/}
             </RadioGroup>
             <Button onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
         </Grid>
     </FormControl>);
 }
+
+EditingQuiz.propTypes = {
+    data: PropTypes.any,
+    onChange: PropTypes.func
+};
+
+EditingQuiz.defaultProps = {
+    onChange: () => {
+    }
+};
+
 

@@ -29,7 +29,7 @@ const initialState = {
     },
     editingContest: {isPublic: false, permittedUsers: []},
     editingTest: {},
-    editingQuestion: {type: 0},
+    editingQuestion: {},
 
     error: null,
 };
