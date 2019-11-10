@@ -102,8 +102,8 @@ export function addToNormalizedList(list, newObject, key = 'id') {
 
 export function removeFromNormalizedList(list, removedId) {
     if (list.byHash[removedId]) {
-        list.byId.splice(list.indexOf(removedId), 1);
-        list.byHash[removedId] = undefined;
+        list.byId.splice(list.byId.indexOf(removedId), 1);
+        delete list.byHash[removedId];
     }
 }
 

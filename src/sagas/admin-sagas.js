@@ -6,6 +6,7 @@ import {POST_LOGIN_BY_THIRD_PARTY, POST_TEST,} from "../actions/action-types";
 import {history} from "../configurations";
 import {updateOwnedContests} from "../actions";
 import {denormalize, denormalizer} from "../utils/byid-utils";
+import {convertFromEditorStateToString} from "../utils/editor-converter";
 
 const questionsSchema = {
     questions: {
@@ -38,8 +39,11 @@ export function* postTestSaga(action) {
     try {
         console.log('get here: ', payload);
         yield put(showLoading());
-        console.log('payload: ', payload);
         const requestParams = denormalize(payload, questionsSchema);
+        requestParams.questions.forEach(function (part, index) {
+            this.questions[index].content = convertFromEditorStateToString(this.questions[index].content);
+        }, requestParams);
+        console.log('request params: ', requestParams);
         const response = yield call(APIs.postTestAPI, requestParams);
         console.log('response', response);
     } catch (error) {

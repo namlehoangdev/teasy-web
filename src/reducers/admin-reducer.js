@@ -11,6 +11,7 @@ import {produce} from "immer";
 import fakeQuestions from '../fake-data/fake-questions';
 import {normalizer} from "../utils/byid-utils";
 import {EditorState} from 'draft-js';
+import {fakeTest} from "../fake-data";
 
 
 //const contestSchema = new schema.Entity('contest');

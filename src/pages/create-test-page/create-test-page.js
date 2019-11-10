@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './create-test-page.scss'
 import {
     AppBar,
@@ -38,12 +38,19 @@ export default function CreateTestPage() {
     const {editingTest} = useSelector(state => state.adminReducer);
     const {profile} = useSelector(state => state.authReducer);
     const {id: ownerId, name: ownerName} = profile;
-    const {questions = new DefaultNormalizer()} = editingTest;
+    const {questions = new DefaultNormalizer(), name} = editingTest;
     const [addNewAnchorEl, setAddNewAnchorEl] = useState(null);
+
 
     const history = useHistory();
     const dispatch = useDispatch();
     const classes = useStyles();
+
+    useEffect(() => {
+        if (!name) {
+            dispatch(updateEditingTest({name: ''}));
+        }
+    }, []);
 
     function handleClose() {
         history.goBack();
@@ -77,11 +84,7 @@ export default function CreateTestPage() {
     }
 
     function handleTestNameChange(event) {
-        dispatch(updateEditingTest({
-            questions: produce(questions, draft => {
-                draft.name = event.target.value;
-            })
-        }))
+        dispatch(updateEditingTest({name: event.target.value}));
     }
 
     function handlePopperItemClick(questionTypeCode) {
@@ -133,6 +136,7 @@ export default function CreateTestPage() {
                     fullWidth
                     className={classes.testTitle}
                     onChange={handleTestNameChange}
+                    value={name || ''}
                     inputProps={{
                         'aria-label': 'description',
                     }}
