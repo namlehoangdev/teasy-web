@@ -26,8 +26,8 @@ export const UPDATE_SHOW_MINI_LOADING = 'UPDATE_SHOW_MINI_LOADING';
 
 
 /*------------------------------------------------AUTHENTICATION------------------------------------------------*/
-export const POST_LOGIN_BY_THIRD_PARTY = 'POST_LOGIN_BY_FACEBOOK';
-export const POST_REGISTER_BY_THIRD_PARTY = 'POST_REGISTER_BY_FACEBOOK';
+export const POST_LOGIN_BY_THIRD_PARTY = 'POST_LOGIN_BY_THIRD_PARTY';
+export const POST_REGISTER_BY_THIRD_PARTY = 'POST_REGISTER_BY_THIRD_PARTY';
 export const LOGIN = 'LOGIN';
 export const UPDATE_LOGIN_MODE = 'UPDATE_LOGIN_MODE';
 export const LOGOUT = 'LOGOUT';
@@ -36,8 +36,6 @@ export const UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG = 'UPDATE_IS_OPEN_UNAUTHORIZED_D
 /*------------------------------------------------USERS------------------------------------------------*/
 export const GET_ALL_USER_API = 'GET_ALL_USER_API';
 export const UPDATE_ALL_USERS = 'UPDATE_ALL_USER';
-export const GET_ALL_USERS = createRequestType('GET_ALL_USERS');
-export const GET_USER_BY_ID = createRequestType('GET_USER_BY_ID');
 
 
 /*------------------------------------------------ADMIN------------------------------------------------*/
@@ -52,18 +50,8 @@ export const UPDATE_EDITING_TEST = 'UPDATE_EDITING_TEST';
 export const UPDATE_EDITING_CONTEST = 'UPDATE_EDITING_CONTEST';
 export const UPDATE_ADMIN_QUESTIONS = 'UPDATE_ADMIN_QUESTIONS';
 export const UPDATE_ADMIN_QUESTION_BY_ID = 'UPDATE_ADMIN_QUESTION_BY_ID';
-export const UPDATE_ADMIN_QUESTION = 'UPDATE_ADMIN_QUESTION';
 
-export const POST_OWN_CONTEST = createRequestType('POST_OWN_CONTEST');
-export const PUT_OWN_CONTEST = createRequestType('PUT_OWN_CONTEST');
-
-export const GET_OWN_TESTS = createRequestType('GET_OWN_TESTS');
-export const POST_OWN_TESTS = createRequestType('POST_OWN_TESTS');
-export const PUT_OWN_TESTS = createRequestType('PUT_OWN_TESTS');
-
-export const GET_OWN_QUESTIONS = createRequestType('GET_OWN_QUESTIONS');
-export const POST_OWN_QUESTIONS = createRequestType('POST_OWN_QUESTIONS');
-export const PUT_OWN_QUESTIONS = createRequestType('PUT_OWN_QUESTIONS');
+export const GET_OWN_TESTS = 'GET_OWN_TESTS';
 
 export const SET_OPEN_ADMIN_FULLSCREEN_DIALOG = 'SET_OPEN_CREATE_SWITCH_DIALOG';
 

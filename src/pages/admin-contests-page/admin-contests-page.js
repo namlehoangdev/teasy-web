@@ -110,7 +110,7 @@ export default function AdminContestPage() {
     //const {path} = useRouteMatch();
     const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
-    const {contests: contestReducer} = useSelector(state => state.adminReducer);
+    const {contests} = useSelector(state => state.adminReducer);
     // const {entities, result: ownedContestIds} = contestReducer;
     // const {contests} = entities;
 

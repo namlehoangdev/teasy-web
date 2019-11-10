@@ -38,11 +38,11 @@ export function* getOwnContestsSaga() {
 export function* getOwnTestsSaga() {
     try {
         yield put(showLoading());
-        const response = yield call(APIs.getOwnTestsAPI);
-        if (response) {
-            console.log('getOwnTestsSaga', response);
-            //yield put(updateOwnTests(response.data));
-        }
+        //const response = yield call(APIs.getOwnTestsAPI);
+        //if (response) {
+        //  console.log('getOwnTestsSaga', response);
+        //yield put(updateOwnTests(response.data));
+        //}
     } catch (error) {
         console.log('getOwnTestsSaga failed: ', error);
     } finally {
