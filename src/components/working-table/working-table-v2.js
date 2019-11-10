@@ -78,11 +78,12 @@ export default function WorkingTableV2(props) {
 
     function generateFolders(path) {
         const currentFolderList = [];
+        console.log('generateFolders', files, path);
         files.byId.forEach(id => {
             const {directory} = files.byHash[id];
             if (directory && isSubPath(currentPath, directory)) {
                 const folderName = directory[path.length];
-                if (!currentFolderList.includes({folderName})) {
+                if (!currentFolderList.includes(folderName)) {
                     currentFolderList.push(folderName);
                 }
             }
@@ -144,7 +145,6 @@ export default function WorkingTableV2(props) {
             // });
             // setFiles(newCompetitions);
         } else {
-            //const findIndex = files.findIndex(file => file.id === dragItem.id);
             const {id} = dragItem;
             if (!breadcrumb) {
                 setFileById && setFileById(id, {...files.byHash[id], directory: []});
@@ -212,7 +212,7 @@ export default function WorkingTableV2(props) {
         <Table className={classes.table} aria-labelledby="tableTitle" aria-label="enhanced table" size='medium'>
             <TableHead>
                 <TableRow>
-                    {renderHeaders && renderHeaders}
+                    {renderHeaders && renderHeaders()}
                 </TableRow>
             </TableHead>
             <TableBody>

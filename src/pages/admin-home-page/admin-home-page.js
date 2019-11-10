@@ -103,7 +103,7 @@ export default function AdminHomePage() {
     const {path} = useRouteMatch();
     const {isOpenAdminFullscreenDialog} = useSelector(state => state.adminReducer);
     const [currentFullscreenPath, setCurrentFullscreenPath] = useState('');
-    const [openDrawer, setOpenDrawer] = useState(true);
+    const [openDrawer, setOpenDrawer] = useState(false);
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [createPopAnchorEl, setCreatePopAnchorEl] = useState(null);
@@ -126,13 +126,13 @@ export default function AdminHomePage() {
 
     useEffect(() => {
         //TODO: remove these lines
-        dispatch(setOpenAdminFullscreenDialog(true));
-        setCreatePopAnchorEl(null);
-        setCurrentFullscreenPath(PAGE_PATHS.createTest);
-        history.push(`${path}/${PAGE_PATHS.createTest}`);
-        return;
+        // dispatch(setOpenAdminFullscreenDialog(true));
+        // setCreatePopAnchorEl(null);
+        // setCurrentFullscreenPath(PAGE_PATHS.createTest);
+        // history.push(`${path}/${PAGE_PATHS.createTest}`);
+        // return;
         //dispatch(openCreateQuestionDialog());
-        return
+
 
         const item = listNavItemMap[2];
         setSelectedIndex(item.key);

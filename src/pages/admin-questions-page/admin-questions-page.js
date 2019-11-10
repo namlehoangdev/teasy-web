@@ -74,12 +74,12 @@ export default function AdminQuestionsPage() {
     }
 
     function renderHeaders() {
-        return (<TableHead>
-            <TableCell component="th" scope="row" align="left"> </TableCell>
+        return (<React.Fragment>
+            <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left">Nội dung</TableCell>
             <TableCell component="th" scope="row" align="left">Điểm số</TableCell>
             <TableCell component="th" scope="row" align="left">Loại</TableCell>
-        </TableHead>)
+        </React.Fragment>)
     }
 
     function handleFilesChange(files) {
