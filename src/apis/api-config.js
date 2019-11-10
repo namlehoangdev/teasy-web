@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
     },
     function (error) {
         console.error('%cAPI RESPONSE FAILURE: ', 'color: #B00020; font-weight: bold', error.response);
-        if (error.response.status === HTTP_STATUS_CODES.unauthorized) {
+        if (error.response.status && error.response.status === HTTP_STATUS_CODES.unauthorized) {
             store.dispatch(updateUnauthorizedDialog(true))
         }
         return Promise.reject(error.response);

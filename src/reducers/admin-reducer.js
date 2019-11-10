@@ -10,14 +10,32 @@ import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
 import fakeQuestions from '../fake-data/fake-questions';
 import {normalizer} from "../utils/byid-utils";
+import {EditorState} from 'draft-js';
 
 
 //const contestSchema = new schema.Entity('contest');
 // const testSchema = new schema.Entity('test');
 // const questionSchema = new schema.Entity('question');
 // const contestListSchema = new schema.Array(contestSchema);
-
-
+const dump = {
+    questions: {
+        byId: [
+            -1
+        ],
+        byHash: {
+            '-1': {
+                id: -1,
+                content: EditorState.createEmpty(),
+                type: 0,
+                answers: {
+                    byId: [],
+                    byHash: {}
+                }
+            }
+        },
+        name: 'AASD'
+    }
+}
 const initialState = {
     isOpenAdminFullscreenDialog: false,
     contest: {},
@@ -28,7 +46,7 @@ const initialState = {
         isOpen: false
     },
     editingContest: {isPublic: false, permittedUsers: []},
-    editingTest: {},
+    editingTest: dump,
     editingQuestion: {},
 
     error: null,

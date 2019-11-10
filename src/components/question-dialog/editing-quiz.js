@@ -108,13 +108,26 @@ export default function EditingQuiz(props) {
         </Grid>)
     }
 
+    function handleRadioChange(event) {
+        const {answers} = data;
+        const answersId = event.target.value.toString();
+        setAnswerRadioValue(event.target.value);
+        onChange({
+            answers: produce(answers, draftState => {
+                draftState.byId.map(id => {
+                    draftState.byHash[id].isTrue = id == answersId;
+                })
+
+            })
+        });
+    }
 
     return (<FormControl component="fieldset" className={classes.formControl}>
         <Grid item xs={11} sm={11} md={11} className={classes.radioGroup}>
             <RadioGroup name="edit-answer-radio" value={answerRadioValue}
                         className={classes.radioGroup}
                         aria-label="edit-answer-radio-1"
-                        onChange={(event) => setAnswerRadioValue(event.target.value)}>
+                        onChange={handleRadioChange}>
                 {answers && answers.byId && answers.byId.map(renderAnswers)}
                 {/*{renderAddNewAnswerInput()}*/}
             </RadioGroup>

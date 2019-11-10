@@ -67,7 +67,6 @@ export default function EditingQuestionContent(props) {
 
 
     function renderQuestionTypeMenu(questionTypeCode) {
-        console.log(questionTypeCode);
         return (
             <MenuItem key={questionTypeCode} value={questionTypeCode}>{QUESTION_TYPE_TEXT[questionTypeCode]}</MenuItem>)
     }
@@ -79,6 +78,7 @@ export default function EditingQuestionContent(props) {
                     <Select value={(questionTypeCode === 0 || questionTypeCode > 0) ? questionTypeCode : -1}
                             onChange={handleChangeQuestionType}
                             displayEmpty
+                            disableUnderline
                             inputProps={{
                                 name: 'question-type-selector', id: 'question-type-selector',
                             }}>

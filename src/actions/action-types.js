@@ -42,6 +42,7 @@ export const GET_USER_BY_ID = createRequestType('GET_USER_BY_ID');
 
 /*------------------------------------------------ADMIN------------------------------------------------*/
 export const GET_OWN_CONTESTS_API = 'GET_OWN_CONTESTS_API';
+export const POST_TEST = 'POST_TEST';
 export const UPDATE_OWNED_CONTESTS = 'UPDATE_OWNED_CONTESTS';
 export const OPEN_CREATE_QUESTION_DIALOG = 'OPEN_CREATE_QUESTION_DIALOG';
 export const CANCEL_CREATE_QUESTION_DIALOG = 'CANCEL_CREATE_QUESTION_DIALOG';

@@ -17,7 +17,7 @@ import {Close as CloseIcon} from "@material-ui/icons";
 import {QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
-import {setOpenAdminFullscreenDialog, updateEditingTest} from "../../actions";
+import {postTest, setOpenAdminFullscreenDialog, updateEditingTest} from "../../actions";
 import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
 import EditingQuestionContent from "../../components/question-dialog/editing-question-content";
 import produce from 'immer';
@@ -36,6 +36,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateTestPage() {
     const {editingTest} = useSelector(state => state.adminReducer);
+    const {profile} = useSelector(state => state.authReducer);
+    const {id: ownerId, name: ownerName} = profile;
     const {questions = new DefaultNormalizer()} = editingTest;
     const [addNewAnchorEl, setAddNewAnchorEl] = useState(null);
 
@@ -49,7 +51,7 @@ export default function CreateTestPage() {
     }
 
     function handleSave() {
-        
+        dispatch(postTest({...editingTest, ownerId, ownerName}))
     }
 
     function handleQuestionChange(questionId, data) {
@@ -72,6 +74,14 @@ export default function CreateTestPage() {
 
     function handleAddNewQuestionButtonClick(event) {
         setAddNewAnchorEl(event.currentTarget);
+    }
+
+    function handleTestNameChange(event) {
+        dispatch(updateEditingTest({
+            questions: produce(questions, draft => {
+                draft.name = event.target.value;
+            })
+        }))
     }
 
     function handlePopperItemClick(questionTypeCode) {
@@ -100,7 +110,7 @@ export default function CreateTestPage() {
 
     function renderQuestionTypeMenu(questionTypeCode) {
         return (<Typography className={classes.typography}
-                            onClick={handlePopperItemClick}>{QUESTION_TYPE_TEXT[questionTypeCode]}</Typography>)
+                            onClick={() => handlePopperItemClick(questionTypeCode)}>{QUESTION_TYPE_TEXT[questionTypeCode]}</Typography>)
     }
 
     const openAddNewPopper = Boolean(addNewAnchorEl);
@@ -122,6 +132,7 @@ export default function CreateTestPage() {
                     placeholder="Điền đề thi"
                     fullWidth
                     className={classes.testTitle}
+                    onChange={handleTestNameChange}
                     inputProps={{
                         'aria-label': 'description',
                     }}
