@@ -67,13 +67,13 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function ChooseTestDialog(props) {
-    const {open, handleClose, tests, onSelectedUsersChange, selectedUserIds} = props;
+    const {open, handleClose, tests, onSelectedTestsChange, selectedTestIds} = props;
     const [searchValue, setSearchValue] = useState('');
     const classes = useStyles();
 
 
     function isSelected(id) {
-        return selectedUserIds.indexOf(id) !== -1;
+        return selectedTestIds.indexOf(id) !== -1;
     }
 
     const handleCloseDialog = () => {
@@ -84,51 +84,51 @@ export default function ChooseTestDialog(props) {
         setSearchValue(event.target.value);
     }
 
-    function handleUserClick(event, userId) {
-        const selectedIndex = selectedUserIds.indexOf(userId);
-        let newSelected = [...selectedUserIds];
+    function handleTestClick(event, testId) {
+        const selectedIndex = selectedTestIds.indexOf(testId);
+        let newSelected = [...selectedTestIds];
         if (selectedIndex === -1) {
-            newSelected.push(userId);
+            newSelected.push(testId);
         }
-        onSelectedUsersChange(newSelected);
+        onSelectedTestsChange(newSelected);
     }
 
-    function renderUsers(userId) {
-        const {name, email} = tests.byHash[userId];
-        const isItemSelected = isSelected(userId);
+    function renderTests(testId) {
+        const {name, hasFullAnswers} = tests.byHash[testId];
+        const isItemSelected = isSelected(testId);
         return (
             <TableRow
                 hover
-                onClick={event => handleUserClick(event, userId)}
+                onClick={event => handleTestClick(event, testId)}
                 role="checkbox"
                 aria-checked={isItemSelected}
-                key={userId}
+                key={testId}
                 selected={isItemSelected}>
                 <TableCell padding="checkbox">
                     <Checkbox
                         checked={isItemSelected}
-                        inputProps={{'aria-labelledby': userId}}
+                        inputProps={{'aria-labelledby': testId}}
                     />
                 </TableCell>
                 <TableCell align="left">{name}</TableCell>
-                <TableCell align="left">{email}</TableCell>
+                <TableCell align="left">{hasFullAnswers ? 'Có' : 'Không'}</TableCell>
             </TableRow>
         )
     }
 
     function handleSelectAll(event) {
         if (event.target.checked) {
-            onSelectedUsersChange(tests.byId);
+            onSelectedTestsChange(tests.byId);
             return;
         }
-        onSelectedUsersChange([]);
+        onSelectedTestsChange([]);
     }
 
     function renderTableBody() {
         if (searchValue.length === 0) {
-            return (tests.byId.map(renderUsers))
+            return (tests.byId.map(renderTests))
         }
-        return tests.byId.filter(id => tests.byHash[id].name.includes(searchValue)).map(renderUsers);
+        return tests.byId.filter(id => tests.byHash[id].name.includes(searchValue)).map(renderTests);
     }
 
     return (<Dialog
@@ -158,15 +158,15 @@ export default function ChooseTestDialog(props) {
                     <TableRow>
                         <TableCell padding="checkbox">
                             <Checkbox
-                                indeterminate={selectedUserIds.length > 0 && selectedUserIds.length < tests.length}
-                                checked={selectedUserIds.length === tests.length}
+                                indeterminate={selectedTestIds.length > 0 && selectedTestIds.length < tests.length}
+                                checked={selectedTestIds.length === tests.length}
                                 onChange={handleSelectAll}
                                 inputProps={{'aria-label': 'select all desserts'}}
                             />
                         </TableCell>
                         <TableCell component="th" align="left"> </TableCell>
                         <TableCell component="th" align="left">Tên đề thi</TableCell>
-                        <TableCell component="th" align="left">Email</TableCell>
+                        <TableCell component="th" align="left">Đầy đủ đáp án</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody style={{minHeight: '500px'}}>
@@ -184,9 +184,9 @@ export default function ChooseTestDialog(props) {
 
 ChooseTestDialog.propTypes = {
     tests: PropTypes.func,
-    onSelectedUsersChange: PropTypes.func,
+    onSelectedTestsChange: PropTypes.func,
     open: PropTypes.bool,
     handleClose: PropTypes.func,
-    selectedUserIds: PropTypes.array
+    selectedTestIds: PropTypes.array
 };
 

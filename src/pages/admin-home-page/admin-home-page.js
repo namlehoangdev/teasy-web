@@ -126,18 +126,17 @@ export default function AdminHomePage() {
 
     useEffect(() => {
         //TODO: remove these lines
-        // dispatch(setOpenAdminFullscreenDialog(true));
-        // setCreatePopAnchorEl(null);
-        // setCurrentFullscreenPath(PAGE_PATHS.createTest);
-        // history.push(`${path}/${PAGE_PATHS.createTest}`);
-        // return;
-        //dispatch(openCreateQuestionDialog());
+        dispatch(setOpenAdminFullscreenDialog(true));
+        setCreatePopAnchorEl(null);
+        setCurrentFullscreenPath(PAGE_PATHS.createContest);
+        history.push(`${path}/${PAGE_PATHS.createContest}`);
 
+        //dispatch(openCreateTest());
 
-        const item = listNavItemMap[2];
-        setSelectedIndex(item.key);
-        setAppBarTitle(item.name);
-        history.push(`${path}/${item.path}`);
+        // const item = listNavItemMap[1];
+        // setSelectedIndex(item.key);
+        // setAppBarTitle(item.name);
+        // history.push(`${path}/${item.path}`);
     }, []);
 
 

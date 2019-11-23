@@ -1,0 +1,14 @@
+{
+  "isPublic": false,
+  "permittedUsers": [],
+  "testIds": [
+    "5dc7d080eb416750783ad105",
+    "5dc7eb690dc0101410f04a4e"
+  ],
+  "name": "Thi học sinh giỏi",
+  "description": "123",
+  "isSecured": true,
+  "password": "123",
+  "startDate": "2019-11-23T11:22",
+  "duration": "01:39"
+}

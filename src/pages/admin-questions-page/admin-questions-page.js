@@ -1,14 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import './admin-questions-page.scss';
-import {Backdrop, Checkbox, makeStyles, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {makeStyles, TableCell} from "@material-ui/core";
 import {Folder as FolderIcon} from "@material-ui/icons";
-import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@material-ui/lab";
-import {QUESTION_TYPE_TEXT, TEXT} from "../../consts";
-import {CreateNewFolder as CreateNewFolderIcon, PostAdd as PostAddIcon} from "@material-ui/icons";
-import {WorkingTable} from "../../components";
-import PropTypes from "prop-types";
+import {QUESTION_TYPE_TEXT} from "../../consts";
 import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router";
 import {updateAdminQuestionById, updateAdminQuestions} from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 
