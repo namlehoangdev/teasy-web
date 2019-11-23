@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import produce from 'immer';
+//import produce from 'immer';
 import {Breadcrumbs, Button, makeStyles, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
 import {NavigateNext as NavigateNextIcon} from "@material-ui/icons";
 
@@ -39,9 +39,9 @@ function isSubPath(childPath, fullPath) {
     return fullPath.length > childPath.length && fullPath.slice(0, childPath.length).toString() === childPath.toString()
 }
 
-function haveFolderNameInPath(fullPath, path, folderName) {
-    return isSubPath(path, fullPath) && folderName === fullPath[path.length]
-}
+// function haveFolderNameInPath(fullPath, path, folderName) {
+//     return isSubPath(path, fullPath) && folderName === fullPath[path.length]
+// }
 
 
 function isFileInPath(directory, currentPath) {
@@ -53,6 +53,7 @@ export default function WorkingTableV2(props) {
     //const dragFolderIcon = document.createElement('i');
     const dragGhost = document.createElement('div');
     const {files, setFiles, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById} = props;
+    const {onFileClick, onFolderClick} = props;
     const [dragItem, setCurrentDrag] = useState(null);
     const [currentDragOver, setCurrentDragOver] = useState(null);
     const [currentPath, setCurrentPath] = useState([]);
@@ -79,6 +80,9 @@ export default function WorkingTableV2(props) {
     function generateFolders(path) {
         const currentFolderList = [];
         console.log('generateFolders', files, path);
+        if (!files || !files.byId) {
+            return;
+        }
         files.byId.forEach(id => {
             const {directory} = files.byHash[id];
             if (directory && isSubPath(currentPath, directory)) {
@@ -88,7 +92,7 @@ export default function WorkingTableV2(props) {
                 }
             }
         });
-        setCurrentFolders(currentFolderList)
+        setCurrentFolders(currentFolderList);
     }
 
 
@@ -167,7 +171,10 @@ export default function WorkingTableV2(props) {
     function privateRenderFolders(folder, index) {
         return (
             <TableRow key={`folder${folder}${index}`} draggable='true'
-                      onClick={() => setCurrentPath([...currentPath, folder])}
+                      onClick={() => {
+                          setCurrentPath([...currentPath, folder]);
+                          onFolderClick(folder, index);
+                      }}
                       onDragStart={(event) => onStart(event, folder)}
                       onDragEnd={() => setCurrentDragOver(null)}
                       onDrop={() => handleDropInFolder(folder)}
@@ -180,11 +187,13 @@ export default function WorkingTableV2(props) {
 
 
     function privateRenderFiles(fileId, index) {
-        if (isFileInPath(files.byHash[fileId].directory, currentPath))
+        console.log('check error: ', files.byHash[fileId]);
+        if (isFileInPath(files.byHash[fileId].directory || [], currentPath))
             return (
                 <TableRow key={`file${fileId}${index}`} draggable='true'
                           onDragStart={(event) => onStart(event, files.byHash[fileId])}
                           onDragEnd={() => setCurrentDragOver(null)}
+                          onClick={() => onFileClick(fileId)}
                           onDrop={() => hideGhost()}>
                     {renderFiles && renderFiles(fileId, index)}
                 </TableRow>
@@ -232,5 +241,18 @@ WorkingTableV2.propTypes = {
     renderFiles: PropTypes.func,
     renderFolders: PropTypes.func,
     renderHeaders: PropTypes.func,
-    dragDisplayProperty: PropTypes.string
+    dragDisplayProperty: PropTypes.string,
+    onFileClick: PropTypes.func,
+    onFolderClick: PropTypes.func
 };
+
+WorkingTableV2.defaultProps = {
+    setFiles: () => {
+    },
+    setFileById: () => {
+    },
+    onFileClick: () => {
+    },
+    onFolderClick: () => {
+    },
+}

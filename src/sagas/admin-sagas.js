@@ -2,7 +2,13 @@ import {takeLatest, call, put} from 'redux-saga/effects';
 import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
-import {GET_OWN_CONTESTS_API, GET_OWN_TESTS, POST_LOGIN_BY_THIRD_PARTY, POST_TEST,} from "../actions/action-types";
+import {
+    GET_OWN_CONTESTS_API,
+    GET_OWN_TESTS,
+    POST_CONTEST,
+    POST_LOGIN_BY_THIRD_PARTY,
+    POST_TEST,
+} from "../actions/action-types";
 import {history} from "../configurations";
 import {updateOwnedContests} from "../actions";
 import {denormalize, denormalizer} from "../utils/byid-utils";
@@ -38,11 +44,11 @@ export function* getOwnContestsSaga() {
 export function* getOwnTestsSaga() {
     try {
         yield put(showLoading());
-        //const response = yield call(APIs.getOwnTestsAPI);
-        //if (response) {
-        //  console.log('getOwnTestsSaga', response);
-        //yield put(updateOwnTests(response.data));
-        //}
+        const response = yield call(APIs.getOwnTestsAPI);
+        console.log('get own test response: ', response);
+        if (response.data) {
+            yield put(updateOwnTests(response.data));
+        }
     } catch (error) {
         console.log('getOwnTestsSaga failed: ', error);
     } finally {
@@ -68,6 +74,20 @@ export function* postTestSaga(action) {
     }
 }
 
+export function* postContestSaga(action) {
+    const {payload} = action;
+    try {
+        console.log('post contest saga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.postContestAPI, payload);
+        console.log('postContestSaga succeed: ', response);
+    } catch (error) {
+        console.log('postContestSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
 /*-----saga watchers-----*/
 function* getOwnContestsWatcherSaga() {
     yield takeLatest(GET_OWN_CONTESTS_API, getOwnContestsSaga);
@@ -81,8 +101,14 @@ function* postTestSagaWatcher() {
     yield takeLatest(POST_TEST, postTestSaga);
 }
 
+function* postContestSagaWatcher() {
+    yield takeLatest(POST_CONTEST, postContestSaga);
+}
+
+
 export default [
     getOwnContestsWatcherSaga(),
     postTestSagaWatcher(),
-    getOwnTestsWatcherSaga()
+    getOwnTestsWatcherSaga(),
+    postContestSagaWatcher()
 ];
