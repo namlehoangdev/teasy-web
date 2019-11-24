@@ -71,8 +71,11 @@ export const UPDATE_LANGUAGE_MODE = 'UPDATE_LANGUAGE_MODE';
 
 /*------------------------------------------------PLAYGROUND------------------------------------------------*/
 export const GET_SHARED_CONTESTS = 'GET_SHARED_CONTESTS';
-export const GET_ALL_CONTESTS = 'GET_ALL_CONTESTS';
+export const GET_PUBLIC_CONTESTS = 'GET_PUBLIC_CONTESTS';
 
 export const UPDATE_SHARED_CONTESTS = 'UPDATE_SHARED_CONTESTS';
+export const UPDATE_PUBLIC_CONTESTS = 'UPDATE_PUBLIC_CONTESTS';
 export const UPDATE_ALL_CONTESTS = 'UPDATE_ALL_CONTESTS';
+
+export const UPDATE_ALL_CONTEST_BY_ID = 'UPDATE_ALL_CONTEST_BY_ID';
 

@@ -15,7 +15,6 @@ import {
     ListItemIcon,
     ListItemText,
     Fab,
-    Popover,
     Avatar,
     Button,
     Popper,
@@ -27,7 +26,7 @@ import {
 } from '@material-ui/core';
 import {Route, Switch} from "react-router";
 import {
-    AdminContestsPage, AdminQuestionsPage, AdminTestsPage,
+    PlaygroundAllContestsPage, PlaygroundContestResultsPage, PlaygroundSharedContestsPage
 } from "../index";
 import {
     Menu as MenuIcon,
@@ -40,10 +39,6 @@ import {
 import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
 import {PAGE_PATHS} from "../../consts";
-import {setOpenAdminFullscreenDialog} from "../../actions";
-import PlaygroundAllContestsPage from '../playground-all-contests-page';
-import PlaygroundContestsHistoryPage from '../playground-contests-history-page';
-import PlaygroundSharedContestsPage from '../playground-shared-contests-page';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
@@ -117,7 +112,7 @@ export default function PlaygroundHomePage() {
     const classes = useStyles();
     const theme = useTheme();
     const history = useHistory();
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const {path} = useRouteMatch();
 
     const [openDrawer, setOpenDrawer] = useState(true);
@@ -126,12 +121,12 @@ export default function PlaygroundHomePage() {
     const {language} = useSelector(state => state.settingReducer);
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
-    const [selectedAvatarOptions, setselectedAvatarOptions] = useState(0);
+    const [selectedAvatarOptions, setSelectedAvatarOptions] = useState(0);
     const {profile} = useSelector(state => state.authReducer);
 
 
     const handleMenuItemClick = (event, index) => {
-        setselectedAvatarOptions(index);
+        setSelectedAvatarOptions(index);
         setOpen(false);
         console.log(profile.name)
     };
@@ -257,7 +252,7 @@ export default function PlaygroundHomePage() {
                 <Switch>
                     <Route path={`${path}/${PAGE_PATHS.allContests}`} component={PlaygroundAllContestsPage}/>
                     <Route path={`${path}/${PAGE_PATHS.sharedContests}`} component={PlaygroundSharedContestsPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={PlaygroundContestsHistoryPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={PlaygroundContestResultsPage}/>
                 </Switch>
             </main>
         </div>

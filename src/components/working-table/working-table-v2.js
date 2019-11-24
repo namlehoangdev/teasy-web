@@ -52,7 +52,7 @@ function isFileInPath(directory, currentPath) {
 export default function WorkingTableV2(props) {
     //const dragFolderIcon = document.createElement('i');
     const dragGhost = document.createElement('div');
-    const {files, setFiles, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById} = props;
+    const {files, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
     const {onFileClick, onFolderClick} = props;
     const [dragItem, setCurrentDrag] = useState(null);
     const [currentDragOver, setCurrentDragOver] = useState(null);
@@ -170,7 +170,7 @@ export default function WorkingTableV2(props) {
 
     function privateRenderFolders(folder, index) {
         return (
-            <TableRow key={`folder${folder}${index}`} draggable='true'
+            <TableRow key={`folder${folder}${index}`} draggable={draggable}
                       onClick={() => {
                           setCurrentPath([...currentPath, folder]);
                           onFolderClick(folder, index);
@@ -190,7 +190,7 @@ export default function WorkingTableV2(props) {
         console.log('check error: ', files.byHash[fileId]);
         if (isFileInPath(files.byHash[fileId].directory || [], currentPath))
             return (
-                <TableRow key={`file${fileId}${index}`} draggable='true'
+                <TableRow key={`file${fileId}${index}`} draggable={draggable}
                           onDragStart={(event) => onStart(event, files.byHash[fileId])}
                           onDragEnd={() => setCurrentDragOver(null)}
                           onClick={() => onFileClick(fileId)}
@@ -201,7 +201,7 @@ export default function WorkingTableV2(props) {
     }
 
     function renderBreadcrumb(breadcrumb, index) {
-        return (<Button draggable='true'
+        return (<Button draggable={draggable}
                         key={`breadcrumb'${breadcrumb}${index}`}
                         onDrop={() => handleDropInBreadcrumbs(breadcrumb, index)}
                         onClick={() => setCurrentPath(prev => prev.slice(0, index + 1))}>
@@ -212,7 +212,7 @@ export default function WorkingTableV2(props) {
 
     return (<div onDragOver={preProcessDragOver} className={classes.tableWrapper}>
         <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small"/>}>
-            <Button draggable='true'
+            <Button draggable={draggable}
                     key={`breadcrumb'${-1}`}
                     onDrop={() => handleDropInBreadcrumbs(null, -1)}
                     onClick={() => setCurrentPath([])}>Home</Button>
@@ -243,7 +243,8 @@ WorkingTableV2.propTypes = {
     renderHeaders: PropTypes.func,
     dragDisplayProperty: PropTypes.string,
     onFileClick: PropTypes.func,
-    onFolderClick: PropTypes.func
+    onFolderClick: PropTypes.func,
+    draggable: PropTypes.bool
 };
 
 WorkingTableV2.defaultProps = {
@@ -255,4 +256,5 @@ WorkingTableV2.defaultProps = {
     },
     onFolderClick: () => {
     },
-}
+    draggable: true
+};

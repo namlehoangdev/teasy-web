@@ -1,9 +1,9 @@
 import ApiInstance from './api-config';
 
 
-export const getAllContestsAPI = () => ApiInstance.get('Competitions');
+export const getPublicContestsAPI = () => ApiInstance.get('Competitions');
 
-export const getSharedContestsAPI = ()=>ApiInstance.get('Competitions/MyShared');
+export const getSharedContestsAPI = () => ApiInstance.get('Competitions/MyShared');
 
 // export const getOwnTestsAPI = () => ApiInstance.get('Tests/MyOwn');
 //

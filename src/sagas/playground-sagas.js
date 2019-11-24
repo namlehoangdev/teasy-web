@@ -3,26 +3,25 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    GET_ALL_CONTESTS, GET_SHARED_CONTESTS,
+    GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS,
 } from "../actions/action-types";
-import {updateOwnContests} from "../actions";
 import {normalizer} from "../utils/byid-utils";
-import {updateAllContests} from "../actions";
 import {updateSharedContests} from "../actions";
+import {updatePublicContests} from "../actions";
 
 
 /*-----saga effects-----*/
-export function* getAllContestsSaga() {
+export function* getPublicContestsSaga() {
     try {
         yield put(showLoading());
-        const response = yield call(APIs.getAllContestsAPI);
-        console.log('getAllContestsSaga: ', response);
+        const response = yield call(APIs.getPublicContestsAPI);
+        console.log('getPublicContestsSaga: ', response);
         if (response) {
             const contests = normalizer(response.data) || null;
-            yield put(updateAllContests(contests));
+            yield put(updatePublicContests(contests));
         }
     } catch (error) {
-        console.log('getAllContestsSaga failed: ', error);
+        console.log('getPublicContestsSaga failed: ', error);
     } finally {
         yield put(hideLoading());
     }
@@ -32,7 +31,7 @@ export function* getAllContestsSaga() {
 export function* getSharedContestsSaga() {
     try {
         yield put(showLoading());
-        const response = yield call(APIs.getSharedContestsAPI());
+        const response = yield call(APIs.getSharedContestsAPI);
         console.log('getSharedContestsSaga: ', response);
         if (response) {
             const contests = normalizer(response.data) || null;
@@ -47,8 +46,8 @@ export function* getSharedContestsSaga() {
 
 
 /*-----saga watchers-----*/
-function* getAllContestsWatcherSagas() {
-    yield takeLatest(GET_ALL_CONTESTS, getAllContestsSaga);
+function* getPublicContestsWatcherSagas() {
+    yield takeLatest(GET_PUBLIC_CONTESTS, getPublicContestsSaga);
 }
 
 function* getSharedContestsWatcherSaga() {
@@ -57,5 +56,5 @@ function* getSharedContestsWatcherSaga() {
 
 export default [
     getSharedContestsWatcherSaga(),
-    getAllContestsWatcherSagas(),
+    getPublicContestsWatcherSagas(),
 ];

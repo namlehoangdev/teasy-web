@@ -1,15 +1,12 @@
 import {
-    API_STATUS,
-    GET_ALL_CONTESTS,
-    GET_SHARED_CONTESTS,
-    LOGOUT, UPDATE_ALL_CONTESTS,
-    UPDATE_OWN_CONTESTS,
-    UPDATE_OWN_TESTS
+    UPDATE_ALL_CONTEST_BY_ID, UPDATE_ALL_CONTESTS,
+    UPDATE_PUBLIC_CONTESTS, UPDATE_SHARED_CONTESTS
 } from '../actions/action-types';
-import {DefaultNormalizer} from "../utils/byid-utils";
+import {addToNormalizedList, DefaultNormalizer} from "../utils/byid-utils";
 import {produce} from "immer";
 
 const initialState = {
+    contests: new DefaultNormalizer(),
     isLoading: false,
     error: null,
 };
@@ -21,10 +18,26 @@ export default function playgroundReducer(state = initialState, action) {
             case UPDATE_ALL_CONTESTS:
                 draft.contests = payload.contests || new DefaultNormalizer();
                 return;
-            case UPDATE_OWN_TESTS:
-                draft.tests = payload.tests || new DefaultNormalizer();
+
+            case UPDATE_PUBLIC_CONTESTS:
+                console.log('public: ', payload);
+                payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
+                    addToNormalizedList(draft.contests, payload.contests.byHash[id] || new DefaultNormalizer())
+                });
                 return;
 
+            case UPDATE_SHARED_CONTESTS:
+                console.log('shared: ', payload);
+                payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
+                    addToNormalizedList(draft.contests, payload.contests.byHash[id] || new DefaultNormalizer())
+                });
+                return;
+
+            case UPDATE_ALL_CONTEST_BY_ID: {
+                const {id, contest} = payload;
+                draft.contests.byHash[id] = contest;
+                return;
+            }
             default:
                 return state;
         }
