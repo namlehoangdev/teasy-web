@@ -3,9 +3,7 @@ import {makeStyles, TableCell} from "@material-ui/core";
 import {Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getOwnContests,
-    updateOwnContestById,
-    updateOwnContests
+    getPublicContests, getSharedContests, updateAllContestById, updateAllContests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 
@@ -38,26 +36,18 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function AdminContestPage() {
-    const {contests} = useSelector(state => state.adminReducer) || {};
+export default function PlaygroundAllContestsPage() {
+    const {contests, sharedContestIds} = useSelector(state => state.playgroundReducer) || {};
     const dispatch = useDispatch();
     const classes = useStyles();
-    useEffect(() => {
-        dispatch(getOwnContests());
-    }, []);
-
-    function handleCreateNewFolderClick() {
-        console.log('create new folder');
-    }
 
 
     function renderFiles(id) {
-        //const labelId = `enhanced-table-checkbox-${index}`;
-        const {name, description, startAt} = contests.byHash[id];
+        const {name, ownerName, startAt} = contests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
-            <TableCell align="left">{description}</TableCell>
+            <TableCell align="left">{ownerName}</TableCell>
             <TableCell align="left">{startAt}</TableCell>
         </React.Fragment>)
     }
@@ -75,30 +65,31 @@ export default function AdminContestPage() {
         return (<React.Fragment>
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left">Tên cuộc thi</TableCell>
-            <TableCell component="th" scope="row" align="left">Mô tả</TableCell>
+            <TableCell component="th" scope="row" align="left">Người chia sẻ</TableCell>
             <TableCell component="th" scope="row" align="left">Ngày tạo</TableCell>
         </React.Fragment>)
     }
 
     function handleFilesChange(files) {
-        dispatch(updateOwnContests(files));
+        dispatch(updateAllContests(files));
     }
 
     function handleFileByIdChange(id, file) {
-        dispatch(updateOwnContestById(id, file));
+        dispatch(updateAllContestById(id, file));
     }
 
 
     return (<div className={classes.root}>
         <div className={classes.header}>
             <WorkingTableV2 filesByHash={contests.byHash}
-                            filesById={contests.byId}
+                            filesById={sharedContestIds}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
                             setFileById={handleFileByIdChange}
                             renderFiles={renderFiles}
                             renderFolders={renderFolders}
-                            renderHeaders={renderHeaders}/>
+                            renderHeaders={renderHeaders}
+            />
         </div>
     </div>)
 }

@@ -4,7 +4,7 @@ import {makeStyles, TableCell} from "@material-ui/core";
 import {Folder as FolderIcon} from "@material-ui/icons";
 import {QUESTION_TYPE_TEXT} from "../../consts";
 import {useDispatch, useSelector} from "react-redux";
-import {updateAdminQuestionById, updateAdminQuestions} from "../../actions";
+import {getOwnQuestions, updateOwnQuestionById, updateOwnQuestions} from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +41,7 @@ export default function AdminQuestionsPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
-        console.log(questions);
+        dispatch(getOwnQuestions());
     }, []);
 
     function handleCreateNewFolderClick() {
@@ -78,17 +78,18 @@ export default function AdminQuestionsPage() {
     }
 
     function handleFilesChange(files) {
-        dispatch(updateAdminQuestions(files));
+        dispatch(updateOwnQuestions(files));
     }
 
     function handleFileByIdChange(id, file) {
-        dispatch(updateAdminQuestionById(id, file));
+        dispatch(updateOwnQuestionById(id, file));
     }
 
 
     return (<div className={classes.root}>
         <div className={classes.header}>
-            <WorkingTableV2 files={questions}
+            <WorkingTableV2 filesByHash={questions.byHash}
+                            filesById={questions.byId}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
                             setFileById={handleFileByIdChange}

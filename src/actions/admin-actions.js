@@ -1,27 +1,29 @@
 import {
     action,
     SET_OPEN_ADMIN_FULLSCREEN_DIALOG,
-    GET_OWN_CONTESTS_API,
-    UPDATE_OWNED_CONTESTS,
+    GET_OWN_CONTESTS,
+    UPDATE_OWN_CONTESTS,
     OPEN_CREATE_QUESTION_DIALOG,
     UPDATE_EDITING_QUESTION,
     UPDATE_EDITING_TEST,
     UPDATE_EDITING_CONTEST,
     CANCEL_CREATE_QUESTION_DIALOG,
-    UPDATE_ADMIN_QUESTION_BY_ID,
+    UPDATE_OWN_QUESTION_BY_ID,
     POST_TEST,
     GET_OWN_TESTS,
     UPDATE_OWN_TESTS,
-    UPDATE_ADMIN_QUESTIONS, UPDATE_ADMIN_TEST_BY_ID, UPDATE_ADMIN_TESTS, POST_CONTEST
+    UPDATE_OWN_QUESTIONS,
+    UPDATE_OWN_TEST_BY_ID,
+    POST_CONTEST, UPDATE_OWN_CONTEST_BY_ID, GET_OWN_QUESTIONS
 } from './action-types';
 
 export const setOpenAdminFullscreenDialog = value => action(SET_OPEN_ADMIN_FULLSCREEN_DIALOG, {value});
 
-export const getOwnContests = () => action(GET_OWN_CONTESTS_API);
+export const getOwnContests = () => action(GET_OWN_CONTESTS);
 
 export const getOwnTests = () => action(GET_OWN_TESTS);
 
-export const updateOwnedContests = (contests) => action(UPDATE_OWNED_CONTESTS, {contests});
+export const getOwnQuestions = () => action(GET_OWN_QUESTIONS);
 
 export const updateOwnTests = (tests) => action(UPDATE_OWN_TESTS, {tests});
 
@@ -35,14 +37,16 @@ export const updateEditingTest = (test) => action(UPDATE_EDITING_TEST, test);
 
 export const updateEditingContest = (contest) => action(UPDATE_EDITING_CONTEST, contest);
 
-export const updateAdminQuestions = (questions) => action(UPDATE_ADMIN_QUESTIONS, {questions});
+export const updateOwnQuestions = (questions) => action(UPDATE_OWN_QUESTIONS, {questions});
 
-export const updateAdminQuestionById = (id, question) => action(UPDATE_ADMIN_QUESTION_BY_ID, {id, question});
+export const updateOwnQuestionById = (id, question) => action(UPDATE_OWN_QUESTION_BY_ID, {id, question});
 
-export const updateAdminTests = (tests) => action(UPDATE_ADMIN_TESTS, {tests});
 
-export const updateAdminTestById = (id, test) => action(UPDATE_ADMIN_TEST_BY_ID, {id, test});
+export const updateOwnTestById = (id, test) => action(UPDATE_OWN_TEST_BY_ID, {id, test});
 
+export const updateOwnContests = (contests) => action(UPDATE_OWN_CONTESTS, {contests});
+
+export const updateOwnContestById = (id, contest) => action(UPDATE_OWN_CONTEST_BY_ID, {id, contest});
 
 export const postTest = (tests) => action(POST_TEST, tests);
 
