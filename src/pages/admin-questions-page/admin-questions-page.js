@@ -88,7 +88,8 @@ export default function AdminQuestionsPage() {
 
     return (<div className={classes.root}>
         <div className={classes.header}>
-            <WorkingTableV2 files={questions}
+            <WorkingTableV2 filesByHash={questions.byHash}
+                            filesById={questions.byId}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
                             setFileById={handleFileByIdChange}

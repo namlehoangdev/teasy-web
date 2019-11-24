@@ -52,7 +52,7 @@ function isFileInPath(directory, currentPath) {
 export default function WorkingTableV2(props) {
     //const dragFolderIcon = document.createElement('i');
     const dragGhost = document.createElement('div');
-    const {files, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
+    const {filesByHash, filesById, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
     const {onFileClick, onFolderClick} = props;
     const [dragItem, setCurrentDrag] = useState(null);
     const [currentDragOver, setCurrentDragOver] = useState(null);
@@ -74,17 +74,16 @@ export default function WorkingTableV2(props) {
 
     useEffect(() => {
         generateFolders(currentPath);
-    }, [currentPath, files.byId]);
+    }, [currentPath, filesById]);
 
 
     function generateFolders(path) {
         const currentFolderList = [];
-        console.log('generateFolders', files, path);
-        if (!files || !files.byId) {
+        if (!filesById) {
             return;
         }
-        files.byId.forEach(id => {
-            const {directory} = files.byHash[id];
+        filesById.forEach(id => {
+            const {directory} = filesByHash[id];
             if (directory && isSubPath(currentPath, directory)) {
                 const folderName = directory[path.length];
                 if (!currentFolderList.includes(folderName)) {
@@ -118,9 +117,9 @@ export default function WorkingTableV2(props) {
         hideGhost();
         if (isFile(dragItem)) {
             const {id} = dragItem;
-            if (id && files.byHash[id]) {
-                let directory = [...files.byHash[id].directory, folder];
-                setFileById && setFileById(id, {...files.byHash[id], directory})
+            if (id && filesByHash[id]) {
+                let directory = [...filesByHash[id].directory, folder];
+                setFileById && setFileById(id, {...filesByHash[id], directory})
             }
         } else {
             return;
@@ -151,13 +150,13 @@ export default function WorkingTableV2(props) {
         } else {
             const {id} = dragItem;
             if (!breadcrumb) {
-                setFileById && setFileById(id, {...files.byHash[id], directory: []});
+                setFileById && setFileById(id, {...filesByHash[id], directory: []});
             }
 
-            if (id && files.byHash[id]) {
-                let directory = [...files.byHash[id].directory];
+            if (id && filesByHash[id]) {
+                let directory = [...filesByHash[id].directory];
                 directory.splice(index + 1, currentPath.length - index - 1);
-                setFileById && setFileById(id, {...files.byHash[id], directory});
+                setFileById && setFileById(id, {...filesByHash[id], directory});
             }
         }
     }
@@ -187,11 +186,11 @@ export default function WorkingTableV2(props) {
 
 
     function privateRenderFiles(fileId, index) {
-        console.log('check error: ', files.byHash[fileId]);
-        if (isFileInPath(files.byHash[fileId].directory || [], currentPath))
+        console.log('check error: ', filesByHash[fileId]);
+        if (isFileInPath(filesByHash[fileId].directory || [], currentPath))
             return (
                 <TableRow key={`file${fileId}${index}`} draggable={draggable}
-                          onDragStart={(event) => onStart(event, files.byHash[fileId])}
+                          onDragStart={(event) => onStart(event, filesByHash[fileId])}
                           onDragEnd={() => setCurrentDragOver(null)}
                           onClick={() => onFileClick(fileId)}
                           onDrop={() => hideGhost()}>
@@ -226,14 +225,15 @@ export default function WorkingTableV2(props) {
             </TableHead>
             <TableBody>
                 {currentFolders.map(privateRenderFolders)}
-                {files && files.byId && files.byId.map(privateRenderFiles)}
+                {filesByHash && filesById && filesById.map(privateRenderFiles)}
             </TableBody>
         </Table>
     </div>)
 }
 
 WorkingTableV2.propTypes = {
-    files: PropTypes.any,//must have name and directory properties
+    filesByHash: PropTypes.any,//must have name and directory properties
+    filesById: PropTypes.any,//must have name and directory properties
     //folders: PropTypes.array.required,
     setFiles: PropTypes.func,
     setFileById: PropTypes.func,

@@ -94,7 +94,8 @@ export default function AdminTestsPage() {
 
     return (<div className={classes.root}>
         <div className={classes.header}>
-            <WorkingTableV2 files={tests}
+            <WorkingTableV2 filesByHash={tests.byHash}
+                            filesById={tests.byId}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
                             setFileById={handleFileByIdChange}

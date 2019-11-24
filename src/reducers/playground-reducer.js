@@ -7,6 +7,8 @@ import {produce} from "immer";
 
 const initialState = {
     contests: new DefaultNormalizer(),
+    sharedContestIds: [],
+    publicContestIds: [],
     isLoading: false,
     error: null,
 };
@@ -20,21 +22,27 @@ export default function playgroundReducer(state = initialState, action) {
                 return;
 
             case UPDATE_PUBLIC_CONTESTS: {
-                let newContests = {};
-                Object.assign(newContests, draft.contests);
-                payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
-                    addToNormalizedList(newContests, payload.contests.byHash[id] || new DefaultNormalizer())
-                });
-                draft.contests = newContests;
+                if (payload.contests && payload.contests.byId) {
+                    let newContests = {};
+                    Object.assign(newContests, draft.contests);
+                    draft.publicContestIds = payload.contests.byId;
+                    payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
+                        addToNormalizedList(newContests, payload.contests.byHash[id] || new DefaultNormalizer())
+                    });
+                    draft.contests = newContests;
+                }
                 return;
             }
             case UPDATE_SHARED_CONTESTS: {
-                let newContests = {};
-                Object.assign(newContests, draft.contests);
-                payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
-                    addToNormalizedList(newContests, payload.contests.byHash[id] || new DefaultNormalizer())
-                });
-                draft.contests = newContests;
+                if (payload.contests && payload.contests.byId) {
+                    let newContests = {};
+                    Object.assign(newContests, draft.contests);
+                    draft.sharedContestIds = payload.contests.byId;
+                    payload.contests.byId.forEach(id => {
+                        addToNormalizedList(newContests, payload.contests.byHash[id] || new DefaultNormalizer())
+                    });
+                    draft.contests = newContests;
+                }
                 return;
             }
             case UPDATE_ALL_CONTEST_BY_ID: {

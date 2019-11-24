@@ -85,7 +85,8 @@ export default function PlaygroundAllContestsPage() {
 
     return (<div className={classes.root}>
         <div className={classes.header}>
-            <WorkingTableV2 files={contests}
+            <WorkingTableV2 filesByHash={contests.byHash}
+                            filesById={contests.byId}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
                             setFileById={handleFileByIdChange}
