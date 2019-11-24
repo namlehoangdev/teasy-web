@@ -52,7 +52,7 @@ function isFileInPath(directory, currentPath) {
 export default function WorkingTableV2(props) {
     //const dragFolderIcon = document.createElement('i');
     const dragGhost = document.createElement('div');
-    const {filesByHash, filesById, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
+    const {filesByHash, selectedFilesHash, filesById, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
     const {onFileClick, onFolderClick} = props;
     const [dragItem, setCurrentDrag] = useState(null);
     const [currentDragOver, setCurrentDragOver] = useState(null);
@@ -186,10 +186,11 @@ export default function WorkingTableV2(props) {
 
 
     function privateRenderFiles(fileId, index) {
-        console.log('check error: ', filesByHash[fileId]);
+        console.log(selectedFilesHash);
         if (isFileInPath(filesByHash[fileId].directory || [], currentPath))
             return (
                 <TableRow key={`file${fileId}${index}`} draggable={draggable}
+                          selected={!!selectedFilesHash[fileId]}
                           onDragStart={(event) => onStart(event, filesByHash[fileId])}
                           onDragEnd={() => setCurrentDragOver(null)}
                           onClick={() => onFileClick(fileId)}
@@ -234,6 +235,7 @@ export default function WorkingTableV2(props) {
 WorkingTableV2.propTypes = {
     filesByHash: PropTypes.any,//must have name and directory properties
     filesById: PropTypes.any,//must have name and directory properties
+    selectedFilesHash: PropTypes.any,
     //folders: PropTypes.array.required,
     setFiles: PropTypes.func,
     setFileById: PropTypes.func,
@@ -244,7 +246,8 @@ WorkingTableV2.propTypes = {
     dragDisplayProperty: PropTypes.string,
     onFileClick: PropTypes.func,
     onFolderClick: PropTypes.func,
-    draggable: PropTypes.bool
+    draggable: PropTypes.bool,
+
 };
 
 WorkingTableV2.defaultProps = {
@@ -256,5 +259,6 @@ WorkingTableV2.defaultProps = {
     },
     onFolderClick: () => {
     },
+    selectedFilesHash: {},
     draggable: true
 };

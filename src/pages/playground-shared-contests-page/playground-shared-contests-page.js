@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function PlaygroundAllContestsPage() {
-    const {contests,sharedContestIds} = useSelector(state => state.playgroundReducer) || {};
+    const {contests, sharedContestIds} = useSelector(state => state.playgroundReducer) || {};
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -88,7 +88,8 @@ export default function PlaygroundAllContestsPage() {
                             setFileById={handleFileByIdChange}
                             renderFiles={renderFiles}
                             renderFolders={renderFolders}
-                            renderHeaders={renderHeaders}/>
+                            renderHeaders={renderHeaders}
+            />
         </div>
     </div>)
 }
