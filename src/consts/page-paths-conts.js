@@ -11,8 +11,8 @@ const EDIT_QUESTION_PATH = 'edit/question';
 const EDIT_TEST_PATH = 'edit/test';
 const EDIT_CONTEST_PATH = 'edit/contest';
 const ALL_CONTESTS_PATH = 'all-contests';
-const MY_SHARED_CONTESTS_PATH = 'my-shared-contests';
-const CONTESTS_HISTORY_PATH = 'contests-history';
+const SHARED_CONTESTS_PATH = 'shared-contests';
+const CONTEST_RESULTS_PATH = 'contest-results';
 
 export const PAGE_PATHS = {
   landing: LANDING,
@@ -28,8 +28,8 @@ export const PAGE_PATHS = {
   editTest: EDIT_TEST_PATH,
   editContest: EDIT_CONTEST_PATH,
   allContests: ALL_CONTESTS_PATH,
-  mySharedContests: MY_SHARED_CONTESTS_PATH,
-  contestsHistory: CONTESTS_HISTORY_PATH
-}
+  sharedContests: SHARED_CONTESTS_PATH,
+  contestResults: CONTEST_RESULTS_PATH
+};
 
 

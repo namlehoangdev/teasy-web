@@ -2,12 +2,11 @@ import React, {useEffect} from 'react';
 import './admin-tests-page.scss';
 import {makeStyles, TableCell} from "@material-ui/core";
 import {Folder as FolderIcon} from "@material-ui/icons";
-import {QUESTION_TYPE_TEXT} from "../../consts";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getOwnTests,
-    updateAdminTestById,
-    updateAdminTests
+    updateOwnTestById,
+    updateOwnTests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 
@@ -49,9 +48,9 @@ export default function AdminTestsPage() {
         dispatch(getOwnTests());
     }, []);
 
-    useEffect(()=>{
-        console.log('when tests change: ',tests);
-    },[tests]);
+    useEffect(() => {
+        console.log('when tests change: ', tests);
+    }, [tests]);
 
     function handleCreateNewFolderClick() {
     }
@@ -85,11 +84,11 @@ export default function AdminTestsPage() {
     }
 
     function handleFilesChange(files) {
-        dispatch(updateAdminTests(files));
+        dispatch(updateOwnTests(files));
     }
 
     function handleFileByIdChange(id, file) {
-        dispatch(updateAdminTestById(id, file));
+        dispatch(updateOwnTestById(id, file));
     }
 
 

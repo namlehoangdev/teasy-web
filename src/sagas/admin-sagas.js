@@ -3,17 +3,16 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    GET_OWN_CONTESTS_API,
+    GET_OWN_CONTESTS,
     GET_OWN_TESTS,
     POST_CONTEST,
-    POST_LOGIN_BY_THIRD_PARTY,
-    POST_TEST,
+    POST_TEST, UPDATE_OWN_QUESTIONS,
 } from "../actions/action-types";
-import {history} from "../configurations";
-import {updateOwnedContests} from "../actions";
-import {denormalize, denormalizer} from "../utils/byid-utils";
+import {updateOwnContests} from "../actions";
+import {DefaultNormalizer, denormalize, normalizer} from "../utils/byid-utils";
 import {convertFromEditorStateToString} from "../utils/editor-converter";
 import {updateOwnTests} from "../actions";
+import {updateOwnQuestions} from "../actions";
 
 const questionsSchema = {
     questions: {
@@ -31,8 +30,10 @@ export function* getOwnContestsSaga() {
     try {
         yield put(showLoading());
         const response = yield call(APIs.getOwnedContestsAPI);
+        console.log('get own contest response: ', response);
         if (response) {
-            yield put(updateOwnedContests(response.data));
+            const contests = normalizer(response.data) || null;
+            yield put(updateOwnContests(contests));
         }
     } catch (error) {
         console.log('getOwnContestsSaga failed: ', error);
@@ -47,10 +48,27 @@ export function* getOwnTestsSaga() {
         const response = yield call(APIs.getOwnTestsAPI);
         console.log('get own test response: ', response);
         if (response.data) {
-            yield put(updateOwnTests(response.data));
+            const tests = normalizer(response.data);
+            yield put(updateOwnTests(tests));
         }
     } catch (error) {
         console.log('getOwnTestsSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+export function* getOwnQuestionsSaga() {
+    try {
+        yield put(showLoading());
+        const response = yield call(APIs.getOwnQuestionsAPI);
+        console.log('getOwnQuestionsSaga response: ', response);
+        if (response.data) {
+            const questions = normalizer(response.data);
+            yield put(updateOwnQuestions(questions));
+        }
+    } catch (error) {
+        console.log('getOwnQuestionsSaga failed: ', error);
     } finally {
         yield put(hideLoading());
     }
@@ -90,11 +108,15 @@ export function* postContestSaga(action) {
 
 /*-----saga watchers-----*/
 function* getOwnContestsWatcherSaga() {
-    yield takeLatest(GET_OWN_CONTESTS_API, getOwnContestsSaga);
+    yield takeLatest(GET_OWN_CONTESTS, getOwnContestsSaga);
 }
 
 function* getOwnTestsWatcherSaga() {
     yield takeLatest(GET_OWN_TESTS, getOwnTestsSaga);
+}
+
+function* getOwnQuestionsWatcherSaga() {
+    yield  takeLatest(UPDATE_OWN_QUESTIONS, getOwnQuestionsSaga);
 }
 
 function* postTestSagaWatcher() {
@@ -107,8 +129,9 @@ function* postContestSagaWatcher() {
 
 
 export default [
+    getOwnTestsWatcherSaga(),
     getOwnContestsWatcherSaga(),
     postTestSagaWatcher(),
-    getOwnTestsWatcherSaga(),
-    postContestSagaWatcher()
+    postContestSagaWatcher(),
+    getOwnQuestionsWatcherSaga()
 ];

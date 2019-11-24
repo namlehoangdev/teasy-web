@@ -2,8 +2,8 @@ import {takeLatest, call, put} from 'redux-saga/effects';
 import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
-import {GET_ALL_USER_API, POST_LOGIN_BY_THIRD_PARTY,} from "../actions/action-types";
-import {updateOwnedContests} from "../actions";
+import {GET_ALL_USERS, POST_LOGIN_BY_THIRD_PARTY,} from "../actions/action-types";
+import {updateOwnContests} from "../actions";
 import {updateAllUsers} from "../actions";
 
 
@@ -27,7 +27,7 @@ export function* getAllUsersSaga() {
 
 /*-----saga watchers-----*/
 function* getAllUsersWatcherSaga() {
-    yield takeLatest(GET_ALL_USER_API, getAllUsersSaga);
+    yield takeLatest(GET_ALL_USERS, getAllUsersSaga);
 }
 
 export default [

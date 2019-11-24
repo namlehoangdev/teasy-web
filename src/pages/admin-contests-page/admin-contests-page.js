@@ -1,74 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {
-    Button,
-    CssBaseline,
-    Backdrop,
-    makeStyles,
-    Breadcrumbs,
-    Table,
-    TableRow,
-    TableCell,
-    TableBody,
-    Checkbox
-} from "@material-ui/core";
-import EnhancedTableHead from "./enhanced-table-head";
-import EnhancedTableToolbar from "./enhanced-table-toolbar";
-import {PAGE_PATHS} from "../../consts";
-import {SpeedDial, SpeedDialIcon, SpeedDialAction} from '@material-ui/lab';
-import {useHistory} from "react-router";
-import {TEXT} from "../../consts";
+import React, {useEffect} from 'react';
+import {makeStyles, TableCell} from "@material-ui/core";
+import {Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    CreateNewFolder as CreateNewFolderIcon,
-    PostAdd as PostAddIcon,
-    NavigateNext as NavigateNextIcon
-} from '@material-ui/icons'
-import {getOwnContests, setOpenAdminFullscreenDialog} from "../../actions";
-import useClickAndDoubleClick from "../../utils/use-click-and-double-click";
-
-function createData(id, name, isFolder, startDate, status) {
-    return {id, name, isFolder, startDate, status};
-}
-
-const rows = [
-    createData(1, 'Cupcake', true, '14/10/2019', true),
-    createData(2, 'Donut', false, '14/10/2019', false),
-    createData(3, 'Eclair', true, '14/10/2019', true),
-    createData(4, 'Frozen yoghurt', false, '14/10/2019', false),
-    createData(5, 'Gingerbread', true, '14/10/2019', false),
-    createData(6, 'Honeycomb', true, '14/10/2019', true),
-    createData(7, 'Ice cream sandwich', false, '14/10/2019', true),
-    createData(8, 'Jelly Bean', true, '14/10/2019', true),
-    createData(9, 'KitKat', false, '14/10/2019', false),
-    createData(10, 'Lollipop', false, '14/10/2019', true),
-    createData(11, 'Marshmallow', false, '14/10/2019', false),
-    createData(12, 'Nougat', false, '14/10/2019', false),
-    createData(13, 'Oreo', true, '14/10/2019', true)
-];
-
-function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function stableSort(array, cmp) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = cmp(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
+    getOwnContests,
+    updateOwnContestById,
+    updateOwnContests
+} from "../../actions";
+import WorkingTableV2 from "../../components/working-table/working-table-v2";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -86,12 +25,6 @@ const useStyles = makeStyles(theme => ({
         bottom: theme.spacing(2),
         right: theme.spacing(2),
     },
-    table: {
-        minWidth: 750,
-    },
-    tableWrapper: {
-        overflowX: 'auto',
-    },
     visuallyHidden: {
         border: 0,
         clip: 'rect(0 0 0 0)',
@@ -105,135 +38,66 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
 export default function AdminContestPage() {
-    //const {path} = useRouteMatch();
-    const [openSpeedDial, setOpenSpeedDial] = useState(false);
-
-    const {contests} = useSelector(state => state.adminReducer);
-    // const {entities, result: ownedContestIds} = contestReducer;
-    // const {contests} = entities;
-
-    const [selectedItems, setSelectedItems] = React.useState([]);
-    const [enableSelectMode, setEnableSelectMode] = React.useState(false);
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('name');
-    const history = useHistory();
+    const {contests} = useSelector(state => state.adminReducer) || [];
     const dispatch = useDispatch();
     const classes = useStyles();
-
     useEffect(() => {
         dispatch(getOwnContests());
     }, []);
 
     function handleCreateNewFolderClick() {
+        console.log('create new folder');
     }
 
-    function handleCreateNewContestClick() {
-        dispatch(setOpenAdminFullscreenDialog(true));
-        history.push(`${PAGE_PATHS.createContest}`)
+
+    function renderFiles(id) {
+        //const labelId = `enhanced-table-checkbox-${index}`;
+        const {name, description, startAt} = contests.byHash[id];
+        return (<React.Fragment>
+            <TableCell align="left"> </TableCell>
+            <TableCell align="left">{name}</TableCell>
+            <TableCell align="left">{description}</TableCell>
+            <TableCell align="left">{startAt}</TableCell>
+        </React.Fragment>)
     }
 
-    const handleRequestSort = (event, property) => {
-        console.log('order by :', orderBy, property);
-
-        const isDesc = orderBy === property && order === 'desc';
-        setOrder(isDesc ? 'asc' : 'desc');
-        setOrderBy(property);
-    };
-
-    const handleSelectAllClick = event => {
-        if (event.target.checked) {
-            setSelectedItems(rows.map(newItem => newItem.name));
-            return;
-        }
-        setSelectedItems([]);
-    };
-
-    const handleItemClick = (event, name) => {
-        if (!enableSelectMode) {
-            console.log('not enable selected mode');
-        } else {
-            const selectedIndex = selectedItems.indexOf(name);
-            let newSelected = [];
-            if (selectedIndex === -1) {
-                newSelected = newSelected.concat(selectedItems, name);
-            } else if (selectedIndex === 0) {
-                newSelected = newSelected.concat(selectedItems.slice(1));
-            } else if (selectedIndex === selectedItems.length - 1) {
-                newSelected = newSelected.concat(selectedItems.slice(0, -1));
-            } else if (selectedIndex > 0) {
-                newSelected = newSelected.concat(
-                    selectedItems.slice(0, selectedIndex),
-                    selectedItems.slice(selectedIndex + 1),
-                );
-            }
-            setSelectedItems(newSelected);
-        }
-    };
-
-    const isSelected = name => selectedItems.indexOf(name) !== -1;
-
-    function renderContestTableRows(row, index) {
-        const isItemSelected = isSelected(row.name);
-        const labelId = `enhanced-table-checkbox-${index}`;
-        return (
-            <TableRow key={row.name}
-                      hover role="checkbox"
-                      onClick={event => handleEnhancedClick(event, row)}
-                      onDoubleClick={handleEnhanceDoubleClick}
-                //onClick={event => handleClick(event, row.name)}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      selected={isItemSelected}>
-                <TableCell padding="checkbox">
-                    {enableSelectMode && <Checkbox checked={isItemSelected} inputProps={{'aria-labelledby': labelId}}/>}
-                </TableCell>
-                <TableCell component="th" id={labelId} scope="row" padding="none">
-                    {row.name}
-                </TableCell>
-                <TableCell align="left">{row.isFolder ? 'a' : 'b'}</TableCell>
-                <TableCell align="left">{row.startDate}</TableCell>
-                <TableCell align="left">{row.status ? 'a' : 'b'}</TableCell>
-            </TableRow>
-        );
+    function renderFolders(folder) {
+        return (<React.Fragment>
+            <TableCell align="left"><FolderIcon/></TableCell>
+            <TableCell align="left">{folder}</TableCell>
+            <TableCell align="left"> </TableCell>
+            <TableCell align="left"> </TableCell>
+        </React.Fragment>)
     }
 
-    function handleItemDoubleClick(event) {
-        console.log(event);
+    function renderHeaders() {
+        return (<React.Fragment>
+            <TableCell component="th" scope="row" align="left">.</TableCell>
+            <TableCell component="th" scope="row" align="left">Tên cuộc thi</TableCell>
+            <TableCell component="th" scope="row" align="left">Mô tả</TableCell>
+            <TableCell component="th" scope="row" align="left">Ngày tạo</TableCell>
+        </React.Fragment>)
     }
 
-    const [handleEnhancedClick, handleEnhanceDoubleClick] = useClickAndDoubleClick(handleItemClick, handleItemDoubleClick);
+    function handleFilesChange(files) {
+        dispatch(updateOwnContests(files));
+    }
+
+    function handleFileByIdChange(id, file) {
+        dispatch(updateOwnContestById(id, file));
+    }
+
 
     return (<div className={classes.root}>
-            <Backdrop open={openSpeedDial} timeout={Infinity}/>
-            <SpeedDial ariaLabel="Tạo mới" open={openSpeedDial} className={classes.speedDial} icon={<SpeedDialIcon/>}
-                       onClose={() => setOpenSpeedDial(false)} onOpen={() => setOpenSpeedDial(true)}>
-                <SpeedDialAction key={0} title={TEXT.folder} icon={<CreateNewFolderIcon/>}
-                                 onClick={handleCreateNewFolderClick}/>
-                <SpeedDialAction key={1} title={TEXT.contest} icon={<PostAddIcon/>}
-                                 onClick={handleCreateNewContestClick}/>
-            </SpeedDial>
-            <div className={classes.header}>
-            </div>
-            <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small"/>}>
-                <Button>asd</Button>
-                <Button>asd</Button>
-            </Breadcrumbs>
-            <CssBaseline/>
-            <EnhancedTableToolbar numSelected={selectedItems.length} title={TEXT.contest}/>
-            <div className={classes.tableWrapper}>
-                <Table className={classes.table} aria-labelledby="tableTitle" aria-label="enhanced table" size='medium'>
-                    <EnhancedTableHead classes={classes}
-                                       numSelected={selectedItems.length}
-                                       order={order} orderBy={orderBy}
-                                       onSelectAllClick={handleSelectAllClick}
-                                       onRequestSort={handleRequestSort}
-                                       rowCount={rows.length}/>
-                    <TableBody> {stableSort(rows, getSorting(order, orderBy)).map(renderContestTableRows)} </TableBody>
-                </Table>
-            </div>
-
+        <div className={classes.header}>
+            <WorkingTableV2 files={contests}
+                            dragDisplayProperty="content"
+                            setFiles={handleFilesChange}
+                            setFileById={handleFileByIdChange}
+                            renderFiles={renderFiles}
+                            renderFolders={renderFolders}
+                            renderHeaders={renderHeaders}/>
         </div>
-    );
+    </div>)
 }
