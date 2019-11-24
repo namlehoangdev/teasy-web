@@ -19,20 +19,24 @@ export default function playgroundReducer(state = initialState, action) {
                 draft.contests = payload.contests || new DefaultNormalizer();
                 return;
 
-            case UPDATE_PUBLIC_CONTESTS:
-                console.log('public: ', payload);
+            case UPDATE_PUBLIC_CONTESTS: {
+                let newContests = {};
+                Object.assign(newContests, draft.contests);
                 payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
-                    addToNormalizedList(draft.contests, payload.contests.byHash[id] || new DefaultNormalizer())
+                    addToNormalizedList(newContests, payload.contests.byHash[id] || new DefaultNormalizer())
                 });
+                draft.contests = newContests;
                 return;
-
-            case UPDATE_SHARED_CONTESTS:
-                console.log('shared: ', payload);
+            }
+            case UPDATE_SHARED_CONTESTS: {
+                let newContests = {};
+                Object.assign(newContests, draft.contests);
                 payload.contests && payload.contests.byId && payload.contests.byId.forEach(id => {
-                    addToNormalizedList(draft.contests, payload.contests.byHash[id] || new DefaultNormalizer())
+                    addToNormalizedList(newContests, payload.contests.byHash[id] || new DefaultNormalizer())
                 });
+                draft.contests = newContests;
                 return;
-
+            }
             case UPDATE_ALL_CONTEST_BY_ID: {
                 const {id, contest} = payload;
                 draft.contests.byHash[id] = contest;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import {
     makeStyles,
@@ -115,7 +115,7 @@ export default function PlaygroundHomePage() {
     //const dispatch = useDispatch();
     const {path} = useRouteMatch();
 
-    const [openDrawer, setOpenDrawer] = useState(true);
+    const [openDrawer, setOpenDrawer] = useState(false);
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {language} = useSelector(state => state.settingReducer);
@@ -123,6 +123,12 @@ export default function PlaygroundHomePage() {
     const anchorRef = React.useRef(null);
     const [selectedAvatarOptions, setSelectedAvatarOptions] = useState(0);
     const {profile} = useSelector(state => state.authReducer);
+
+    useEffect(() => {
+        setSelectedIndex(0);
+        setAppBarTitle(listNavItemMap[0].name);
+        history.push(`${path}/${PAGE_PATHS.allContests}`);
+    }, []);
 
 
     const handleMenuItemClick = (event, index) => {

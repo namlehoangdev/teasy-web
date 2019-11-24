@@ -37,13 +37,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function PlaygroundAllContestsPage() {
-    const {contests} = useSelector(state => state.playgroundReducer);
+    const {contests} = useSelector(state => state.playgroundReducer) || {};
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
         dispatch(getSharedContests());
         dispatch(getPublicContests());
-    });
+    }, []);
 
 
     function renderFiles(id) {

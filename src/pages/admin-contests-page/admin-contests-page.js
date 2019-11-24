@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AdminContestPage() {
-    const {contests} = useSelector(state => state.adminReducer) || [];
+    const {contests} = useSelector(state => state.adminReducer) || {};
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
