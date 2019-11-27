@@ -74,8 +74,8 @@ export default function CreateContestPage() {
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
     const {users} = useSelector(state => state.userReducer) || [];
-    const [_startDate, setStartDate] = useState(null);
-    const [_duration, setDuration] = useState(null);
+    const [_startDate, setStartDate] = useState(new Date().toISOString().slice(0, -8));
+    const [_duration, setDuration] = useState('01:30');
     const [showPassword, setShowPassword] = useState(false);
 
 
@@ -84,6 +84,12 @@ export default function CreateContestPage() {
     const classes = useStyles();
 
     useEffect(() => {
+        const [hours, minutes] = _duration.split(':');
+        dispatch(updateEditingContest({
+            startAt: moment.utc(_startDate).local().toISOString(),
+            duration: hours * 216000 + minutes * 3600
+        }));
+
         dispatch(getAllUsers());
         if (!tests || !tests.byId || tests.byId.length === 0) {
             dispatch(getOwnTests());
@@ -154,10 +160,9 @@ export default function CreateContestPage() {
     }
 
     function handleStartDateChange(event) {
-        console.log('nativeEvent', event.nativeEvent.target);
-        setStartDate(event.target.valueAsDate);
-        let date = moment.utc(event.target.value).local();
-        dispatch(updateEditingContest({startDate: date.toISOString()}));
+        setStartDate(event.target.value);
+        const startAt = moment.utc(event.target.value).local().toISOString();
+        dispatch(updateEditingContest({startAt}));
     }
 
     function handleDurationChange(event) {
