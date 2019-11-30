@@ -1,11 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {makeStyles, TableCell, Paper, Typography, Grid, Container, Table, TableRow} from "@material-ui/core";
+import {
+    makeStyles,
+    Button,
+    TableCell,
+    Paper,
+    Typography,
+    Grid,
+    Container,
+    Table,
+    TableRow,
+    Box
+} from "@material-ui/core";
 import {Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getPublicContests, getSharedContests, updateAllContestById, updateAllContests, updateOwnContestById
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
+import moment from 'moment';
+import {addDurationToString, isoToLocalDateString, msToTime} from "../../utils";
+import Countdown from 'react-countdown-now';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -25,6 +39,26 @@ const useStyles = makeStyles(theme => ({
     },
     detailCell: {
         borderBottom: 0
+    },
+    countDownContainer: {
+        marginTop: theme.spacing(4),
+        display: 'flex',
+        flexDirection: 'row'
+    },
+    countDownBox: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        ...theme.shape,
+        borderWidth:theme.spacing(1),
+        borderColor:theme.palette.primary.main
+    },
+    numberCountDown: {
+        ...theme.typography.h4
+    },
+    labelCountDown: {
+        ...theme.typography.body1
     }
 }));
 
@@ -41,12 +75,12 @@ export default function PlaygroundAllContestsPage() {
 
 
     function renderFiles(id) {
-        const {name, ownerName, startAt} = contests.byHash[id];
+        const {name, ownerName, createdAt} = contests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{ownerName}</TableCell>
-            <TableCell align="left">{startAt}</TableCell>
+            <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
         </React.Fragment>)
     }
 
@@ -81,11 +115,48 @@ export default function PlaygroundAllContestsPage() {
         setFocusedFiles({[id]: true});
     }
 
+    function renderCountDown({total, days, hours, minutes, seconds}) {
+        return (
+            <div className={classes.countDownContainer}>
+                <div className={classes.countDownBox}>
+                    <span className={classes.numberCountDown}>{days}</span>
+                    <span className={classes.labelCountDown}>ngày</span>
+                </div>
+                <div className={classes.countDownBox}>
+                    <span className={classes.numberCountDown}>{hours}</span>
+                    <span className={classes.labelCountDown}>giờ</span>
+                </div>
+                <div className={classes.countDownBox}>
+                    <span className={classes.numberCountDown}>{minutes}</span>
+                    <span className={classes.labelCountDown}>phút</span>
+                </div>
+                <div className={classes.countDownBox}>
+                    <span className={classes.numberCountDown}>{seconds}</span>
+                    <span className={classes.labelCountDown}>giây</span>
+                </div>
+            </div>
+        )
+    }
+
+    function renderStartContestButton() {
+        if (focusedDetailId === -1) {
+            return null;
+        }
+        const {startAt, duration} = contests.byHash[focusedDetailId];
+
+        const diff = moment(startAt).diff(moment.utc(), 'ms');
+        console.log('diff: ', diff);
+        if (diff > 0) {
+            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
+        }
+        return (<Button variant="contained" color="primary">Tham gia thi</Button>)
+    }
+
     function renderDetail() {
         if (focusedDetailId === -1) {
             return null;
         }
-        const {name, description, startAt, createAt, isPublic, code, isSecured, duration, password, permittedUsers, ownerName, test} = contests.byHash[focusedDetailId]
+        const {name, description, startAt, createdAt, isPublic, code, isSecured, duration, password, permittedUsers, ownerName, test} = contests.byHash[focusedDetailId];
         return (<Paper className={classes.paper}>
             <Typography gutterBottom variant="h6" component="h2" color="primary">Chi tiết</Typography>
             <Table size="small">
@@ -107,18 +178,19 @@ export default function PlaygroundAllContestsPage() {
                 </TableRow>
                 <TableRow>
                     <TableCell className={classes.detailCell}>Thời gian bắt đầu</TableCell>
-                    <TableCell className={classes.detailCell}>{startAt}</TableCell>
+                    <TableCell
+                        className={classes.detailCell}>{isoToLocalDateString(startAt)}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                    <TableCell className={classes.detailCell}>{duration}</TableCell>
+                    <TableCell className={classes.detailCell}>{msToTime(duration)}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                    <TableCell className={classes.detailCell}>{createAt}</TableCell>
+                    <TableCell className={classes.detailCell}>{isoToLocalDateString(createdAt)}</TableCell>
                 </TableRow>
-
             </Table>
+            {renderStartContestButton()}
         </Paper>)
     }
 

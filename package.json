@@ -19,6 +19,7 @@
     "normalizr": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
+    "react-countdown-now": "^2.1.2",
     "react-dom": "^16.10.2",
     "react-facebook-login": "^4.1.1",
     "react-google-login": "^5.0.5",

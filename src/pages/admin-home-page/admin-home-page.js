@@ -126,10 +126,10 @@ export default function AdminHomePage() {
 
     useEffect(() => {
         //TODO: remove these lines
-        //dispatch(setOpenAdminFullscreenDialog(true));
+        dispatch(setOpenAdminFullscreenDialog(true));
         setCreatePopAnchorEl(null);
-        //setCurrentFullscreenPath(PAGE_PATHS.createContest);
-        history.push(`${path}/${PAGE_PATHS.contest}`);
+        setCurrentFullscreenPath(PAGE_PATHS.createContest);
+        history.push(`${path}/${PAGE_PATHS.createContest}`);
 
         //dispatch(openCreateTest());
 

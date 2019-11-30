@@ -74,10 +74,9 @@ export default function CreateContestPage() {
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
     const {users} = useSelector(state => state.userReducer) || [];
-    const [_startDate, setStartDate] = useState(new Date().toISOString().slice(0, -8));
+    const [_startDate, setStartDate] = useState(new Date());
     const [_duration, setDuration] = useState('01:30');
     const [showPassword, setShowPassword] = useState(false);
-
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -86,8 +85,7 @@ export default function CreateContestPage() {
     useEffect(() => {
         const [hours, minutes] = _duration.split(':');
         dispatch(updateEditingContest({
-            startAt: moment.utc(_startDate).local().toISOString(),
-            duration: hours * 216000 + minutes * 3600
+            duration: hours * 3600000 + minutes * 60000
         }));
 
         dispatch(getAllUsers());
@@ -160,16 +158,16 @@ export default function CreateContestPage() {
     }
 
     function handleStartDateChange(event) {
+        console.log('start date change: ', event.target.value);
         setStartDate(event.target.value);
-        const startAt = moment.utc(event.target.value).local().toISOString();
-        dispatch(updateEditingContest({startAt}));
+        dispatch(updateEditingContest({startAt: new Date(event.target.value).toISOString()}));
     }
 
     function handleDurationChange(event) {
         console.log('duration: ', event.target.value);
         setDuration(event.target.value);
         const [hours, minutes] = event.target.value.split(':');
-        dispatch(updateEditingContest({duration: hours * 216000 + minutes * 3600}));
+        dispatch(updateEditingContest({duration: hours * 3600000 + minutes * 60000}));
     }
 
     function handlePasswordChange(event) {
@@ -177,6 +175,14 @@ export default function CreateContestPage() {
     }
 
     function handleSaveCompetition() {
+         if (!editingContest.startAt) {
+             alert('ngày không hợp lệ');
+             return;
+         }
+         if (!editingContest.name || editingContest.name.length===0) {
+             alert('ten khong hop le');
+             return;
+         }
         dispatch(postContest(editingContest));
     }
 
@@ -206,7 +212,6 @@ export default function CreateContestPage() {
         </div>)
     }
 
-    const defaultDate = new Date();
     return (<div>
         <AppBar className={classes.appBar}>
             <Toolbar>
@@ -286,7 +291,7 @@ export default function CreateContestPage() {
                     id="create-contest-start-date"
                     label="Thời gian bắt đầu"
                     type="datetime-local"
-                    defaultValue={defaultDate.toISOString().slice(0, -8)}
+                    //defaultValue={defaultDate.toISOString().slice(0, -8)}
                     value={_startDate}
                     onChange={handleStartDateChange}
                     InputLabelProps={{shrink: true}}

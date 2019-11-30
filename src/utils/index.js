@@ -1,4 +1,5 @@
 import {HTTP_STATUS_CODES_DEFINITIONS} from "../consts/http-status-codes-consts";
+export * from './time-utils';
 
 export function disabledStyleWrapper(disabled, style) {
     return disabled ? {
