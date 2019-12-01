@@ -8,9 +8,10 @@ import {
     UPDATE_ALL_CONTESTS,
     UPDATE_PUBLIC_CONTESTS,
     UPDATE_OWN_CONTEST_BY_ID,
-    UPDATE_ALL_CONTEST_BY_ID
+    UPDATE_ALL_CONTEST_BY_ID, SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG
 } from './action-types';
 
+export const setOpenPlaygroundFullscreenDialog = (value) => action(SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, {value});
 
 export const getSharedContests = () => action(GET_SHARED_CONTESTS);
 

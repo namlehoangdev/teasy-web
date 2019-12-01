@@ -1,25 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {
-    makeStyles,
-    Button,
-    TableCell,
-    Paper,
-    Typography,
-    Grid,
-    Container,
-    Table,
-    TableRow,
-    Box
+    makeStyles, Button, TableCell, Paper, Typography, Grid, Container, Table, TableRow
 } from "@material-ui/core";
 import {Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getPublicContests, getSharedContests, updateAllContestById, updateAllContests, updateOwnContestById
+    getPublicContests,
+    getSharedContests,
+    setOpenAdminFullscreenDialog,
+    setOpenPlaygroundFullscreenDialog,
+    updateAllContestById,
+    updateAllContests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import moment from 'moment';
-import {addDurationToString, isoToLocalDateString, msToTime} from "../../utils";
+import {isoToLocalDateString, msToTime} from "../../utils";
 import Countdown from 'react-countdown-now';
+import {useHistory} from "react-router";
+import {PAGE_PATHS} from "../../consts";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -51,8 +49,8 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 'auto',
         marginRight: 'auto',
         ...theme.shape,
-        borderWidth:theme.spacing(1),
-        borderColor:theme.palette.primary.main
+        borderWidth: theme.spacing(1),
+        borderColor: theme.palette.primary.main
     },
     numberCountDown: {
         ...theme.typography.h4
@@ -62,10 +60,26 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+function StartButtonWrapper(props) {
+    const {onMount, onClick} = props;
+    useEffect(() => {
+        onMount && onMount();
+    }, []);
+
+    function handleClick() {
+        onClick && onClick();
+    }
+
+    return <Button variant="contained" color="primary" onClick={handleClick}>Tham gia thi</Button>
+}
+
 export default function PlaygroundAllContestsPage() {
     const {contests} = useSelector(state => state.playgroundReducer) || {};
     const [focusedDetailId, setFocusedDetailId] = useState(-1);
     const [focusedFiles, setFocusedFiles] = useState({});
+    const [endCountDown, setEndCountDown] = useState(true);
+    const history = useHistory();
+
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
@@ -82,6 +96,7 @@ export default function PlaygroundAllContestsPage() {
             <TableCell align="left">{ownerName}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
         </React.Fragment>)
+
     }
 
     function renderFolders(folder) {
@@ -115,6 +130,11 @@ export default function PlaygroundAllContestsPage() {
         setFocusedFiles({[id]: true});
     }
 
+    function handleStartContestClick(item) {
+        dispatch(setOpenPlaygroundFullscreenDialog(true));
+        history.push(`${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, {id: item.id});
+    }
+
     function renderCountDown({total, days, hours, minutes, seconds}) {
         return (
             <div className={classes.countDownContainer}>
@@ -142,14 +162,17 @@ export default function PlaygroundAllContestsPage() {
         if (focusedDetailId === -1) {
             return null;
         }
-        const {startAt, duration} = contests.byHash[focusedDetailId];
+        const item = contests.byHash[focusedDetailId];
+        const {startAt, duration} = item;
 
         const diff = moment(startAt).diff(moment.utc(), 'ms');
         console.log('diff: ', diff);
         if (diff > 0) {
-            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
+            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}
+                               onStart={() => setEndCountDown(false)} onComplete={() => setEndCountDown(true)}/>);
         }
-        return (<Button variant="contained" color="primary">Tham gia thi</Button>)
+        return (
+            <StartButtonWrapper onMoun={() => setEndCountDown(true)} onClick={() => handleStartContestClick(item)}/>)
     }
 
     function renderDetail() {

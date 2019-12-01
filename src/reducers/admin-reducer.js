@@ -16,25 +16,7 @@ import {produce} from "immer";
 
 import {DefaultNormalizer, normalizer} from "../utils/byid-utils";
 
-// const dump = {
-//     questions: {
-//         byId: [
-//             -1
-//         ],
-//         byHash: {
-//             '-1': {
-//                 id: -1,
-//                 content: EditorState.createEmpty(),
-//                 type: 0,
-//                 answers: {
-//                     byId: [],
-//                     byHash: {}
-//                 }
-//             }
-//         },
-//         name: 'AASD'
-//     }
-// }
+
 const initialState = {
     isOpenAdminFullscreenDialog: false,
     contests: new DefaultNormalizer(),

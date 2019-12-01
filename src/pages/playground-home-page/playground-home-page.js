@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef, forwardRef} from 'react';
 import clsx from 'clsx';
 import {
     makeStyles,
@@ -22,11 +22,13 @@ import {
     Paper,
     ClickAwayListener,
     MenuList,
-    MenuItem
+    MenuItem, Dialog, Slide
 } from '@material-ui/core';
 import {Route, Switch} from "react-router";
 import {
-    PlaygroundAllContestsPage, PlaygroundContestResultsPage, PlaygroundSharedContestsPage
+    CreateContestPage,
+    CreateQuestionPage, CreateTestPage, EditContestPage, EditQuestionPage, EditTestPage,
+    PlaygroundAllContestsPage, PlaygroundCompetePage, PlaygroundContestResultsPage, PlaygroundSharedContestsPage
 } from "../index";
 import {
     Menu as MenuIcon,
@@ -40,6 +42,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
 import {PAGE_PATHS} from "../../consts";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog} from "../../actions";
 
 const drawerWidth = 240;
 
@@ -107,20 +110,24 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+// eslint-disable-next-line react/display-name
+const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function PlaygroundHomePage() {
     const classes = useStyles();
     const theme = useTheme();
     const history = useHistory();
-    //const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const {path} = useRouteMatch();
-
+    const {isOpenPlaygroundFullscreenDialog} = useSelector(state => state.playgroundReducer);
     const [openDrawer, setOpenDrawer] = useState(false);
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {language} = useSelector(state => state.settingReducer);
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef(null);
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef(null);
     const [selectedAvatarOptions, setSelectedAvatarOptions] = useState(0);
     const {profile} = useSelector(state => state.authReducer);
 
@@ -261,6 +268,13 @@ export default function PlaygroundHomePage() {
                     <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={PlaygroundContestResultsPage}/>
                 </Switch>
             </main>
+
+            <Dialog fullScreen open={isOpenPlaygroundFullscreenDialog} TransitionComponent={Transition}
+                    onClose={() => dispatch(setOpenPlaygroundFullscreenDialog(false))}>
+                <Switch>
+                    <Route path={`${path}/${PAGE_PATHS.compete}`} component={PlaygroundCompetePage}/>
+                </Switch>
+            </Dialog>
         </div>
     );
 }
