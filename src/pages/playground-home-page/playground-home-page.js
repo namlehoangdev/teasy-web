@@ -132,9 +132,14 @@ export default function PlaygroundHomePage() {
     const {profile} = useSelector(state => state.authReducer);
 
     useEffect(() => {
-        setSelectedIndex(0);
-        setAppBarTitle(listNavItemMap[0].name);
-        history.push(`${path}/${PAGE_PATHS.allContests}`);
+        dispatch(setOpenPlaygroundFullscreenDialog(true));
+        history.push({
+            pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`,
+            state: {contestId: '5ddeeb25439d7d1054b28a41'}
+        });
+        // setSelectedIndex(0);
+        // setAppBarTitle(listNavItemMap[0].name);
+        // history.push(`${path}/${PAGE_PATHS.allContests}`);
     }, []);
 
 

@@ -3,12 +3,24 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
+    GET_CONTEST_BY_ID,
     GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS,
 } from "../actions/action-types";
 import {normalizer} from "../utils/byid-utils";
 import {updateSharedContests} from "../actions";
 import {updatePublicContests} from "../actions";
+import {updateCompetingContest} from "../actions";
+import {fakeCompetingContest} from "../fake-data";
+import {normalize, schema} from "normalizr";
+import {convertStringToEditorState} from "../utils/editor-converter";
 
+const answerSchema= new schema.Entity('answers');
+const questionsSchema=new schema.Entity('questions',{
+    answers:[answerSchema]
+});
+const testSchema = new schema.Entity('test',{
+    questions:[questionsSchema]
+});
 
 /*-----saga effects-----*/
 export function* getPublicContestsSaga() {
@@ -44,6 +56,30 @@ export function* getSharedContestsSaga() {
     }
 }
 
+export function* getContestByIdSaga({payload}) {
+    try {
+        yield put(showLoading());
+        const {id} = payload;
+        //const response = yield call(APIs.getContestByIdAPI, id);
+        const response = {
+            data: fakeCompetingContest
+        };
+        //const contests = normalizer(response.data) || null;
+        if (response && response.data) {
+            const contest = response.data;
+            contest.test.questions && contest.test.questions.forEach(function (part, index) {
+                this.test.questions[index].content = convertStringToEditorState(this.test.questions[index].content);
+            }, contest);
+            const {entities} = normalize(contest.test, testSchema);
+            yield put(updateCompetingContest({ ...contest, ...entities}));
+        }
+    } catch (error) {
+        console.log('getContestByIdSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
 
 /*-----saga watchers-----*/
 function* getPublicContestsWatcherSagas() {
@@ -54,7 +90,12 @@ function* getSharedContestsWatcherSaga() {
     yield takeLatest(GET_SHARED_CONTESTS, getSharedContestsSaga);
 }
 
+function* getContestByIdSagaWatcher() {
+    yield takeLatest(GET_CONTEST_BY_ID, getContestByIdSaga);
+}
+
 export default [
     getSharedContestsWatcherSaga(),
     getPublicContestsWatcherSagas(),
+    getContestByIdSagaWatcher()
 ];

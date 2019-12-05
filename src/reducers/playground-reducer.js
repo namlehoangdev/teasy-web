@@ -1,13 +1,15 @@
 import {
     SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG,
-    UPDATE_ALL_CONTEST_BY_ID, UPDATE_ALL_CONTESTS,
+    UPDATE_ALL_CONTEST_BY_ID, UPDATE_ALL_CONTESTS, UPDATE_COMPETING_CONTEST,
     UPDATE_PUBLIC_CONTESTS, UPDATE_SHARED_CONTESTS
 } from '../actions/action-types';
 import {addToNormalizedList, DefaultNormalizer} from "../utils/byid-utils";
+import { normalize, schema } from 'normalizr';
 import {produce} from "immer";
 
 const initialState = {
     isOpenPlaygroundFullscreenDialog: false,
+    competingContest:{},
     contests: new DefaultNormalizer(),
     sharedContestIds: [],
     publicContestIds: [],
@@ -15,12 +17,16 @@ const initialState = {
     error: null,
 };
 
+
+
+
+
 export default function playgroundReducer(state = initialState, action) {
     return produce(state, draft => {
         const {type, payload} = action;
         switch (type) {
             case SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG:
-                draft.isOpenPlaygroundFullscreenDialog=payload.value;
+                draft.isOpenPlaygroundFullscreenDialog = payload.value;
                 return;
 
             case UPDATE_ALL_CONTESTS:
@@ -54,6 +60,12 @@ export default function playgroundReducer(state = initialState, action) {
             case UPDATE_ALL_CONTEST_BY_ID: {
                 const {id, contest} = payload;
                 draft.contests.byHash[id] = contest;
+                return;
+            }
+            case UPDATE_COMPETING_CONTEST:{
+                console.log('payload: ',payload);
+                const {contest}=payload;
+                draft.competingContest=contest;
                 return;
             }
             default:

@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getPublicContests,
     getSharedContests,
-    setOpenAdminFullscreenDialog,
     setOpenPlaygroundFullscreenDialog,
     updateAllContestById,
     updateAllContests
@@ -131,8 +130,9 @@ export default function PlaygroundAllContestsPage() {
     }
 
     function handleStartContestClick(item) {
+        console.log(item);
         dispatch(setOpenPlaygroundFullscreenDialog(true));
-        history.push(`${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, {id: item.id});
+        history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId: item.id}});
     }
 
     function renderCountDown({total, days, hours, minutes, seconds}) {

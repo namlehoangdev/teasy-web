@@ -5,6 +5,8 @@ export const getPublicContestsAPI = () => ApiInstance.get('Competitions');
 
 export const getSharedContestsAPI = () => ApiInstance.get('Competitions/MyShared');
 
+export const getContestByIdAPI = (id) => ApiInstance.get(`Competitions/${id}`);
+
 // export const getOwnTestsAPI = () => ApiInstance.get('Tests/MyOwn');
 //
 // export const getOwnQuestionsAPI = () => ApiInstance.get('Questions/MyOwn');

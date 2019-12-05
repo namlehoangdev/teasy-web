@@ -1,0 +1,71 @@
+{
+  "id": "5ddeeb25439d7d1054b28a41",
+  "name": "CUỘC THI SỐ 3",
+  "ownerId": "5dac1ba09417302c68989934",
+  "ownerName": "Nam Le",
+  "testIds": [
+    "5dc7d080eb416750783ad105"
+  ],
+  "test": {
+    "id": "5dc7d080eb416750783ad105",
+    "name": "Kiểm tra đồng khối môn Toán",
+    "ownerId": "5dac1ba09417302c68989934",
+    "ownerName": "Nam Le",
+    "questions": [
+      {
+        "id": "8b76bebc-81bf-4467-bbca-02f4818af5b30",
+        "type": 0,
+        "point": 0,
+        "content": "{\"blocks\":[{\"key\":\"9q0in\",\"text\":\"10-5=?\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+        "answers": [
+          {
+            "id": "b90c9c6d-5200-41e0-a76e-7f65d72670750",
+            "content": "5",
+            "isTrue": false
+          },
+          {
+            "id": "3a9abbd6-da02-46c0-8189-4b13b1ebcb531",
+            "content": "2",
+            "isTrue": false
+          }
+        ]
+      },
+      {
+        "id": "6aa90152-88e3-41c1-9142-442b7cb222f21",
+        "type": 0,
+        "point": 0,
+        "content": "{\"blocks\":[{\"key\":\"cm8tb\",\"text\":\"số Pi bằng bao nhiêu?\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+        "answers": [
+          {
+            "id": "7b22e459-a517-4fd9-ba44-839790f72fa50",
+            "content": "3.9",
+            "isTrue": false
+          },
+          {
+            "id": "11097813-18e1-48cf-835a-47e796f230b31",
+            "content": "3.14",
+            "isTrue": false
+          },
+          {
+            "id": "65d29ecd-9656-4198-806f-5e4473d045dd2",
+            "content": "5",
+            "isTrue": false
+          }
+        ]
+      }
+    ],
+    "type": 0,
+    "hasFullAnswers": false
+  },
+  "startAt": "0001-01-01T00:00:00Z",
+  "endAt": "0001-01-01T00:00:00Z",
+  "createdAt": "2019-11-27T21:31:17.081Z",
+  "duration": 5400000,
+  "useSEB": false,
+  "permittedUsers": [],
+  "isPublic": true,
+  "description": "test",
+  "password": "",
+  "isSecured": false,
+  "code": 4
+}

@@ -41,7 +41,7 @@ export default function AdminQuestionsPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
-        dispatch(getOwnQuestions());
+        //dispatch(getOwnQuestions());
     }, []);
 
     function handleCreateNewFolderClick() {

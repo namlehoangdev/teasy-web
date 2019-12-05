@@ -8,7 +8,7 @@ import {
     UPDATE_ALL_CONTESTS,
     UPDATE_PUBLIC_CONTESTS,
     UPDATE_OWN_CONTEST_BY_ID,
-    UPDATE_ALL_CONTEST_BY_ID, SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG
+    UPDATE_ALL_CONTEST_BY_ID, SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, GET_CONTEST_BY_ID, UPDATE_COMPETING_CONTEST
 } from './action-types';
 
 export const setOpenPlaygroundFullscreenDialog = (value) => action(SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, {value});
@@ -17,12 +17,18 @@ export const getSharedContests = () => action(GET_SHARED_CONTESTS);
 
 export const getPublicContests = () => action(GET_PUBLIC_CONTESTS);
 
+export const getContestById = (id) => action(GET_CONTEST_BY_ID, {id});
+
 export const updateSharedContests = (contests) => action(UPDATE_SHARED_CONTESTS, {contests});
+
+export const updateCompetingContest = (contest) =>  action(UPDATE_COMPETING_CONTEST,{contest});
 
 export const updatePublicContests = (contests) => action(UPDATE_PUBLIC_CONTESTS, {contests});
 
 export const updateAllContests = (contests) => action(UPDATE_ALL_CONTESTS, {contests});
 
 export const updateAllContestById = (id, contest) => action(UPDATE_ALL_CONTEST_BY_ID, {id, contest});
+
+
 
 

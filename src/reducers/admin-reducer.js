@@ -15,13 +15,14 @@ import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
 
 import {DefaultNormalizer, normalizer} from "../utils/byid-utils";
+import {fakeQuestions} from "../fake-data";
 
 
 const initialState = {
     isOpenAdminFullscreenDialog: false,
     contests: new DefaultNormalizer(),
     tests: new DefaultNormalizer(),
-    questions: new DefaultNormalizer(),
+    questions:normalizer(fakeQuestions),  //new DefaultNormalizer(),
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
