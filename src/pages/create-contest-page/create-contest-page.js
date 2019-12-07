@@ -29,8 +29,7 @@ import {
 import produce from "immer";
 import ChooseUserDialog from "./choose-users-dialog";
 import ChooseTestDialog from "./choose-tests-dialog";
-import {FormControl, InputLabel} from "@material-ui/core";
-import moment from 'moment';
+import {FormControl} from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 //TODO: change to permitted Users from array to map
 
@@ -56,6 +55,7 @@ const useStyles = makeStyles(theme => ({
     permittedUserContainer: {
         display: 'flex',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'center',
         '& > *': {
             margin: theme.spacing(0.5),
@@ -83,6 +83,7 @@ export default function CreateContestPage() {
     const classes = useStyles();
 
     useEffect(() => {
+        console.log('asd');
         const [hours, minutes] = _duration.split(':');
         dispatch(updateEditingContest({
             duration: hours * 3600000 + minutes * 60000
@@ -175,14 +176,14 @@ export default function CreateContestPage() {
     }
 
     function handleSaveCompetition() {
-         if (!editingContest.startAt) {
-             alert('ngày không hợp lệ');
-             return;
-         }
-         if (!editingContest.name || editingContest.name.length===0) {
-             alert('ten khong hop le');
-             return;
-         }
+        if (!editingContest.startAt) {
+            alert('ngày không hợp lệ');
+            return;
+        }
+        if (!editingContest.name || editingContest.name.length === 0) {
+            alert('ten khong hop le');
+            return;
+        }
         dispatch(postContest(editingContest));
     }
 
