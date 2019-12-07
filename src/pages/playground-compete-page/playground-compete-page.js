@@ -30,7 +30,8 @@ import {Editor} from 'draft-js';
 import {msToTime} from "../../utils";
 import QuizQuestion from "./quiz-question";
 import produce from "immer";
-import {addToNormalizedList, DefaultNormalizer, denormalize, denormalizer} from "../../utils/byid-utils";
+import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
+import Calculator from '../../components/calculator/component/App';
 
 const drawerWidth = 240;
 
@@ -186,6 +187,7 @@ export default function PlaygroundCompetePage() {
                             </Button>)
                     })}
                 </Grid>
+                <Calculator></Calculator>
             </Box>
         </React.Fragment>)
     }

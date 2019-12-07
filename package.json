@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "chai": "^4.2.0",
+    "gh-pages": "^2.0.1",
+    "prettier": "^1.17.1",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@material-ui/core": "^4.5.2",
     "@material-ui/icons": "^4.4.3",
@@ -35,7 +38,9 @@
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.1.1",
     "reselect": "^4.0.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "big.js": "^5.2.2",
+    "github-fork-ribbon-css": "^0.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

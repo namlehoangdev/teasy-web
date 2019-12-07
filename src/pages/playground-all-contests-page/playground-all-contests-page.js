@@ -15,8 +15,9 @@ import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import moment from 'moment';
 import {isoToLocalDateString, msToTime} from "../../utils";
 import Countdown from 'react-countdown-now';
-import {useHistory} from "react-router";
-import {PAGE_PATHS} from "../../consts";
+import { useHistory } from "react-router";
+import { PAGE_PATHS } from "../../consts";
+import Calculator from 'components/calculator/component/App';
 
 const useStyles = makeStyles(theme => ({
     root: {},
