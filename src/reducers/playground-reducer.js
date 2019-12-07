@@ -1,24 +1,21 @@
 import {
     SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG,
-    UPDATE_ALL_CONTEST_BY_ID, UPDATE_ALL_CONTESTS, UPDATE_COMPETING_CONTEST,
+    UPDATE_ALL_CONTEST_BY_ID, UPDATE_ALL_CONTESTS, UPDATE_COMPETING_CONTEST, UPDATE_COMPETING_RESULT,
     UPDATE_PUBLIC_CONTESTS, UPDATE_SHARED_CONTESTS
 } from '../actions/action-types';
 import {addToNormalizedList, DefaultNormalizer} from "../utils/byid-utils";
-import { normalize, schema } from 'normalizr';
+import {normalize, schema} from 'normalizr';
 import {produce} from "immer";
 
 const initialState = {
     isOpenPlaygroundFullscreenDialog: false,
-    competingContest:{},
+    competingContest: {},
     contests: new DefaultNormalizer(),
     sharedContestIds: [],
     publicContestIds: [],
     isLoading: false,
     error: null,
 };
-
-
-
 
 
 export default function playgroundReducer(state = initialState, action) {
@@ -62,10 +59,31 @@ export default function playgroundReducer(state = initialState, action) {
                 draft.contests.byHash[id] = contest;
                 return;
             }
-            case UPDATE_COMPETING_CONTEST:{
-                console.log('payload: ',payload);
-                const {contest}=payload;
-                draft.competingContest=contest;
+            case UPDATE_COMPETING_CONTEST: {
+                console.log('payload: ', payload);
+
+                draft.competingContest = {...draft.competingContest, ...payload};
+                return;
+            }
+
+            case UPDATE_COMPETING_RESULT: {
+                const {result} = payload;
+                let questionId = result.questionId;
+                let newResults ={...draft.competingContest.results} || new DefaultNormalizer();
+                console.log('new results: ', newResults);
+                if (!draft.competingContest.results) {
+                    const obj = new DefaultNormalizer();
+                    addToNormalizedList(obj, result, 'questionId');
+                    draft.competingContest.results = obj;
+                } else {
+                    if (!draft.competingContest.results.byHash[questionId]) {
+                        addToNormalizedList(newResults, result, 'questionId');
+                        draft.competingContest.results = newResults;
+                    } else {
+                        newResults.byHash[questionId] = result;
+                        draft.competingContest.results = newResults;
+                    }
+                }
                 return;
             }
             default:

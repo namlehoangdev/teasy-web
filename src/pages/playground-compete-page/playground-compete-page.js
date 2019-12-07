@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Container,
     Grid,
     makeStyles,
     Paper,
@@ -11,20 +10,21 @@ import {
     Drawer,
     IconButton,
     Chip,
-    Box, RadioGroup, FormControlLabel, Radio, TextField
+    Box,
+    ButtonGroup,
+    Button,
+    Divider,
 } from "@material-ui/core";
 import clsx from "clsx";
-import {Folder as FolderIcon, Menu as MenuIcon} from "@material-ui/icons";
+import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    getContestById,
-    getPublicContests, getSharedContests, updateAllContestById, updateAllContests
-} from "../../actions";
-import WorkingTableV2 from "../../components/working-table/working-table-v2";
-import {useParams, useHistory, useLocation, useRouteMatch} from 'react-router';
-import {TEXT} from "../../consts";
+import {getContestById, updateCompetingContest, updateCompetingResult} from "../../actions";
+import {useLocation} from 'react-router';
 import {Editor} from 'draft-js';
 import {msToTime} from "../../utils";
+import QuizQuestion from "./quiz-question";
+import produce from "immer";
+import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
 
 const drawerWidth = 240;
 
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
+        marginRight: drawerWidth,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         padding: theme.spacing(0, 1),
         ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
     },
     content: {
         flexGrow: 1,
@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        marginLeft: -drawerWidth,
+        marginRight: -drawerWidth,
         paddingTop: theme.spacing(10)
     },
     contentShift: {
@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: 0,
+        marginRight: 0,
     },
     paper: {
         padding: theme.spacing(3)
@@ -89,27 +89,30 @@ const useStyles = makeStyles(theme => ({
     question: {
         marginTop: theme.spacing(3)
     },
-    answerContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center'
-    }
+
 }));
 
 function checkLength(testIds) {
     return testIds && testIds.length > 0;
 }
 
+const a = [1, 2, 4, 5, 3, 2, 5, 64, 3, 5, 6, 3, 3, 65, 3, 4, 3, 3, 5, 3, 6, 3, 6, 3];
+
 export default function PlaygroundCompetePage() {
     const classes = useStyles();
     const theme = useTheme();
-    const [openDrawer, setOpenDrawer] = React.useState(false);
+    const [openDrawer, setOpenDrawer] = React.useState(true);
     const {competingContest} = useSelector(state => state.playgroundReducer) || {};
-    const {duration, questions: questionByHash, test: testByHash, answers: answersByHash, testIds, name: contestName, description} = competingContest;
+    const {
+        duration, results, description,
+        test: testByHash, answers: answersByHash, questions: questionByHash,
+        testIds, name: contestName
+    } = competingContest;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
     const [testName, setTestName] = useState('');
+
 
     useEffect(() => {
         if (checkLength(testIds)) {
@@ -118,6 +121,8 @@ export default function PlaygroundCompetePage() {
             questions && setQuestionsById(questions);
         }
     }, [testIds]);
+
+
     useEffect(() => {
         const {contestId} = locationState;
         console.log('get contest id: ', contestId);
@@ -125,23 +130,8 @@ export default function PlaygroundCompetePage() {
     }, []);
 
 
-    function renderAnswerBlock() {
-        return 'answers';
-        return null;
-    }
-
-    function renderAnswers(answerKey, index) {
-        const {content, isTrue} = answersByHash[answerKey];
-        const answerCharacter = String.fromCharCode(65 + index);
-        return (<Grid item key={answerKey} className={classes.answerContainer}>
-            <FormControlLabel value={answerKey} control={<Radio className={classes.radio}/>} label=''/>
-            <Typography><b>{answerCharacter}.</b> {content}</Typography>
-        </Grid>);
-
-    }
-
-    function handleRadioChange(event) {
-        console.log('event: ', event.target.value);
+    function handleAnswerChange(item, questionId) {
+        dispatch(updateCompetingResult(item));
     }
 
     function renderQuestions() {
@@ -152,44 +142,73 @@ export default function PlaygroundCompetePage() {
                 <Typography variant="subtitle2" noWrap align='center'>
                     <b><Editor editorState={content} readOnly={true}/></b>
                 </Typography>
-                <RadioGroup name="edit-answer-radio" value={0}
-                            className={classes.radioGroup}
-                            aria-label="edit-answer-radio-1"
-                            onChange={handleRadioChange}>
-                    {answersById.map(renderAnswers)}
-                </RadioGroup>
+                <QuizQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
+                              question={questionByHash[questionId]}/>
             </Box>)
         });
     }
 
-    const durationArray = msToTime(duration);
-    return (<div className={classes.root}>
-        <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
-            <Toolbar>
-                <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)}
-                            edge="start" className={clsx(classes.menuButton, openDrawer && classes.hide)}>
-                    <MenuIcon/>
-                </IconButton>
-                <Typography variant="h6" noWrap>Persistent drawer</Typography>
-            </Toolbar>
-        </AppBar>
-        <Drawer className={classes.drawer} variant="persistent" anchor="left"
-                open={openDrawer} classes={{paper: classes.drawerPaper}}>
-            {renderAnswerBlock()}
-        </Drawer>
-        <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
-            <Grid container spacing={3}>
-                <Grid item spacing={3} xs={12} sm={12} md={12}>
-                    <Paper className={classes.paper}>
-                        <Typography variant="h5" noWrap align='center'>{contestName}</Typography>
-                        <Typography variant="h5" noWrap align='center'>{testName}</Typography>
-                        <Typography variant="h6" noWrap align='center'>{description}</Typography>
-                        <Typography variant="subtitle1" noWrap align='center'>Số câu: {questionsById.length} - Thời gian
-                            làm bài: {durationArray[0]} giờ {durationArray[1]} phút</Typography>
-                        {renderQuestions()}
-                    </Paper>
+    function renderDrawerBlock() {
+        return (<React.Fragment>
+            <Box>
+                <Typography variant="subtitle1">Thời gian còn lại</Typography>
+            </Box>
+            <Divider/>
+            <Box>
+                <Typography variant="subtitle1">Các câu đã làm</Typography>
+                <Grid container wrap>
+                    {questionsById.map((item, index) => {
+                        if (results) {
+                            alert('asd' + JSON.stringify(results.byHash));
+                        }
+                        const color = (results && results.byHash[item]) ? 'primary' : 'default';
+                        return (
+                            <Button size='small' key={item} color={color}>
+                                <b>{index}</b>
+                            </Button>)
+                    })}
                 </Grid>
-            </Grid>
-        </main>
-    </div>)
+            </Box>
+        </React.Fragment>)
+    }
+
+    const durationArray = msToTime(duration);
+    return (
+        <div className={classes.root}>
+            <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
+                <Toolbar>
+                    <Typography variant="h6" noWrap></Typography>
+                    <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)}
+                                edge="end" className={clsx(classes.menuButton, openDrawer && classes.hide)}>
+                        <MenuIcon/>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
+                <Grid container spacing={3}>
+                    <Grid item spacing={3} xs={12} sm={12} md={12}>
+                        <Paper className={classes.paper}>
+                            <Typography variant="h5" noWrap align='center'>{contestName}</Typography>
+                            <Typography variant="h5" noWrap align='center'>{testName}</Typography>
+                            <Typography variant="h6" noWrap align='center'>{description}</Typography>
+                            <Typography variant="subtitle1" noWrap align='center'>Số câu: {questionsById.length} - Thời
+                                gian
+                                làm bài: {durationArray[0]} giờ {durationArray[1]} phút</Typography>
+                            {renderQuestions()}
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </main>
+            <Drawer className={classes.drawer} variant="persistent" anchor="right"
+                    open={openDrawer} classes={{paper: classes.drawerPaper}}>
+                <div className={classes.drawerHeader}>
+                    <IconButton onClick={() => setOpenDrawer(false)}>
+                        <ChevronRightIcon/>
+                    </IconButton>
+                </div>
+                <Divider/>
+                {renderDrawerBlock()}
+            </Drawer>
+        </div>
+    )
 }
