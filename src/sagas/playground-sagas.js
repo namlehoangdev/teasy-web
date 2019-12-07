@@ -4,7 +4,7 @@ import APIs from '../apis';
 import {} from '../actions';
 import {
     GET_CONTEST_BY_ID,
-    GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS,
+    GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS, POST_CONTEST_RESULT,
 } from "../actions/action-types";
 import {normalizer} from "../utils/byid-utils";
 import {updateSharedContests} from "../actions";
@@ -13,14 +13,14 @@ import {updateCompetingContest} from "../actions";
 import {fakeCompetingContest} from "../fake-data";
 import {normalize, schema} from "normalizr";
 import {convertStringToEditorState} from "../utils/editor-converter";
-import { showCircleLoading, hideCircleLoading } from '../actions/ui-effect-actions';
+import {showCircleLoading, hideCircleLoading} from '../actions/ui-effect-actions';
 
-const answerSchema= new schema.Entity('answers');
-const questionsSchema=new schema.Entity('questions',{
-    answers:[answerSchema]
+const answerSchema = new schema.Entity('answers');
+const questionsSchema = new schema.Entity('questions', {
+    answers: [answerSchema]
 });
-const testSchema = new schema.Entity('test',{
-    questions:[questionsSchema]
+const testSchema = new schema.Entity('test', {
+    questions: [questionsSchema]
 });
 
 /*-----saga effects-----*/
@@ -72,12 +72,26 @@ export function* getContestByIdSaga({payload}) {
                 this.test.questions[index].content = convertStringToEditorState(this.test.questions[index].content);
             }, contest);
             const {entities} = normalize(contest.test, testSchema);
-            yield put(updateCompetingContest({ ...contest, ...entities}));
+            yield put(updateCompetingContest({...contest, ...entities}));
         }
     } catch (error) {
         console.log('getContestByIdSaga failed: ', error);
     } finally {
         yield put(hideCircleLoading());
+    }
+}
+
+export function* postContestResultSaga(action) {
+    const {payload} = action;
+    try {
+        console.log('payload: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.postContestResultAPI, payload);
+        console.log('postContestResultAPI succeed: ', response);
+    } catch (error) {
+        console.log('postContestResultAPI failed: ', error);
+    } finally {
+        yield put(hideLoading());
     }
 }
 
@@ -91,12 +105,17 @@ function* getSharedContestsWatcherSaga() {
     yield takeLatest(GET_SHARED_CONTESTS, getSharedContestsSaga);
 }
 
-function* getContestByIdSagaWatcher() {
+function* postContestResultWatcherSaga() {
+    yield takeLatest(POST_CONTEST_RESULT, postContestResultSaga);
+}
+
+function* getContestByIdWatcherSaga() {
     yield takeLatest(GET_CONTEST_BY_ID, getContestByIdSaga);
 }
 
 export default [
     getSharedContestsWatcherSaga(),
     getPublicContestsWatcherSagas(),
-    getContestByIdSagaWatcher()
+    getContestByIdWatcherSaga(),
+    postContestResultWatcherSaga()
 ];

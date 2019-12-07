@@ -13,7 +13,7 @@ export const getContestByIdAPI = (id) => ApiInstance.get(`Competitions/${id}`);
 //
 // export const postTestAPI = (tests) => ApiInstance.post('Tests', tests);
 //
-// export const postContestAPI = (contest) => ApiInstance.post('Competitions', contest);
+ export const postContestResultAPI = (params) => ApiInstance.post('Results', params);
 
 
 

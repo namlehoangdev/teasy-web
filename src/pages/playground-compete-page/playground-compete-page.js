@@ -18,13 +18,19 @@ import {
 import clsx from "clsx";
 import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {getContestById, updateCompetingContest, updateCompetingResult} from "../../actions";
+import {
+    getContestById,
+    postContest,
+    postContestResult,
+    updateCompetingContest,
+    updateCompetingResult
+} from "../../actions";
 import {useLocation} from 'react-router';
 import {Editor} from 'draft-js';
 import {msToTime} from "../../utils";
 import QuizQuestion from "./quiz-question";
 import produce from "immer";
-import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
+import {addToNormalizedList, DefaultNormalizer, denormalize, denormalizer} from "../../utils/byid-utils";
 
 const drawerWidth = 240;
 
@@ -96,8 +102,6 @@ function checkLength(testIds) {
     return testIds && testIds.length > 0;
 }
 
-const a = [1, 2, 4, 5, 3, 2, 5, 64, 3, 5, 6, 3, 3, 65, 3, 4, 3, 3, 5, 3, 6, 3, 6, 3];
-
 export default function PlaygroundCompetePage() {
     const classes = useStyles();
     const theme = useTheme();
@@ -106,13 +110,13 @@ export default function PlaygroundCompetePage() {
     const {
         duration, results, description,
         test: testByHash, answers: answersByHash, questions: questionByHash,
-        testIds, name: contestName
+        testIds, name: contestName,
+        ownerId, ownerName
     } = competingContest;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
     const [testName, setTestName] = useState('');
-
 
     useEffect(() => {
         if (checkLength(testIds)) {
@@ -132,6 +136,23 @@ export default function PlaygroundCompetePage() {
 
     function handleAnswerChange(item, questionId) {
         dispatch(updateCompetingResult(item));
+    }
+
+    function handleSubmit() {
+        console.log('handle submit: ');
+        const {contestId} = locationState;
+        if (checkLength(testIds)) {
+            console.log('testIds', testIds);
+            const reqResults = denormalizer(results);
+            const params = {
+                competitionId: contestId,
+                testId: testIds[0],
+                ownerId,
+                displayName: ownerName,
+                results: reqResults
+            };
+            dispatch(postContestResult(params));
+        }
     }
 
     function renderQuestions() {
@@ -174,7 +195,8 @@ export default function PlaygroundCompetePage() {
         <div className={classes.root}>
             <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
                 <Toolbar>
-                    <Typography variant="h6" noWrap></Typography>
+                    <Typography variant="h6" noWrap>{contestName}</Typography>
+                    <Button color="secondary" variant="contained" onClick={handleSubmit}>Nộp bài</Button>
                     <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)}
                                 edge="end" className={clsx(classes.menuButton, openDrawer && classes.hide)}>
                         <MenuIcon/>
