@@ -158,9 +158,6 @@ export default function PlaygroundCompetePage() {
                 <Typography variant="subtitle1">Các câu đã làm</Typography>
                 <Grid container wrap>
                     {questionsById.map((item, index) => {
-                        if (results) {
-                            alert('asd' + JSON.stringify(results.byHash));
-                        }
                         const color = (results && results.byHash[item]) ? 'primary' : 'default';
                         return (
                             <Button size='small' key={item} color={color}>
