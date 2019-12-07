@@ -23,7 +23,7 @@ export function action(type, payload = {}) {
 /*------------------------------------------------UI-EFFECTS------------------------------------------------*/
 export const UPDATE_SHOW_LOADING_BAR = 'UPDATE_SHOW_LOADING_BAR';
 export const UPDATE_SHOW_MINI_LOADING = 'UPDATE_SHOW_MINI_LOADING';
-
+export const UPDATE_SHOW_CIRCLE_LOADING = 'UPDATE_SHOW_CIRCLE_LOADING';
 
 /*------------------------------------------------AUTHENTICATION------------------------------------------------*/
 export const POST_LOGIN_BY_THIRD_PARTY = 'POST_LOGIN_BY_THIRD_PARTY';

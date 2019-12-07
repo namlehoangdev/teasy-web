@@ -13,6 +13,7 @@ import {updateCompetingContest} from "../actions";
 import {fakeCompetingContest} from "../fake-data";
 import {normalize, schema} from "normalizr";
 import {convertStringToEditorState} from "../utils/editor-converter";
+import { showCircleLoading, hideCircleLoading } from '../actions/ui-effect-actions';
 
 const answerSchema= new schema.Entity('answers');
 const questionsSchema=new schema.Entity('questions',{
@@ -25,7 +26,7 @@ const testSchema = new schema.Entity('test',{
 /*-----saga effects-----*/
 export function* getPublicContestsSaga() {
     try {
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.getPublicContestsAPI);
         console.log('getPublicContestsSaga: ', response);
         if (response) {
@@ -35,14 +36,14 @@ export function* getPublicContestsSaga() {
     } catch (error) {
         console.log('getPublicContestsSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
 
 export function* getSharedContestsSaga() {
     try {
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.getSharedContestsAPI);
         console.log('getSharedContestsSaga: ', response);
         if (response) {
@@ -52,13 +53,13 @@ export function* getSharedContestsSaga() {
     } catch (error) {
         console.log('getSharedContestsSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
 export function* getContestByIdSaga({payload}) {
     try {
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const {id} = payload;
         //const response = yield call(APIs.getContestByIdAPI, id);
         const response = {
@@ -76,7 +77,7 @@ export function* getContestByIdSaga({payload}) {
     } catch (error) {
         console.log('getContestByIdSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
