@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 //import produce from 'immer';
-import {Breadcrumbs, Button, makeStyles, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
+import {Breadcrumbs, Button, makeStyles, Table, TableBody, TableHead, TableRow, CircularProgress} from "@material-ui/core";
 import {NavigateNext as NavigateNextIcon} from "@material-ui/icons";
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 750,
     },
@@ -23,6 +23,10 @@ const useStyles = makeStyles(() => ({
         top: 20,
         width: 1,
     },
+    loadingTable:{
+      marginTop: theme.spacing(2),
+      marginLeft:theme.spacing(45),
+    }
 }));
 
 
@@ -53,7 +57,7 @@ export default function WorkingTableV2(props) {
     //const dragFolderIcon = document.createElement('i');
     const dragGhost = document.createElement('div');
     const {filesByHash, selectedFilesHash, filesById, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
-    const {onFileClick, onFolderClick} = props;
+    const {onFileClick, onFolderClick, isLoading} = props;
     const [dragItem, setCurrentDrag] = useState(null);
     const [currentDragOver, setCurrentDragOver] = useState(null);
     const [currentPath, setCurrentPath] = useState([]);
@@ -224,10 +228,10 @@ export default function WorkingTableV2(props) {
                     {renderHeaders && renderHeaders()}
                 </TableRow>
             </TableHead>
-            <TableBody>
+            {isLoading ? <div className={classes.loadingTable}><CircularProgress/></div> :<TableBody>
                 {currentFolders.map(privateRenderFolders)}
                 {filesByHash && filesById && filesById.map(privateRenderFiles)}
-            </TableBody>
+            </TableBody>}
         </Table>
     </div>)
 }
