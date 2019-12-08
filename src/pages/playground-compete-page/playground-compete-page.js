@@ -190,21 +190,36 @@ export default function PlaygroundCompetePage() {
         return questionsById.map((questionId, index) => {
             const {answers: answersById, content} = questionByHash[questionId];
             const isResponseFullAnswer = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
-            let chipStyle = {};
+            let questionType = 0;
             let count = 0;
             let trueAnswer = '';
             if (isResponseFullAnswer) {
                 answersById.every((item) => {
                     if (rightAnswerIds[item]) {
                         trueAnswer = item;
-                        chipStyle = {backgroundColor: snackColors.success};
+                        questionType = 1;
+
                         return false;
                     }
                     count++;
                     return true;
                 });
                 if (count === answersById.length) {
+                    questionType = -1;
+                }
+            }
+            let chipStyle = {};
+            let chipText = '';
+            switch (questionType) {
+                case 1: {
+                    chipStyle = {backgroundColor: snackColors.success};
+                    chipText = 'Đúng';
+                    break;
+                }
+                case -1: {
                     chipStyle = {backgroundColor: snackColors.error};
+                    chipText = 'Sai';
+                    break;
                 }
             }
             return (<Box key={questionId} className={classes.question}
@@ -250,6 +265,9 @@ export default function PlaygroundCompetePage() {
             <React.Fragment>
                 <DialogContent>
                     <DialogContentText>Nộp bài thành công</DialogContentText>
+                    {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) &&
+                    <DialogContentText>Số câu trả lời
+                        đúng: {Object.keys(rightAnswerIds).length}/{Object.keys(testRightAnswerIds).length}</DialogContentText>}
                 </DialogContent>
                 <DialogActions>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER)
@@ -299,7 +317,7 @@ export default function PlaygroundCompetePage() {
                 {renderDrawerBlock()}
             </Drawer>
 
-            <Dialog open={isOpenResultDialog} onClose={() => setIsOpenResultDialog(false)}
+            <Dialog open={isOpenResultDialog}
                     aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Nộp bài thi</DialogTitle>
                 {renderSubmitResult()}
