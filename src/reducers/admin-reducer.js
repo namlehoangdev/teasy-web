@@ -9,12 +9,12 @@ import {
     LOGOUT,
     UPDATE_OWN_QUESTIONS,
     UPDATE_OWN_QUESTION_BY_ID,
-    UPDATE_OWN_TEST_BY_ID, UPDATE_OWN_TESTS, UPDATE_OWN_CONTEST_BY_ID
+    UPDATE_OWN_TEST_BY_ID, UPDATE_OWN_TESTS, UPDATE_OWN_CONTEST_BY_ID, UPDATE_REMOVED_CONTEST_BY_ID
 } from '../actions/action-types';
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
 
-import {DefaultNormalizer, normalizer} from "../utils/byid-utils";
+import {DefaultNormalizer, normalizer, removeFromNormalizedList} from "../utils/byid-utils";
 import {fakeQuestions} from "../fake-data";
 
 
@@ -22,7 +22,7 @@ const initialState = {
     isOpenAdminFullscreenDialog: false,
     contests: new DefaultNormalizer(),
     tests: new DefaultNormalizer(),
-    questions:normalizer(fakeQuestions),  //new DefaultNormalizer(),
+    questions: normalizer(fakeQuestions),  //new DefaultNormalizer(),
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
@@ -86,6 +86,12 @@ export default function adminReducer(state = initialState, action) {
                 const {id, contest} = payload;
                 draft.contests = payload.contests;
                 draft.contests.byHash[id] = contest;
+                return;
+            }
+            case UPDATE_REMOVED_CONTEST_BY_ID: {
+                console.log('UPDATE_REMOVED_CONTEST_BY_ID', payload);
+                removeFromNormalizedList(draft.contests, payload);
+                console.log('draft contests: ', draft.contests);
                 return;
             }
 

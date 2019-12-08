@@ -11,5 +11,5 @@ export const postTestAPI = (tests) => ApiInstance.post('Tests', tests);
 
 export const postContestAPI = (contest) => ApiInstance.post('Competitions', contest);
 
-
+export const deleteOwnContestAPI = (contestId) => ApiInstance.delete(`Competitions/${contestId}`);
 

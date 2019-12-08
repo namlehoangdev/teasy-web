@@ -130,13 +130,6 @@ export function* getMarkedContestResultSaga({payload}) {
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));
-            // {
-            //     "rightAnswersIds": [
-            //     "11097813-18e1-48cf-835a-47e796f230b31"
-            // ],
-            //     "point": 0,
-            //     "createdAt": "0001-01-01T00:00:00"
-            // }
         }
     } catch (error) {
         console.log('getMarkedContestResultSaga failed: ', error);
