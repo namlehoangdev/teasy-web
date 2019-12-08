@@ -9,7 +9,11 @@ import {
     LOGOUT,
     UPDATE_OWN_QUESTIONS,
     UPDATE_OWN_QUESTION_BY_ID,
-    UPDATE_OWN_TEST_BY_ID, UPDATE_OWN_TESTS, UPDATE_OWN_CONTEST_BY_ID, UPDATE_REMOVED_CONTEST_BY_ID
+    UPDATE_OWN_TEST_BY_ID,
+    UPDATE_OWN_TESTS,
+    UPDATE_OWN_CONTEST_BY_ID,
+    UPDATE_REMOVED_CONTEST_BY_ID,
+    UPDATE_REMOVED_TEST_BY_ID
 } from '../actions/action-types';
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
@@ -92,6 +96,13 @@ export default function adminReducer(state = initialState, action) {
                 console.log('UPDATE_REMOVED_CONTEST_BY_ID', payload);
                 removeFromNormalizedList(draft.contests, payload);
                 console.log('draft contests: ', draft.contests);
+                return;
+            }
+
+            case UPDATE_REMOVED_TEST_BY_ID: {
+                console.log('UPDATE_REMOVED_TEST_BY_ID', payload);
+                removeFromNormalizedList(draft.tests, payload);
+                console.log('draft contests: ', draft.tests);
                 return;
             }
 

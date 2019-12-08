@@ -3,7 +3,7 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    DELETE_OWN_CONTEST,
+    DELETE_OWN_CONTEST, DELETE_OWN_TEST,
     GET_OWN_CONTESTS,
     GET_OWN_TESTS,
     POST_CONTEST,
@@ -15,6 +15,7 @@ import {convertFromEditorStateToString} from "../utils/editor-converter";
 import {updateOwnTests} from "../actions";
 import {updateOwnQuestions} from "../actions";
 import {updateRemovedOwnContestById} from "../actions";
+import {updateRemovedOwnTestById} from "../actions";
 
 const questionsSchema = {
     questions: {
@@ -128,6 +129,23 @@ export function* deleteOwnContestSaga({payload}) {
     }
 }
 
+export function* deleteTestSaga({payload}) {
+    try {
+        console.log('deleteOwnTestSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.deleteOwnTestAPI, payload);
+        console.log('deleteOwnTestSaga succeed: ', response);
+        if (response) {
+            console.log('response: ', response);
+            yield put(updateRemovedOwnTestById(payload));
+        }
+    } catch (error) {
+        console.log('deleteOwnTestSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
 /*-----saga watchers-----*/
 function* getOwnContestsWatcherSaga() {
     yield takeLatest(GET_OWN_CONTESTS, getOwnContestsSaga);
@@ -153,11 +171,16 @@ function* deleteOwnContestWatcherSaga() {
     yield takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga);
 }
 
+function* deleteOwnTestWatcherSaga() {
+    yield takeLatest(DELETE_OWN_TEST, deleteTestSaga);
+}
+
 export default [
     getOwnTestsWatcherSaga(),
     getOwnContestsWatcherSaga(),
     postTestSagaWatcher(),
     postContestSagaWatcher(),
     getOwnQuestionsWatcherSaga(),
-    deleteOwnContestWatcherSaga()
+    deleteOwnContestWatcherSaga(),
+    deleteOwnTestWatcherSaga()
 ];
