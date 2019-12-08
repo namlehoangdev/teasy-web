@@ -3,6 +3,7 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
+    DELETE_OWN_CONTEST, DELETE_OWN_TEST,
     GET_OWN_CONTESTS,
     GET_OWN_TESTS,
     POST_CONTEST,
@@ -13,6 +14,8 @@ import {DefaultNormalizer, denormalize, normalizer} from "../utils/byid-utils";
 import {convertFromEditorStateToString} from "../utils/editor-converter";
 import {updateOwnTests} from "../actions";
 import {updateOwnQuestions} from "../actions";
+import {updateRemovedOwnContestById} from "../actions";
+import {updateRemovedOwnTestById} from "../actions";
 
 const questionsSchema = {
     questions: {
@@ -92,19 +95,52 @@ export function* postTestSaga(action) {
     }
 }
 
-export function* postContestSaga(action) {
-    const {payload} = action;
+export function* postContestSaga({payload}) {
     try {
         console.log('post contest saga: ', payload);
         yield put(showLoading());
         const response = yield call(APIs.postContestAPI, payload);
         console.log('postContestSaga succeed: ', response);
         if (response && response.data) {
-            const {id}=response.data;
+            const {id} = response.data;
 
         }
     } catch (error) {
         console.log('postContestSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+export function* deleteOwnContestSaga({payload}) {
+    try {
+        console.log('deleteOwnContestSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.deleteOwnContestAPI, payload);
+        console.log('deleteOwnContestSaga succeed: ', response);
+        if (response) {
+            console.log('response: ', response);
+            yield put(updateRemovedOwnContestById(payload));
+        }
+    } catch (error) {
+        console.log('deleteOwnContestSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+export function* deleteTestSaga({payload}) {
+    try {
+        console.log('deleteOwnTestSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.deleteOwnTestAPI, payload);
+        console.log('deleteOwnTestSaga succeed: ', response);
+        if (response) {
+            console.log('response: ', response);
+            yield put(updateRemovedOwnTestById(payload));
+        }
+    } catch (error) {
+        console.log('deleteOwnTestSaga failed: ', error);
     } finally {
         yield put(hideLoading());
     }
@@ -131,11 +167,20 @@ function* postContestSagaWatcher() {
     yield takeLatest(POST_CONTEST, postContestSaga);
 }
 
+function* deleteOwnContestWatcherSaga() {
+    yield takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga);
+}
+
+function* deleteOwnTestWatcherSaga() {
+    yield takeLatest(DELETE_OWN_TEST, deleteTestSaga);
+}
 
 export default [
     getOwnTestsWatcherSaga(),
     getOwnContestsWatcherSaga(),
     postTestSagaWatcher(),
     postContestSagaWatcher(),
-    getOwnQuestionsWatcherSaga()
+    getOwnQuestionsWatcherSaga(),
+    deleteOwnContestWatcherSaga(),
+    deleteOwnTestWatcherSaga()
 ];

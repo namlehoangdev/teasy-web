@@ -1,7 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 //import produce from 'immer';
-import {Breadcrumbs, Button, makeStyles, Table, TableBody, TableHead, TableRow, CircularProgress} from "@material-ui/core";
+import {
+    Breadcrumbs,
+    Button,
+    makeStyles,
+    Table,
+    TableBody,
+    TableHead,
+    TableRow,
+    CircularProgress
+} from "@material-ui/core";
 import {NavigateNext as NavigateNextIcon} from "@material-ui/icons";
 
 
@@ -23,9 +32,9 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    loadingTable:{
-      marginTop: theme.spacing(2),
-      marginLeft:theme.spacing(45),
+    loadingTable: {
+        marginTop: theme.spacing(2),
+        marginLeft: theme.spacing(45),
     }
 }));
 
@@ -190,7 +199,6 @@ export default function WorkingTableV2(props) {
 
 
     function privateRenderFiles(fileId, index) {
-        console.log(selectedFilesHash);
         if (isFileInPath(filesByHash[fileId].directory || [], currentPath))
             return (
                 <TableRow key={`file${fileId}${index}`} draggable={draggable}
@@ -228,7 +236,7 @@ export default function WorkingTableV2(props) {
                     {renderHeaders && renderHeaders()}
                 </TableRow>
             </TableHead>
-            {isLoading ? <div className={classes.loadingTable}><CircularProgress/></div> :<TableBody>
+            {isLoading ? <div className={classes.loadingTable}><CircularProgress/></div> : <TableBody>
                 {currentFolders.map(privateRenderFolders)}
                 {filesByHash && filesById && filesById.map(privateRenderFiles)}
             </TableBody>}
