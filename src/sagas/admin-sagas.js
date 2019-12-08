@@ -99,6 +99,10 @@ export function* postContestSaga(action) {
         yield put(showLoading());
         const response = yield call(APIs.postContestAPI, payload);
         console.log('postContestSaga succeed: ', response);
+        if (response && response.data) {
+            const {id}=response.data;
+
+        }
     } catch (error) {
         console.log('postContestSaga failed: ', error);
     } finally {

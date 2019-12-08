@@ -54,4 +54,12 @@ export const QUESTION_DIALOG_MODE = {
 export const LANGUAGE = {
     'VN': VIETNAMESE,
     'EN': ENGLISH
-}
+};
+
+export const COMPETING_CONTEST_STATE = {
+    GET_TEST: 'GET_CONTEST',
+    DOING: 'DOING',
+    SUBMIT: 'SUBMIT',
+    RESPONSE_OF_HAS_FULL_ANSWER: '',
+    RESPONSE_OF_NOT_FULL_ANSWER: '',
+};

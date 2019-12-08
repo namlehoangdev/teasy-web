@@ -12,7 +12,7 @@ import {
     SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG,
     GET_CONTEST_BY_ID,
     UPDATE_COMPETING_CONTEST,
-    UPDATE_COMPETING_RESULT, POST_CONTEST_RESULT
+    UPDATE_COMPETING_RESULT, POST_CONTEST_RESULT, GET_MARKED_CONTEST_RESULT
 } from './action-types';
 
 export const setOpenPlaygroundFullscreenDialog = (value) => action(SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, {value});
@@ -35,7 +35,9 @@ export const updateAllContestById = (id, contest) => action(UPDATE_ALL_CONTEST_B
 
 export const updateCompetingResult = (result) => action(UPDATE_COMPETING_RESULT, {result});
 
-export const postContestResult = (result) => action(POST_CONTEST_RESULT, result);
+export const postContestResult = (params, hasFullAnswers) => action(POST_CONTEST_RESULT, {params, hasFullAnswers});
+
+export const getMarkedContestResult = (resultId) => action(GET_MARKED_CONTEST_RESULT, resultId);
 
 
 

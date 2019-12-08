@@ -1,11 +1,13 @@
 import {HTTP_STATUS_CODES_DEFINITIONS} from "../consts/http-status-codes-consts";
+
 export * from './time-utils';
 
-export function disabledStyleWrapper(disabled, style) {
+export function disabledStyleWrapper(disabled, style = {}, overrideStyle = {}) {
     return disabled ? {
         ...style,
         pointerEvents: 'none',
-        opacity: 0.4
+        opacity: 0.4,
+        ...overrideStyle
     } : style;
 }
 

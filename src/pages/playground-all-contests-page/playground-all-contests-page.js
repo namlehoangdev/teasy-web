@@ -75,7 +75,7 @@ function StartButtonWrapper(props) {
 
 export default function PlaygroundAllContestsPage() {
     const {contests} = useSelector(state => state.playgroundReducer) || {};
-    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer)
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const [focusedDetailId, setFocusedDetailId] = useState(-1);
     const [focusedFiles, setFocusedFiles] = useState({});
     const [endCountDown, setEndCountDown] = useState(true);

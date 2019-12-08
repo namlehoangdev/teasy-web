@@ -14,6 +14,12 @@ import {
     ButtonGroup,
     Button,
     Divider,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    CircularProgress,
+    DialogContentText,
+    DialogActions
 } from "@material-ui/core";
 import clsx from "clsx";
 import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
@@ -27,11 +33,13 @@ import {
 } from "../../actions";
 import {useLocation} from 'react-router';
 import {Editor} from 'draft-js';
-import {msToTime} from "../../utils";
+import {disabledStyleWrapper, msToTime} from "../../utils";
 import QuizQuestion from "./quiz-question";
 import produce from "immer";
 import {addToNormalizedList, DefaultNormalizer, denormalizer} from "../../utils/byid-utils";
 import Calculator from '../../components/calculator/component/App';
+import {snackColors} from "../../consts/color";
+import {COMPETING_CONTEST_STATE} from "../../consts";
 
 const drawerWidth = 240;
 
@@ -96,7 +104,18 @@ const useStyles = makeStyles(theme => ({
     question: {
         marginTop: theme.spacing(3)
     },
-
+    circleProgressWrapper: {
+        display: 'flex',
+        '& > * + *': {
+            marginLeft: theme.spacing(2),
+        },
+    },
+    errorBackground: {
+        backgroundColor: snackColors.error
+    },
+    successColor: {
+        backgroundColor: snackColors.success
+    }
 }));
 
 function checkLength(testIds) {
@@ -108,16 +127,22 @@ export default function PlaygroundCompetePage() {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(true);
     const {competingContest} = useSelector(state => state.playgroundReducer) || {};
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer)
     const {
         duration, results, description,
         test: testByHash, answers: answersByHash, questions: questionByHash,
         testIds, name: contestName,
-        ownerId, ownerName
+        ownerId, ownerName,
+        hasFullAnswers,
+        state,
+        markedResults = {}
     } = competingContest;
+    const {testRightAnswerIds, rightAnswerIds} = markedResults;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
     const [testName, setTestName] = useState('');
+    const [isOpenResultDialog, setIsOpenResultDialog] = useState(false);
 
     useEffect(() => {
         if (checkLength(testIds)) {
@@ -139,6 +164,10 @@ export default function PlaygroundCompetePage() {
         dispatch(updateCompetingResult(item));
     }
 
+    function handleNavigateToResultsPage() {
+        console.log('navigate to results page');
+    }
+
     function handleSubmit() {
         console.log('handle submit: ');
         const {contestId} = locationState;
@@ -152,19 +181,40 @@ export default function PlaygroundCompetePage() {
                 displayName: ownerName,
                 results: reqResults
             };
-            dispatch(postContestResult(params));
+            setIsOpenResultDialog(true);
+            dispatch(postContestResult(params, hasFullAnswers));
         }
     }
 
     function renderQuestions() {
         return questionsById.map((questionId, index) => {
             const {answers: answersById, content} = questionByHash[questionId];
-            return (<Box key={questionId} className={classes.question}>
-                <Chip label={`Câu ${index + 1}`}/>
+            const isResponseFullAnswer = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
+            let chipStyle = {};
+            let count = 0;
+            let trueAnswer = '';
+            if (isResponseFullAnswer) {
+                answersById.every((item) => {
+                    if (rightAnswerIds[item]) {
+                        trueAnswer = item;
+                        chipStyle = {backgroundColor: snackColors.success};
+                        return false;
+                    }
+                    count++;
+                    return true;
+                });
+                if (count === answersById.length) {
+                    chipStyle = {backgroundColor: snackColors.error};
+                }
+            }
+            return (<Box key={questionId} className={classes.question}
+                         style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
+                <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
                 <Typography variant="subtitle2" noWrap align='center'>
                     <b><Editor editorState={content} readOnly={true}/></b>
                 </Typography>
                 <QuizQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
+                              trueAnswer={trueAnswer}
                               question={questionByHash[questionId]}/>
             </Box>)
         });
@@ -191,6 +241,24 @@ export default function PlaygroundCompetePage() {
             </Box>
         </React.Fragment>)
     }
+
+    function renderSubmitResult() {
+        if (state === COMPETING_CONTEST_STATE.SUBMIT) {
+            return (<div className={classes.circleProgressWrapper}><CircularProgress/></div>);
+        }
+        return (
+            <React.Fragment>
+                <DialogContent>
+                    <DialogContentText>Nộp bài thành công</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER)
+                    && <Button onClick={() => setIsOpenResultDialog(false)} color="primary">Xem đáp án</Button>}
+                    <Button onClick={handleNavigateToResultsPage} color="primary">Về trang kết quả thi</Button>
+                </DialogActions>
+            </React.Fragment>)
+    }
+
 
     const durationArray = msToTime(duration);
     return (
@@ -230,6 +298,12 @@ export default function PlaygroundCompetePage() {
                 <Divider/>
                 {renderDrawerBlock()}
             </Drawer>
+
+            <Dialog open={isOpenResultDialog} onClose={() => setIsOpenResultDialog(false)}
+                    aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Nộp bài thi</DialogTitle>
+                {renderSubmitResult()}
+            </Dialog>
         </div>
     )
 }
