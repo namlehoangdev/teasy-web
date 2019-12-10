@@ -20,17 +20,20 @@ import {Close as CloseIcon, Visibility as VisibilityIcon, VisibilityOff as Visib
 import {TEXT} from "../../consts";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
+import {DateTimePicker, TimePicker} from "@material-ui/pickers";
 import {
     setOpenAdminFullscreenDialog,
     getAllUsers,
     updateEditingContest,
-    getOwnTests, postContest
+    getOwnTests, postContest, putContest
 } from "../../actions";
 import produce from "immer";
 import ChooseUserDialog from "./choose-users-dialog";
 import ChooseTestDialog from "./choose-tests-dialog";
 import {FormControl} from "@material-ui/core";
 import Input from "@material-ui/core/Input";
+import {isDate} from "moment";
+import {isDateObject, msToTime} from "../../utils";
 //TODO: change to permitted Users from array to map
 
 const useStyles = makeStyles(theme => ({
@@ -69,13 +72,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
-    const {isPublic, permittedUsers, testIds, isSecured, password} = editingContest;
+    const {id, isPublic, permittedUsers, testIds, isSecured, password, name, description, startAt, duration} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
     const {users} = useSelector(state => state.userReducer) || [];
-    const [_startDate, setStartDate] = useState(new Date());
-    const [_duration, setDuration] = useState('01:30');
+    const [_duration, setDuration] = useState(new Date());
     const [showPassword, setShowPassword] = useState(false);
 
     const history = useHistory();
@@ -83,15 +85,15 @@ export default function CreateContestPage() {
     const classes = useStyles();
 
     useEffect(() => {
-        console.log('asd');
-        const [hours, minutes] = _duration.split(':');
-        dispatch(updateEditingContest({
-            duration: hours * 3600000 + minutes * 60000
-        }));
 
         dispatch(getAllUsers());
         if (!tests || !tests.byId || tests.byId.length === 0) {
             dispatch(getOwnTests());
+        }
+
+        if (id) {
+            const [hours, minutes] = msToTime(duration);
+            setDuration(new Date(1997, 10, 3, hours, minutes));
         }
     }, []);
 
@@ -159,16 +161,15 @@ export default function CreateContestPage() {
     }
 
     function handleStartDateChange(event) {
-        console.log('start date change: ', event.target.value);
-        setStartDate(event.target.value);
-        dispatch(updateEditingContest({startAt: new Date(event.target.value).toISOString()}));
+        console.log('start date change: ', event);
+        dispatch(updateEditingContest({startAt: new Date(event).toISOString()}));
     }
 
     function handleDurationChange(event) {
-        console.log('duration: ', event.target.value);
-        setDuration(event.target.value);
-        const [hours, minutes] = event.target.value.split(':');
-        dispatch(updateEditingContest({duration: hours * 3600000 + minutes * 60000}));
+        console.log('duration: ', event);
+        setDuration(event);
+        const temp = new Date(event);
+        dispatch(updateEditingContest({duration: temp.getHours() * 3600000 + temp.getMinutes() * 60000}));
     }
 
     function handlePasswordChange(event) {
@@ -184,7 +185,11 @@ export default function CreateContestPage() {
             alert('ten khong hop le');
             return;
         }
-        dispatch(postContest(editingContest));
+        if (id) {
+            dispatch(putContest(editingContest));
+        } else {
+            dispatch(postContest(editingContest));
+        }
     }
 
     function renderPermittedUsers() {
@@ -192,7 +197,10 @@ export default function CreateContestPage() {
             return null;
         }
         return (<div className={classes.permittedUserContainer}>
-            {permittedUsers.map((userId) => {
+            {permittedUsers && permittedUsers.map((userId) => {
+                if (!users.byHash[userId]) {
+                    return;
+                }
                 const {id, name} = users.byHash[userId];
                 return (<Chip key={id} avatar={<Avatar>{name.charAt(0)}</Avatar>}
                               label={name}
@@ -206,6 +214,9 @@ export default function CreateContestPage() {
     function renderTests() {
         return (<div className={classes.permittedUserContainer}>
             {testIds && testIds.map((testId) => {
+                if (!tests.byHash[testId]) {
+                    return;
+                }
                 const {id, name} = tests.byHash[testId];
                 return (<Chip key={id} label={name} onDelete={() => handleDeleteSelectedTestClick(testId)}
                               variant="outlined"/>)
@@ -219,7 +230,11 @@ export default function CreateContestPage() {
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                     <CloseIcon/>
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>{`${TEXT.create} ${TEXT.contest}`}</Typography>
+                {
+                    id ? (<Typography variant="h6"
+                                      className={classes.title}>{`${TEXT.edit} ${TEXT.contest}`}</Typography>) :
+                        (<Typography variant="h6"
+                                     className={classes.title}>{`${TEXT.create} ${TEXT.contest}`}</Typography>)}
                 <Button color="inherit" onClick={handleSaveCompetition}>{TEXT.save}</Button>
             </Toolbar>
         </AppBar>
@@ -238,10 +253,12 @@ export default function CreateContestPage() {
 
         <Grid container className={classes.page}>
             <Grid item xs={12} sm={8} md={8}>
-                <TextField required label="Tên cuộc thi" margin="normal" fullWidth onChange={handleNameChange}/>
+                <TextField required label="Tên cuộc thi" margin="normal" fullWidth onChange={handleNameChange}
+                           value={name}/>
             </Grid>
             <Grid item xs={12} sm={8} md={8}>
-                <TextField label="Mô tả" margin="normal" multiline fullWidth onChange={handleDescriptionChange}/>
+                <TextField label="Mô tả" margin="normal" multiline fullWidth
+                           value={description} onChange={handleDescriptionChange}/>
             </Grid>
             <Grid item xs={12} sm={8} md={8}>
                 <FormLabel component="legend">Quyền truy cập</FormLabel>
@@ -288,28 +305,33 @@ export default function CreateContestPage() {
                 />
             </Grid>
             <Grid item xs={12} sm={8} md={8}>
-                <TextField
-                    id="create-contest-start-date"
-                    label="Thời gian bắt đầu"
-                    type="datetime-local"
-                    //defaultValue={defaultDate.toISOString().slice(0, -8)}
-                    value={_startDate}
-                    onChange={handleStartDateChange}
-                    InputLabelProps={{shrink: true}}
-                />
+                <DateTimePicker ampm={false} label="Thời gian bắt đầu"
+                                value={startAt} onChange={handleStartDateChange}/>
             </Grid>
 
             <Grid item xs={12} sm={8} md={8}>
-                <TextField
-                    id="create-contest-time"
+                <TimePicker
+                    ampm={false}
                     label="Diễn ra trong"
-                    type="time"
-                    style={{width: 100}}
-                    InputLabelProps={{shrink: true}}
-                    inputProps={{step: 300}}
-                    defaultValue='01:30'
+                    views={["hours", "minutes"]}
+                    format="HH:mm"
                     value={_duration}
+                    invalidDateMessage="Giờ không hợp lệ"
+                    invalidLabel="Không đúng"
+                    cancelLabel="Hủy"
+                    okLabel="Chọn"
                     onChange={handleDurationChange}
+                />
+                {/*<TextField*/}
+                {/*    id="create-contest-time"*/}
+                {/*    label="Diễn ra trong"*/}
+                {/*    type="time"*/}
+                {/*    style={{width: 100}}*/}
+                {/*    InputLabelProps={{shrink: true}}*/}
+                {/*    inputProps={{step: 300}}*/}
+                {/*    defaultValue='01:30'*/}
+                {/*    value={_duration}*/}
+                {/*    onChange={handleDurationChange}*/}
                 />
             </Grid>
             <Grid item xs={12} sm={8} md={8}>

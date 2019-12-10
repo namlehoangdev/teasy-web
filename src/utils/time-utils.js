@@ -16,9 +16,11 @@ function msToTime(duration) {
 }
 
 function addDurationToString(isoString, durationMillisecond) {
-    return moment(isoString).add(durationMillisecond,'ms').toISOString();
+    return moment(isoString).add(durationMillisecond, 'ms').toISOString();
 }
 
+function isDateObject(date) {
+    return date && typeof date.getMonth === 'function';
+}
 
-
-export {isoToLocalDateString, msToTime,addDurationToString}
+export {isoToLocalDateString, msToTime, addDurationToString, isDateObject}

@@ -2,6 +2,8 @@ import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import {Switch, Route} from 'react-router-dom';
 import {ConnectedRouter} from "connected-react-router";
+import DateFnsUtils from '@date-io/date-fns'
+import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 
 import {Provider, useDispatch} from 'react-redux';
 import {LandingPage, AdminHomePage, PlaygroundHomePage, NotFoundPage} from './pages';
@@ -42,7 +44,9 @@ function App() {
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-            <App/>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <App/>
+            </MuiPickersUtilsProvider>
         </PersistGate>
     </Provider>,
     document.getElementById('root')

@@ -24,7 +24,12 @@ import {
 import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
 import {PAGE_PATHS} from "../../consts";
-import {openCreateQuestionDialog, setOpenAdminFullscreenDialog} from "../../actions";
+import {
+    clearEditingContest, clearEditingQuestion,
+    clearEditingTest,
+    openCreateQuestionDialog,
+    setOpenAdminFullscreenDialog
+} from "../../actions";
 import {disabledStyleWrapper} from "../../utils";
 import EditingQuestionDialog from "../../components/question-dialog/editing-question-dialog";
 import {whenMapDispatchToPropsIsObject} from "react-redux/lib/connect/mapDispatchToProps";
@@ -149,10 +154,18 @@ export default function AdminHomePage() {
     };
 
     function handleCreateItemClick(event, item) {
-        if (item.key === 2) {
-            setCreatePopAnchorEl(null);
-            dispatch(openCreateQuestionDialog());
-            return;
+        switch (item.key) {
+            case 0:
+                dispatch(clearEditingContest());
+                break;
+            case 1:
+                dispatch(clearEditingTest());
+                break;
+            case 2:
+                dispatch(clearEditingQuestion());
+                setCreatePopAnchorEl(null);
+                dispatch(openCreateQuestionDialog());
+                break;
         }
         dispatch(setOpenAdminFullscreenDialog(true));
         setCreatePopAnchorEl(null);
@@ -239,7 +252,7 @@ export default function AdminHomePage() {
                     <Route path={`${path}/${PAGE_PATHS.createContest}`} component={CreateContestPage}/>
                     <Route path={`${path}/${PAGE_PATHS.editQuestion}`} component={EditQuestionPage}/>
                     <Route path={`${path}/${PAGE_PATHS.editTest}`} component={EditTestPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.editContest}`} component={EditContestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.editContest}`} component={CreateContestPage}/>
                 </Switch>
             </Dialog>
             <EditingQuestionDialog/>

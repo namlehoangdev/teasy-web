@@ -13,33 +13,46 @@ import {
     UPDATE_OWN_TESTS,
     UPDATE_OWN_CONTEST_BY_ID,
     UPDATE_REMOVED_CONTEST_BY_ID,
-    UPDATE_REMOVED_TEST_BY_ID
-} from '../actions/action-types';
+    UPDATE_REMOVED_TEST_BY_ID,
+    ADD_OWN_CONTEST,
+    CLEAR_EDITING_CONTEST,
+    CLEAR_EDITING_TEST,
+    CLEAR_EDITING_QUESTION
+} from "../actions/action-types";
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
 
-import {DefaultNormalizer, normalizer, removeFromNormalizedList} from "../utils/byid-utils";
+import {
+    addToNormalizedList,
+    DefaultNormalizer,
+    normalizer,
+    removeFromNormalizedList
+} from "../utils/byid-utils";
 import {fakeQuestions} from "../fake-data";
-
 
 const initialState = {
     isOpenAdminFullscreenDialog: false,
     contests: new DefaultNormalizer(),
     tests: new DefaultNormalizer(),
-    questions: normalizer(fakeQuestions),  //new DefaultNormalizer(),
+    questions: normalizer(fakeQuestions), //new DefaultNormalizer(),
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
     },
     editingContest: {
-        isPublic: false, permittedUsers: [], testIds: [], name: '',
-        description: '', isSecured: false, password: '',
+        isPublic: false,
+        permittedUsers: [],
+        testIds: [],
+        name: "",
+        description: "",
+        isSecured: false,
+        password: "",
         startDate: null,
         duration: null
     },
     editingTest: {},
     editingQuestion: {},
-    error: null,
+    error: null
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -59,7 +72,10 @@ export default function adminReducer(state = initialState, action) {
                 draft.questions = payload.questions || new DefaultNormalizer();
                 return;
             case OPEN_CREATE_QUESTION_DIALOG:
-                draft.questionDialog = {isOpen: true, mode: QUESTION_DIALOG_MODE.create};
+                draft.questionDialog = {
+                    isOpen: true,
+                    mode: QUESTION_DIALOG_MODE.create
+                };
                 draft.editingQuestion = {};
                 return;
             case CANCEL_CREATE_QUESTION_DIALOG:
@@ -88,21 +104,39 @@ export default function adminReducer(state = initialState, action) {
             }
             case UPDATE_OWN_CONTEST_BY_ID: {
                 const {id, contest} = payload;
-                draft.contests = payload.contests;
+                console.log("UPDATE_OWN_CONTEST_BY_ID", payload);
+                console.log("draft contests : ", draft.contests);
+                //draft.contests = payload.contests;
                 draft.contests.byHash[id] = contest;
                 return;
             }
             case UPDATE_REMOVED_CONTEST_BY_ID: {
-                console.log('UPDATE_REMOVED_CONTEST_BY_ID', payload);
+                console.log("UPDATE_REMOVED_CONTEST_BY_ID", payload);
                 removeFromNormalizedList(draft.contests, payload);
-                console.log('draft contests: ', draft.contests);
+                console.log("draft contests: ", draft.contests);
                 return;
             }
 
             case UPDATE_REMOVED_TEST_BY_ID: {
-                console.log('UPDATE_REMOVED_TEST_BY_ID', payload);
+                console.log("UPDATE_REMOVED_TEST_BY_ID", payload);
                 removeFromNormalizedList(draft.tests, payload);
-                console.log('draft contests: ', draft.tests);
+                console.log("draft contests: ", draft.tests);
+                return;
+            }
+            case ADD_OWN_CONTEST: {
+                addToNormalizedList(draft.contests, payload);
+                return;
+            }
+            case CLEAR_EDITING_CONTEST: {
+                draft.editingContest = initialState.editingContest;
+                return;
+            }
+            case CLEAR_EDITING_TEST: {
+                draft.editingTest = initialState.editingTest;
+                return;
+            }
+            case CLEAR_EDITING_QUESTION: {
+                draft.editingQuestion = initialState.editingQuestion;
                 return;
             }
 
@@ -112,4 +146,3 @@ export default function adminReducer(state = initialState, action) {
         }
     });
 }
-

@@ -9,13 +9,16 @@ import {
 } from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    clearEditingContest,
     deleteOwnContest,
-    getOwnContests,
+    getOwnContests, setOpenAdminFullscreenDialog, updateEditingContest,
     updateOwnContestById,
     updateOwnContests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {isoToLocalDateString} from "../../utils";
+import {PAGE_PATHS} from "../../consts/page-paths-conts";
+import {useHistory, useRouteMatch} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -47,7 +50,10 @@ const useStyles = makeStyles(theme => ({
 export default function AdminContestPage() {
     const {contests} = useSelector(state => state.adminReducer) || {};
     const [isOpenRemoveDialog, setOpenRemoveDialog] = React.useState(false);
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const [actionItemId, setActionItemId] = useState(null);
+    const history = useHistory();
+    const {path} = useRouteMatch();
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
@@ -102,7 +108,12 @@ export default function AdminContestPage() {
 
 
     function handleEditContestIconClick(id) {
-
+        const contest = contests.byHash[id];
+        console.log('prepare update: ', contest);
+        dispatch(clearEditingContest());
+        dispatch(updateEditingContest(contest));
+        dispatch(setOpenAdminFullscreenDialog(true));
+        history.push(`${PAGE_PATHS.editContest}`);
     }
 
     function handleCancelRemoveDialog() {
@@ -142,6 +153,7 @@ export default function AdminContestPage() {
                         <Typography gutterBottom variant="h6"
                                     component="h2" color="primary">Quản lý cuộc thi</Typography>
                         <WorkingTableV2 filesByHash={contests.byHash}
+                                        isLoading={isShowCircleLoading}
                                         filesById={contests.byId}
                                         dragDisplayProperty="content"
                                         setFiles={handleFilesChange}

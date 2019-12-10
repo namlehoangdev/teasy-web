@@ -89,6 +89,8 @@ export default function ChooseTestDialog(props) {
         let newSelected = [...selectedTestIds];
         if (selectedIndex === -1) {
             newSelected.push(testId);
+        } else {
+            newSelected.splice(selectedIndex, 1);
         }
         onSelectedTestsChange(newSelected);
     }
@@ -183,7 +185,7 @@ export default function ChooseTestDialog(props) {
 }
 
 ChooseTestDialog.propTypes = {
-    tests: PropTypes.func,
+    tests: PropTypes.object,
     onSelectedTestsChange: PropTypes.func,
     open: PropTypes.bool,
     handleClose: PropTypes.func,

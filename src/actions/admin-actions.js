@@ -20,7 +20,12 @@ import {
     DELETE_OWN_CONTEST,
     DELETE_OWN_TEST,
     DELETE_OWN_QUESTION,
-    UPDATE_REMOVED_CONTEST_BY_ID, UPDATE_REMOVED_TEST_BY_ID, UPDATE_REMOVED_QUESTION_BY_ID
+    UPDATE_REMOVED_CONTEST_BY_ID,
+    UPDATE_REMOVED_TEST_BY_ID,
+    UPDATE_REMOVED_QUESTION_BY_ID,
+    PUT_TEST,
+    PUT_QUESTION,
+    ADD_OWN_CONTEST, PUT_CONTEST, CLEAR_EDITING_CONTEST, CLEAR_EDITING_TEST, CLEAR_EDITING_QUESTION
 } from './action-types';
 
 export const setOpenAdminFullscreenDialog = value => action(SET_OPEN_ADMIN_FULLSCREEN_DIALOG, {value});
@@ -32,6 +37,10 @@ export const getOwnTests = () => action(GET_OWN_TESTS);
 export const getOwnQuestions = () => action(GET_OWN_QUESTIONS);
 
 export const updateOwnTests = (tests) => action(UPDATE_OWN_TESTS, {tests});
+
+export const clearEditingContest = () => action(CLEAR_EDITING_CONTEST);
+export const clearEditingTest = () => action(CLEAR_EDITING_TEST);
+export const clearEditingQuestion = () => action(CLEAR_EDITING_QUESTION);
 
 export const openCreateQuestionDialog = () => action(OPEN_CREATE_QUESTION_DIALOG);
 
@@ -53,9 +62,16 @@ export const updateOwnContests = (contests) => action(UPDATE_OWN_CONTESTS, {cont
 
 export const updateOwnContestById = (id, contest) => action(UPDATE_OWN_CONTEST_BY_ID, {id, contest});
 
-export const postTest = (tests) => action(POST_TEST, tests);
+export const addNewOwnContest = (contest) => action(ADD_OWN_CONTEST, contest);
+export const addNewOwnTest = (test) => action(ADD_OWN_CONTEST, test);
+export const addNewOwnQuestion = (question) => action(ADD_OWN_CONTEST, question);
+
+export const postTest = (test) => action(POST_TEST, test);
 
 export const postContest = (contest) => action(POST_CONTEST, contest);
+export const putContest = (contest) => action(PUT_CONTEST, contest);
+export const putQuestion = (question) => action(PUT_QUESTION, question);
+export const putTest = (test) => action(PUT_TEST, test);
 
 export const deleteOwnContest = (contestId) => action(DELETE_OWN_CONTEST, contestId);
 export const deleteOwnTest = (testId) => action(DELETE_OWN_TEST, testId);

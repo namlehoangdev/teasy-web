@@ -7,7 +7,7 @@ import {
     GET_OWN_CONTESTS,
     GET_OWN_TESTS,
     POST_CONTEST,
-    POST_TEST, UPDATE_OWN_QUESTIONS,
+    POST_TEST, PUT_CONTEST, UPDATE_OWN_QUESTIONS,
 } from "../actions/action-types";
 import {updateOwnContests} from "../actions";
 import {DefaultNormalizer, denormalize, normalizer} from "../utils/byid-utils";
@@ -16,6 +16,10 @@ import {updateOwnTests} from "../actions";
 import {updateOwnQuestions} from "../actions";
 import {updateRemovedOwnContestById} from "../actions";
 import {updateRemovedOwnTestById} from "../actions";
+import {addNewOwnContest} from "../actions";
+import {updateOwnContestById} from "../actions";
+import {showCircleLoading} from "../actions";
+import {hideCircleLoading} from "../actions";
 
 const questionsSchema = {
     questions: {
@@ -31,7 +35,7 @@ const questionsSchema = {
 
 export function* getOwnContestsSaga() {
     try {
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.getOwnedContestsAPI);
         console.log('get own contest response: ', response);
         if (response) {
@@ -41,13 +45,13 @@ export function* getOwnContestsSaga() {
     } catch (error) {
         console.log('getOwnContestsSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
 export function* getOwnTestsSaga() {
     try {
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.getOwnTestsAPI);
         console.log('get own test response: ', response);
         if (response.data) {
@@ -57,13 +61,13 @@ export function* getOwnTestsSaga() {
     } catch (error) {
         console.log('getOwnTestsSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
 export function* getOwnQuestionsSaga() {
     try {
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.getOwnQuestionsAPI);
         console.log('getOwnQuestionsSaga response: ', response);
         if (response.data) {
@@ -73,7 +77,7 @@ export function* getOwnQuestionsSaga() {
     } catch (error) {
         console.log('getOwnQuestionsSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
@@ -102,11 +106,28 @@ export function* postContestSaga({payload}) {
         const response = yield call(APIs.postContestAPI, payload);
         console.log('postContestSaga succeed: ', response);
         if (response && response.data) {
-            const {id} = response.data;
-
+            yield put(addNewOwnContest(response.data));
         }
     } catch (error) {
         console.log('postContestSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+export function* putContestSaga({payload}) {
+    try {
+        console.log('putContestSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.putContestAPI, payload);
+        console.log('putContestSaga succeed: ', response);
+        if (response && response.data) {
+            const {id} = response.data;
+            const contest = {...response.data};
+            yield put(updateOwnContestById(id, contest));
+        }
+    } catch (error) {
+        console.log('putContestSaga failed: ', error);
     } finally {
         yield put(hideLoading());
     }
@@ -147,40 +168,15 @@ export function* deleteTestSaga({payload}) {
 }
 
 /*-----saga watchers-----*/
-function* getOwnContestsWatcherSaga() {
-    yield takeLatest(GET_OWN_CONTESTS, getOwnContestsSaga);
-}
-
-function* getOwnTestsWatcherSaga() {
-    yield takeLatest(GET_OWN_TESTS, getOwnTestsSaga);
-}
-
-function* getOwnQuestionsWatcherSaga() {
-    yield  takeLatest(UPDATE_OWN_QUESTIONS, getOwnQuestionsSaga);
-}
-
-function* postTestSagaWatcher() {
-    yield takeLatest(POST_TEST, postTestSaga);
-}
-
-function* postContestSagaWatcher() {
-    yield takeLatest(POST_CONTEST, postContestSaga);
-}
-
-function* deleteOwnContestWatcherSaga() {
-    yield takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga);
-}
-
-function* deleteOwnTestWatcherSaga() {
-    yield takeLatest(DELETE_OWN_TEST, deleteTestSaga);
-}
-
 export default [
-    getOwnTestsWatcherSaga(),
-    getOwnContestsWatcherSaga(),
-    postTestSagaWatcher(),
-    postContestSagaWatcher(),
-    getOwnQuestionsWatcherSaga(),
-    deleteOwnContestWatcherSaga(),
-    deleteOwnTestWatcherSaga()
-];
+    takeLatest(PUT_CONTEST, putContestSaga),
+    takeLatest(GET_OWN_CONTESTS, getOwnContestsSaga),
+    takeLatest(GET_OWN_TESTS, getOwnTestsSaga),
+    takeLatest(UPDATE_OWN_QUESTIONS, getOwnQuestionsSaga),
+    takeLatest(POST_TEST, postTestSaga),
+    takeLatest(POST_CONTEST, postContestSaga),
+    takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga),
+    takeLatest(DELETE_OWN_TEST, deleteTestSaga)
+]
+
+

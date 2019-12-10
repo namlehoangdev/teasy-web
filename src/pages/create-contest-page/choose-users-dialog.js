@@ -89,6 +89,8 @@ export default function ChooseUserDialog(props) {
         let newSelected = [...selectedUserIds];
         if (selectedIndex === -1) {
             newSelected.push(userId);
+        } else {
+            newSelected.splice(selectedIndex, 1);
         }
         onSelectedUsersChange(newSelected);
     }
@@ -183,7 +185,7 @@ export default function ChooseUserDialog(props) {
 }
 
 ChooseUserDialog.propTypes = {
-    users: PropTypes.func,
+    users: PropTypes.object,
     onSelectedUsersChange: PropTypes.func,
     open: PropTypes.bool,
     handleClose: PropTypes.func,
