@@ -25,7 +25,12 @@ import {
     UPDATE_REMOVED_QUESTION_BY_ID,
     PUT_TEST,
     PUT_QUESTION,
-    ADD_OWN_CONTEST, PUT_CONTEST, CLEAR_EDITING_CONTEST, CLEAR_EDITING_TEST, CLEAR_EDITING_QUESTION
+    ADD_OWN_CONTEST,
+    PUT_CONTEST,
+    CLEAR_EDITING_CONTEST,
+    CLEAR_EDITING_TEST,
+    CLEAR_EDITING_QUESTION,
+    GET_CONTEST_RESULTS_BY_ID, UPDATE_PARTITION_OF_CONTEST_BY_ID
 } from './action-types';
 
 export const setOpenAdminFullscreenDialog = value => action(SET_OPEN_ADMIN_FULLSCREEN_DIALOG, {value});
@@ -35,6 +40,8 @@ export const getOwnContests = () => action(GET_OWN_CONTESTS);
 export const getOwnTests = () => action(GET_OWN_TESTS);
 
 export const getOwnQuestions = () => action(GET_OWN_QUESTIONS);
+
+export const getContestResultsById = (contestId) => action(GET_CONTEST_RESULTS_BY_ID, contestId);
 
 export const updateOwnTests = (tests) => action(UPDATE_OWN_TESTS, {tests});
 
@@ -80,5 +87,9 @@ export const deleteOwnQuestion = (questionId) => action(DELETE_OWN_QUESTION, que
 export const updateRemovedOwnContestById = (contestId) => action(UPDATE_REMOVED_CONTEST_BY_ID, contestId);
 export const updateRemovedOwnTestById = (testId) => action(UPDATE_REMOVED_TEST_BY_ID, testId);
 export const updateRemovedOwnQuestionById = (questionId) => action(UPDATE_REMOVED_QUESTION_BY_ID, questionId);
+export const updatePartitionOfContestById = (contestId, contestParams) => action(UPDATE_PARTITION_OF_CONTEST_BY_ID, {
+    id: contestId,
+    contest: contestParams
+})
 
 

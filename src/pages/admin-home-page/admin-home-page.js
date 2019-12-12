@@ -33,6 +33,7 @@ import {
 import {disabledStyleWrapper} from "../../utils";
 import EditingQuestionDialog from "../../components/question-dialog/editing-question-dialog";
 import {whenMapDispatchToPropsIsObject} from "react-redux/lib/connect/mapDispatchToProps";
+import AdminContestResultsPage from "../admin-contest-result-page/admin-contest-results-page";
 
 const drawerWidth = 240;
 
@@ -125,6 +126,7 @@ export default function AdminHomePage() {
                 case PAGE_PATHS.editTest:
                 case PAGE_PATHS.editContest:
                 case PAGE_PATHS.editQuestion:
+                case PAGE_PATHS.contestResults:
                     dispatch(setOpenAdminFullscreenDialog(false));
             }
         }
@@ -253,6 +255,7 @@ export default function AdminHomePage() {
                     <Route path={`${path}/${PAGE_PATHS.editQuestion}`} component={EditQuestionPage}/>
                     <Route path={`${path}/${PAGE_PATHS.editTest}`} component={EditTestPage}/>
                     <Route path={`${path}/${PAGE_PATHS.editContest}`} component={CreateContestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={AdminContestResultsPage}/>
                 </Switch>
             </Dialog>
             <EditingQuestionDialog/>

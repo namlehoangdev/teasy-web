@@ -3,7 +3,7 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    DELETE_OWN_CONTEST, DELETE_OWN_TEST,
+    DELETE_OWN_CONTEST, DELETE_OWN_TEST, GET_CONTEST_RESULTS_BY_ID,
     GET_OWN_CONTESTS,
     GET_OWN_TESTS,
     POST_CONTEST,
@@ -20,6 +20,8 @@ import {addNewOwnContest} from "../actions";
 import {updateOwnContestById} from "../actions";
 import {showCircleLoading} from "../actions";
 import {hideCircleLoading} from "../actions";
+import {updateAllContestById} from "../actions";
+import {updatePartitionOfContestById} from "../actions";
 
 const questionsSchema = {
     questions: {
@@ -41,6 +43,24 @@ export function* getOwnContestsSaga() {
         if (response) {
             const contests = normalizer(response.data) || null;
             yield put(updateOwnContests(contests));
+        }
+    } catch (error) {
+        console.log('getOwnContestsSaga failed: ', error);
+    } finally {
+        yield put(hideCircleLoading());
+    }
+}
+
+
+export function* getContestResultsById({payload}) {
+    try {
+        yield put(showCircleLoading());
+        const response = yield call(APIs.getContestResultsByIdAPI, payload);
+        console.log('get own contest response: ', response);
+        if (response) {
+            const results = normalizer(response.data) || null;
+            console.log(results);
+            yield put(updatePartitionOfContestById(payload, {results}));
         }
     } catch (error) {
         console.log('getOwnContestsSaga failed: ', error);
@@ -176,7 +196,8 @@ export default [
     takeLatest(POST_TEST, postTestSaga),
     takeLatest(POST_CONTEST, postContestSaga),
     takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga),
-    takeLatest(DELETE_OWN_TEST, deleteTestSaga)
+    takeLatest(DELETE_OWN_TEST, deleteTestSaga),
+    takeLatest(GET_CONTEST_RESULTS_BY_ID, getContestResultsById)
 ]
 
 

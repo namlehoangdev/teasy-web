@@ -4,14 +4,13 @@ import {
     List, ListItem, ListItemText, Dialog, DialogActions, DialogContentText, DialogContent, DialogTitle
 } from "@material-ui/core";
 import {
-    Folder as FolderIcon, MoreVert as MoreVertIcon,
-    Edit as EditIcon, Delete as DeleteIcon
+    Folder as FolderIcon, MoreVert as MoreVertIcon, Edit as EditIcon, Delete as DeleteIcon, ShowChart as ShowChartIcon
 } from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearEditingContest,
     deleteOwnContest,
-    getOwnContests, setOpenAdminFullscreenDialog, updateEditingContest,
+    getOwnContests, setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog, updateEditingContest,
     updateOwnContestById,
     updateOwnContests
 } from "../../actions";
@@ -81,6 +80,7 @@ export default function AdminContestPage() {
             <TableCell align="left"> </TableCell>
             <TableCell align="left"> </TableCell>
             <TableCell align="left"> </TableCell>
+            <TableCell align="left"> </TableCell>
         </React.Fragment>)
     }
 
@@ -90,6 +90,7 @@ export default function AdminContestPage() {
             <TableCell component="th" scope="row" align="left"><b>Tên cuộc thi</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Mô tả</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Ngày bắt đầu</b></TableCell>
+            <TableCell component="th" scope="row" align="left"> </TableCell>
             <TableCell component="th" scope="row" align="left"> </TableCell>
         </React.Fragment>)
     }
@@ -127,6 +128,13 @@ export default function AdminContestPage() {
         setOpenRemoveDialog(true);
     }
 
+    function handleShowAllResultsIconClick(id) {
+        const contest = contests.byHash[id];
+        console.log('prepare update: ', contest);
+        dispatch(setOpenAdminFullscreenDialog(true));
+        history.push({pathname: `${PAGE_PATHS.contestResults}`, state: {contestId: id}});
+    }
+
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
         const {name, description, startAt} = contests.byHash[id];
@@ -141,6 +149,9 @@ export default function AdminContestPage() {
                 </IconButton>
                 <IconButton onClick={() => handleRemoveContestIconClick(id)}>
                     <DeleteIcon/>
+                </IconButton>
+                <IconButton onClick={() => handleShowAllResultsIconClick(id)}>
+                    <ShowChartIcon/>
                 </IconButton>
             </TableCell>
         </React.Fragment>)

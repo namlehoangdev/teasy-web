@@ -16,4 +16,6 @@ export const deleteOwnContestAPI = (contestId) => ApiInstance.delete(`Competitio
 export const deleteOwnTestAPI = (testId) => ApiInstance.delete(`Tests/${testId}`);
 export const deleteOwnQuestionAPI = (questionId) => ApiInstance.delete(`Questions/${questionId}`);
 
+export const getContestResultsByIdAPI = (contestId) => ApiInstance.get(`Results/CompetitionResults/${contestId}`);
+
 

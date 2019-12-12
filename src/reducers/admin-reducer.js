@@ -17,7 +17,7 @@ import {
     ADD_OWN_CONTEST,
     CLEAR_EDITING_CONTEST,
     CLEAR_EDITING_TEST,
-    CLEAR_EDITING_QUESTION
+    CLEAR_EDITING_QUESTION, UPDATE_PARTITION_OF_CONTEST_BY_ID
 } from "../actions/action-types";
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
@@ -65,6 +65,12 @@ export default function adminReducer(state = initialState, action) {
             case UPDATE_OWN_CONTESTS:
                 draft.contests = payload.contests || new DefaultNormalizer();
                 return;
+
+            case UPDATE_PARTITION_OF_CONTEST_BY_ID: {
+                let currentContest = draft.contests.byHash[payload.id];
+                draft.contests.byHash[payload.id] = {...currentContest, ...payload.contest};
+                return;
+            }
             case UPDATE_OWN_TESTS:
                 draft.tests = payload.tests || new DefaultNormalizer();
                 return;
@@ -123,6 +129,8 @@ export default function adminReducer(state = initialState, action) {
                 console.log("draft contests: ", draft.tests);
                 return;
             }
+
+
             case ADD_OWN_CONTEST: {
                 addToNormalizedList(draft.contests, payload);
                 return;
