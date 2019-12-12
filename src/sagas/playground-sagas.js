@@ -3,7 +3,7 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    GET_CONTEST_BY_ID, GET_MARKED_CONTEST_RESULT,
+    GET_CONTEST_BY_ID, GET_OWN_CONTEST_RESULTS, GET_MARKED_CONTEST_RESULT,
     GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS, POST_CONTEST_RESULT,
 } from "../actions/action-types";
 import {normalizer} from "../utils/byid-utils";
@@ -16,6 +16,7 @@ import {convertStringToEditorState} from "../utils/editor-converter";
 import {showCircleLoading, hideCircleLoading} from '../actions/ui-effect-actions';
 import {getMarkedContestResult} from "../actions";
 import {COMPETING_CONTEST_STATE} from "../consts";
+import {updateOwnContestResults} from "../actions";
 
 const answerSchema = new schema.Entity('answers');
 const questionsSchema = new schema.Entity('questions', {
@@ -26,6 +27,23 @@ const testSchema = new schema.Entity('test', {
 });
 
 /*-----saga effects-----*/
+export function* getOwnContestResultsSaga() {
+    try {
+        yield put(showCircleLoading());
+        const response = yield call(APIs.getOwnContestResultsAPI);
+        console.log('getPublicContestsSaga: ', response);
+        if (response) {
+            const results = normalizer(response.data) || null;
+            yield put(updateOwnContestResults(results));
+        }
+    } catch (error) {
+        console.log('getPublicContestsSaga failed: ', error);
+    } finally {
+        yield put(hideCircleLoading());
+    }
+}
+
+
 export function* getPublicContestsSaga() {
     try {
         yield put(showCircleLoading());
@@ -140,31 +158,12 @@ export function* getMarkedContestResultSaga({payload}) {
 
 
 /*-----saga watchers-----*/
-function* getPublicContestsWatcherSagas() {
-    yield takeLatest(GET_PUBLIC_CONTESTS, getPublicContestsSaga);
-}
-
-function* getSharedContestsWatcherSaga() {
-    yield takeLatest(GET_SHARED_CONTESTS, getSharedContestsSaga);
-}
-
-function* postContestResultWatcherSaga() {
-    yield takeLatest(POST_CONTEST_RESULT, postContestResultSaga);
-}
-
-function* getContestByIdWatcherSaga() {
-    yield takeLatest(GET_CONTEST_BY_ID, getContestByIdSaga);
-}
-
-function* getMarkedContestResultWatcherSaga() {
-    yield  takeLatest(GET_MARKED_CONTEST_RESULT, getMarkedContestResultSaga);
-}
 
 export default [
-    getSharedContestsWatcherSaga(),
-    getPublicContestsWatcherSagas(),
-    getContestByIdWatcherSaga(),
-    postContestResultWatcherSaga(),
-    getMarkedContestResultWatcherSaga()
-]
-;
+    takeLatest(GET_PUBLIC_CONTESTS, getPublicContestsSaga),
+    takeLatest(GET_SHARED_CONTESTS, getSharedContestsSaga),
+    takeLatest(POST_CONTEST_RESULT, postContestResultSaga),
+    takeLatest(GET_CONTEST_BY_ID, getContestByIdSaga),
+    takeLatest(GET_MARKED_CONTEST_RESULT, getMarkedContestResultSaga),
+    takeLatest(GET_OWN_CONTEST_RESULTS, getOwnContestResultsSaga)
+];

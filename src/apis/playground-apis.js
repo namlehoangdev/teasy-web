@@ -17,5 +17,7 @@ export const postContestResultAPI = (params) => ApiInstance.post('Results', para
 
 export const getMarkedContestResultAPI = (id) => ApiInstance.get(`Results/MyCompetitionResult/${id}`);
 
+export const getOwnContestResultsAPI = () => ApiInstance.get('Results/MyOwn');
+
 
 

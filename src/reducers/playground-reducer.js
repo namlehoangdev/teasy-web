@@ -1,7 +1,12 @@
 import {
     SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG,
-    UPDATE_ALL_CONTEST_BY_ID, UPDATE_ALL_CONTESTS, UPDATE_COMPETING_CONTEST, UPDATE_COMPETING_RESULT,
-    UPDATE_PUBLIC_CONTESTS, UPDATE_SHARED_CONTESTS
+    UPDATE_ALL_CONTEST_BY_ID,
+    UPDATE_ALL_CONTESTS,
+    UPDATE_COMPETING_CONTEST,
+    UPDATE_COMPETING_RESULT, UPDATE_OWN_CONTEST_RESULT_BY_ID,
+    UPDATE_OWN_CONTEST_RESULTS,
+    UPDATE_PUBLIC_CONTESTS,
+    UPDATE_SHARED_CONTESTS
 } from '../actions/action-types';
 import {addToNormalizedList, DefaultNormalizer} from "../utils/byid-utils";
 import {normalize, schema} from 'normalizr';
@@ -11,6 +16,7 @@ const initialState = {
     isOpenPlaygroundFullscreenDialog: false,
     competingContest: {},
     contests: new DefaultNormalizer(),
+    results: new DefaultNormalizer(),
     sharedContestIds: [],
     publicContestIds: [],
     isLoading: false,
@@ -29,6 +35,11 @@ export default function playgroundReducer(state = initialState, action) {
             case UPDATE_ALL_CONTESTS:
                 draft.contests = payload.contests || new DefaultNormalizer();
                 return;
+
+            case UPDATE_OWN_CONTEST_RESULTS: {
+                draft.results = payload.results || new DefaultNormalizer();
+                return;
+            }
 
             case UPDATE_PUBLIC_CONTESTS: {
                 if (payload.contests && payload.contests.byId) {
@@ -61,15 +72,19 @@ export default function playgroundReducer(state = initialState, action) {
             }
             case UPDATE_COMPETING_CONTEST: {
                 console.log('payload: ', payload);
-
                 draft.competingContest = {...draft.competingContest, ...payload};
+                return;
+            }
+            case UPDATE_OWN_CONTEST_RESULT_BY_ID: {
+                console.log('payload: ', payload);
+                draft.results = {...draft.results, ...payload};
                 return;
             }
 
             case UPDATE_COMPETING_RESULT: {
                 const {result} = payload;
                 let questionId = result.questionId;
-                let newResults ={...draft.competingContest.results} || new DefaultNormalizer();
+                let newResults = {...draft.competingContest.results} || new DefaultNormalizer();
                 console.log('new results: ', newResults);
                 if (!draft.competingContest.results) {
                     const obj = new DefaultNormalizer();
@@ -86,6 +101,7 @@ export default function playgroundReducer(state = initialState, action) {
                 }
                 return;
             }
+
             default:
                 return state;
         }

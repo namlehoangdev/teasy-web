@@ -15,12 +15,15 @@ import {
 import {Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    clearEditingContest,
     deleteOwnContest, deleteOwnTest,
-    getOwnTests,
+    getOwnTests, setOpenAdminFullscreenDialog, updateEditingContest, updateEditingTest,
     updateOwnTestById,
     updateOwnTests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
+import {PAGE_PATHS} from "../../consts";
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -51,7 +54,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function AdminTestsPage() {
     const {tests} = useSelector(state => state.adminReducer) || {};
+    const history = useHistory();
     const [isOpenRemoveDialog, setOpenRemoveDialog] = React.useState(false);
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const [actionItemId, setActionItemId] = useState(null);
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -79,7 +84,12 @@ export default function AdminTestsPage() {
 
 
     function handleEditTestIconClick(id) {
-
+        const tests = tests.byHash[id];
+        console.log('prepare update: ', tests);
+        dispatch(clearEditingContest());
+        dispatch(updateEditingTest(tests));
+        dispatch(setOpenAdminFullscreenDialog(true));
+        history.push(`${PAGE_PATHS.editTest}`);
     }
 
     function handleCancelRemoveDialog() {
@@ -148,6 +158,7 @@ export default function AdminTestsPage() {
                                     component="h2" color="primary">Quản lý đề thi</Typography>
                         <WorkingTableV2 filesByHash={tests.byHash}
                                         filesById={tests.byId}
+                                        isLoading={isShowCircleLoading}
                                         dragDisplayProperty="content"
                                         setFiles={handleFilesChange}
                                         setFileById={handleFileByIdChange}
