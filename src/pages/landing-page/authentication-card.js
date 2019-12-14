@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, IconButton, TextField, Grid, Typography, makeStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import {Facebook as FacebookIcon} from '@material-ui/icons';
 import {TEXT} from "../../consts/text-consts";
+import {useDispatch} from "react-redux";
+import {getAnonymousContestMetadataByCode, updateEditingContest} from "../../actions";
+import {useHistory} from "react-router";
+import {PAGE_PATHS} from "../../consts";
 
 
 const useStyles = makeStyles(theme => ({
@@ -35,7 +39,12 @@ const useStyles = makeStyles(theme => ({
 
 function AuthenticationCard(props) {
     const {onFacebookCallback, onGoogleSuccess, onGoogleFailure, onThirdPartyClick} = props;
+    const [code, setCode] = useState('');
+    const [codeHelperText, setCodeHelperText] = useState('');
+    const [isError, setIsError] = useState(false);
+    const history = useHistory();
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     function handleFacebookCallBack(data) {
         onFacebookCallback && onFacebookCallback(data);
@@ -51,6 +60,31 @@ function AuthenticationCard(props) {
 
     function handleGoogleFailure(data) {
         onGoogleFailure && onGoogleFailure(data);
+    }
+
+    function handleCodeChange(event) {
+        if (isError) {
+            setIsError(false);
+            setCodeHelperText("");
+        }
+        setCode(event.target.value);
+    }
+
+    function handleEnterRoomByCodePress() {
+        if (!code || code.length === 0) {
+            setIsError(true);
+            setCodeHelperText('Mã phòng thi không hợp lệ');
+        } else {
+            const onGetContestSuccess = (response) => {
+                dispatch(updateEditingContest(response));
+                history.push({pathname: `${PAGE_PATHS.waiting}`});
+            };
+            const onGetContestError = (response) => {
+                setIsError(true);
+                setCodeHelperText('Mã phòng thi không đúng');
+            };
+            dispatch(getAnonymousContestMetadataByCode(code, onGetContestSuccess, onGetContestError))
+        }
     }
 
     return (
@@ -91,10 +125,15 @@ function AuthenticationCard(props) {
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <TextField id="roomCode" name="roomCode" variant="outlined" fullWidth
+                               helperText={codeHelperText}
+                               onChange={handleCodeChange}
+                               error={isError}
                                label={TEXT.roomCode}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <Button type="submit" variant="contained" color="primary" className={classes.submit}>
+                    <Button type="submit" variant="contained" color="primary" className={classes.submit}
+
+                            onClick={handleEnterRoomByCodePress}>
                         {TEXT.enterRoom}
                     </Button>
                 </Grid>

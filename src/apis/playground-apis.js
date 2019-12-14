@@ -7,6 +7,10 @@ export const getSharedContestsAPI = () => ApiInstance.get('Competitions/MyShared
 
 export const getContestByIdAPI = (id) => ApiInstance.get(`Competitions/${id}`);
 
+export const getAnonymousContestByIdAPI = (id) => ApiInstance.get(`Competitions/Metadata/${id}`);
+
+export const getAnonymousContestMetadataByCodeAPI = (code) => ApiInstance.get(`Competitions/Metadata/Anonymous/${code}`);
+
 // export const getOwnTestsAPI = () => ApiInstance.get('Tests/MyOwn');
 //
 // export const getOwnQuestionsAPI = () => ApiInstance.get('Questions/MyOwn');

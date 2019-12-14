@@ -20,4 +20,6 @@ export {default as AdminHomePage} from './admin-home-page';
 export {default as PlaygroundHomePage} from './playground-home-page';
 export {default as NotFoundPage} from './not-found-page';
 
+export {default as PlaygroundWaitingRoomPage} from './playground-wating-room-page';
+
 

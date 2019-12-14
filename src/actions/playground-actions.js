@@ -17,7 +17,7 @@ import {
     GET_MARKED_CONTEST_RESULT,
     GET_OWN_CONTEST_RESULTS,
     UPDATE_OWN_CONTEST_RESULTS,
-    UPDATE_OWN_CONTEST_RESULT_BY_ID
+    UPDATE_OWN_CONTEST_RESULT_BY_ID, GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, GET_ANONYMOUS_CONTEST_BY_ID
 } from './action-types';
 
 export const setOpenPlaygroundFullscreenDialog = (value) => action(SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, {value});
@@ -27,6 +27,12 @@ export const getSharedContests = () => action(GET_SHARED_CONTESTS);
 export const getPublicContests = () => action(GET_PUBLIC_CONTESTS);
 
 export const getContestById = (id) => action(GET_CONTEST_BY_ID, {id});
+
+export const getAnonymousContestMetadataByCode = (code, onSuccess, onError) =>
+    action(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, {code, onSuccess, onError});
+
+export const getAnonymousContestById = (id) => action(GET_ANONYMOUS_CONTEST_BY_ID, id);
+
 
 export const updateSharedContests = (contests) => action(UPDATE_SHARED_CONTESTS, {contests});
 
