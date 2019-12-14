@@ -11,17 +11,25 @@ import {
     Grid,
     Paper,
     Popper,
-    Fade, Box
+    Fade, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@material-ui/core";
 import {Close as CloseIcon} from "@material-ui/icons";
-import {QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
+import {COMPETING_CONTEST_STATE, QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
-import {postTest, setOpenAdminFullscreenDialog, updateEditingTest} from "../../actions";
+import {
+    openCreateQuestionDialog,
+    postTest,
+    putTest,
+    setOpenAdminFullscreenDialog,
+    updateEditingTest
+} from "../../actions";
 import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
 import EditingQuestionContent from "../../components/question-dialog/editing-question-content";
 import produce from 'immer';
 import {EditorState} from "draft-js";
+import {disabledStyleWrapper} from "../../utils";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 const useStyles = makeStyles(theme => ({
@@ -38,27 +46,34 @@ export default function CreateTestPage() {
     const {editingTest} = useSelector(state => state.adminReducer);
     const {profile} = useSelector(state => state.authReducer);
     const {id: ownerId, name: ownerName} = profile;
-    const {questions = new DefaultNormalizer(), name} = editingTest;
+    const {id: testId, questions = new DefaultNormalizer(), name = ''} = editingTest;
     const [addNewAnchorEl, setAddNewAnchorEl] = useState(null);
+    const [isSaved, setIsSaved] = useState(false);
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
+    const [isOpenDialog, setIsOpenDialog] = useState(false);
 
 
     const history = useHistory();
     const dispatch = useDispatch();
     const classes = useStyles();
 
-    useEffect(() => {
-        if (!name) {
-            dispatch(updateEditingTest({name: ''}));
-        }
-    }, []);
 
     function handleClose() {
         history.goBack();
         dispatch(setOpenAdminFullscreenDialog(false));
     }
 
+    function onSaveSuccess() {
+        setIsSaved(true);
+        setIsOpenDialog(true);
+    }
+
     function handleSave() {
-        dispatch(postTest({...editingTest, ownerId, ownerName}))
+        if (testId) {
+            dispatch(putTest({...editingTest, ownerId, ownerName}, onSaveSuccess))
+        } else {
+            dispatch(postTest({...editingTest, ownerId, ownerName}, onSaveSuccess))
+        }
     }
 
     function handleQuestionChange(questionId, data) {
@@ -69,7 +84,7 @@ export default function CreateTestPage() {
         }))
     }
 
-    function renderCreatingTests(questionId) {
+    function renderCreatingQuestions(questionId) {
         return (
             <Grid item xs={12} sm={12} md={12}>
                 <Paper key={questionId} className={classes.paper}>
@@ -125,11 +140,13 @@ export default function CreateTestPage() {
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                     <CloseIcon/>
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>{`${TEXT.create} ${TEXT.test}`}</Typography>
-                <Button color="inherit" onClick={handleSave}>{TEXT.save}</Button>
+                <Typography variant="h6"
+                            className={classes.title}>{`${testId ? TEXT.edit : TEXT.create} ${TEXT.test}`}</Typography>
+                {!isSaved && <Button color="inherit" onClick={handleSave}>{TEXT.save}</Button>}
             </Toolbar>
         </AppBar>
-        <Grid container className={classes.contentContainer}>
+        <Grid container className={classes.contentContainer}
+              style={disabledStyleWrapper(isSaved, {}, {opacity: isShowCircleLoading ? 0 : 1})}>
             <Grid item xs={12} sm={12} md={12}>
                 <Input
                     placeholder="Điền đề thi"
@@ -137,25 +154,11 @@ export default function CreateTestPage() {
                     className={classes.testTitle}
                     onChange={handleTestNameChange}
                     value={name || ''}
-                    inputProps={{
-                        'aria-label': 'description',
-                    }}
-                />
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-                <Input
-                    placeholder="Điền mô tả"
-                    fullWidth
-                    multiline
-                    disableUnderline
-                    classes={classes.description}
-                    inputProps={{
-                        'aria-label': 'description',
-                    }}
+                    inputProps={{'aria-label': 'description'}}
                 />
             </Grid>
             <Box m={2}/>
-            {questions.byId.map(renderCreatingTests)}
+            {questions.byId.map(renderCreatingQuestions)}
             <Grid item xs={12} sm={12} md={12}>
                 <Button className={classes.addNewButton}
                         variant='outlined'
@@ -172,5 +175,20 @@ export default function CreateTestPage() {
                 </Fade>
             )}
         </Popper>
+
+        <Dialog open={isOpenDialog}
+                aria-labelledby="form-dialog-title">
+            {isShowCircleLoading ? (<CircularProgress/>) :
+                (<React.Fragment>
+                    <DialogTitle id="form-dialog-title">Lưu thành công</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Bạn đã lưu thành công ${name}</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsOpenDialog(false)} color="primary">Xem lại đề</Button>
+                        <Button onClick={handleClose} color="primary">Về trang chủ</Button>
+                    </DialogActions>
+                </React.Fragment>)}
+        </Dialog>
     </div>);
 }

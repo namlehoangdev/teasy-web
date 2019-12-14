@@ -73,12 +73,12 @@ export const addNewOwnContest = (contest) => action(ADD_OWN_CONTEST, contest);
 export const addNewOwnTest = (test) => action(ADD_OWN_CONTEST, test);
 export const addNewOwnQuestion = (question) => action(ADD_OWN_CONTEST, question);
 
-export const postTest = (test) => action(POST_TEST, test);
+export const postTest = (test, onSuccess) => action(POST_TEST, {test, onSuccess});
 
 export const postContest = (contest) => action(POST_CONTEST, contest);
 export const putContest = (contest) => action(PUT_CONTEST, contest);
 export const putQuestion = (question) => action(PUT_QUESTION, question);
-export const putTest = (test) => action(PUT_TEST, test);
+export const putTest = (test, onSuccess) => action(PUT_TEST, {test, onSuccess});
 
 export const deleteOwnContest = (contestId) => action(DELETE_OWN_CONTEST, contestId);
 export const deleteOwnTest = (testId) => action(DELETE_OWN_TEST, testId);

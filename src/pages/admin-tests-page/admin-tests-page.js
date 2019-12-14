@@ -15,7 +15,7 @@ import {
 import {Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    clearEditingContest,
+    clearEditingContest, clearEditingTest,
     deleteOwnContest, deleteOwnTest,
     getOwnTests, setOpenAdminFullscreenDialog, updateEditingContest, updateEditingTest,
     updateOwnTestById,
@@ -84,10 +84,10 @@ export default function AdminTestsPage() {
 
 
     function handleEditTestIconClick(id) {
-        const tests = tests.byHash[id];
-        console.log('prepare update: ', tests);
-        dispatch(clearEditingContest());
-        dispatch(updateEditingTest(tests));
+        const test = tests.byHash[id];
+        console.log('prepare update: ', test);
+        dispatch(clearEditingTest());
+        dispatch(updateEditingTest(test));
         dispatch(setOpenAdminFullscreenDialog(true));
         history.push(`${PAGE_PATHS.editTest}`);
     }

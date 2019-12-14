@@ -7,11 +7,11 @@ import {
     GET_OWN_CONTESTS,
     GET_OWN_TESTS,
     POST_CONTEST,
-    POST_TEST, PUT_CONTEST, UPDATE_OWN_QUESTIONS,
+    POST_TEST, PUT_CONTEST, PUT_TEST, UPDATE_OWN_QUESTIONS,
 } from "../actions/action-types";
 import {updateOwnContests} from "../actions";
-import {DefaultNormalizer, denormalize, normalizer} from "../utils/byid-utils";
-import {convertFromEditorStateToString} from "../utils/editor-converter";
+import {DefaultNormalizer, normalize, denormalize, normalizer} from "../utils/byid-utils";
+import {convertFromEditorStateToString, convertStringToEditorState} from "../utils/editor-converter";
 import {updateOwnTests} from "../actions";
 import {updateOwnQuestions} from "../actions";
 import {updateRemovedOwnContestById} from "../actions";
@@ -23,11 +23,26 @@ import {hideCircleLoading} from "../actions";
 import {updateAllContestById} from "../actions";
 import {updatePartitionOfContestById} from "../actions";
 
+
 const questionsSchema = {
     questions: {
         schema: {
             answers: {
-                id: 'uuid'
+                id: 'id'
+            }
+        }
+    }
+};
+
+const testsSchema = {
+    tests: {
+        schema: {
+            questions: {
+                schema: {
+                    answers: {
+                        id: 'id'
+                    }
+                }
             }
         }
     }
@@ -75,7 +90,12 @@ export function* getOwnTestsSaga() {
         const response = yield call(APIs.getOwnTestsAPI);
         console.log('get own test response: ', response);
         if (response.data) {
-            const tests = normalizer(response.data);
+            const tests = normalize({tests: response.data}, testsSchema).tests;
+            tests.byId.forEach(function (testIndex, j) {
+                tests.byHash[testIndex].questions.byId.forEach(function (part, index) {
+                    this.questions.byHash[part].content = convertStringToEditorState(this.questions.byHash[part].content);
+                }, tests.byHash[testIndex]);
+            }, tests);
             yield put(updateOwnTests(tests));
         }
     } catch (error) {
@@ -101,21 +121,45 @@ export function* getOwnQuestionsSaga() {
     }
 }
 
-export function* postTestSaga(action) {
-    const {payload} = action;
+export function* postTestSaga({payload}) {
+    const {test, onSuccess} = payload;
     try {
-        console.log('get here: ', payload);
-        yield put(showLoading());
-        const requestParams = denormalize(payload, questionsSchema);
+        console.log('get here: ', test);
+        yield put(showCircleLoading());
+        const requestParams = denormalize(test, questionsSchema);
         requestParams.questions.forEach(function (part, index) {
             this.questions[index].content = convertFromEditorStateToString(this.questions[index].content);
         }, requestParams);
         const response = yield call(APIs.postTestAPI, requestParams);
+        onSuccess && onSuccess(response);
         console.log(response);
     } catch (error) {
         console.log('postTestSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
+    }
+}
+
+
+export function* putTestSaga({payload}) {
+    const {test, onSuccess} = payload;
+    try {
+        console.log('putTestSaga here: ', test);
+        yield put(showCircleLoading());
+        const requestParams = denormalize(test, questionsSchema);
+        requestParams.questions.forEach(function (part, index) {
+            this.questions[index].content = convertFromEditorStateToString(this.questions[index].content);
+        }, requestParams);
+        const response = yield call(APIs.putTestAPI, requestParams);
+        onSuccess && onSuccess(response);
+        if (response && response.data) {
+
+            yield put(updateOwnContestById(test.id, test));
+        }
+    } catch (error) {
+        console.log('putTestSaga failed: ', error);
+    } finally {
+        yield put(hideCircleLoading());
     }
 }
 
@@ -190,6 +234,7 @@ export function* deleteTestSaga({payload}) {
 /*-----saga watchers-----*/
 export default [
     takeLatest(PUT_CONTEST, putContestSaga),
+    takeLatest(PUT_TEST, putTestSaga),
     takeLatest(GET_OWN_CONTESTS, getOwnContestsSaga),
     takeLatest(GET_OWN_TESTS, getOwnTestsSaga),
     takeLatest(UPDATE_OWN_QUESTIONS, getOwnQuestionsSaga),
