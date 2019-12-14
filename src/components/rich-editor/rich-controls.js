@@ -2,9 +2,15 @@ import React from "react";
 import PropTypes from 'prop-types';
 import 'draft-js/dist/Draft.css';
 import './rich-editor.scss';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
+import CodeIcon from '@material-ui/icons/Code';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
+import FormatBoldIcon from '@material-ui/icons/FormatBold';
+import FormatItalicIcon from '@material-ui/icons/FormatItalic';
 
 function StyleButton(props) {
-    const {onToggle, style, active, label = ''} = props;
+    const {onToggle, style, active, label = '', icon} = props;
 
     function handleOnToggle(e) {
         e.preventDefault();
@@ -13,21 +19,23 @@ function StyleButton(props) {
 
     let className = 'RichEditor-styleButton';
     if (active) className += ' RichEditor-activeButton';
-    return (<span className={className} onMouseDown={handleOnToggle}>{label}</span>);
+    return ( icon ? <span className={className} onMouseDown={handleOnToggle}>{icon}</span> : 
+    <span className={className} onMouseDown={handleOnToggle}>{label}</span>);
 }
 
 StyleButton.propTypes = {
     onToggle: PropTypes.func,
     style: PropTypes.any,
     active: PropTypes.bool,
-    label: PropTypes.string
+    label: PropTypes.string,
+    icon: PropTypes.any
 };
 
 const INLINE_STYLES = [
-    {label: 'Bold', style: 'BOLD'},
-    {label: 'Italic', style: 'ITALIC'},
-    {label: 'Underline', style: 'UNDERLINE'},
-    {label: 'Monospace', style: 'CODE'},
+    {label: 'In đậm', style: 'BOLD', icon:<FormatBoldIcon/>},
+    {label: 'Nghiêng', style: 'ITALIC', icon:<FormatItalicIcon/>},
+    {label: 'Gạch dưới', style: 'UNDERLINE', icon:<FormatUnderlinedIcon/>},
+    // {label: 'Code', style: 'CODE'},
 ];
 
 export const InlineStyleControls = (props) => {
@@ -47,6 +55,7 @@ export const InlineStyleControls = (props) => {
                     label={type.label}
                     onToggle={handleToggle}
                     style={type.style}
+                    icon = {type.icon}
                 />
             )}
         </div>
@@ -58,16 +67,16 @@ InlineStyleControls.propTypes = {
 };
 
 const BLOCK_TYPES = [
-    {label: 'H1', style: 'header-one'},
-    {label: 'H2', style: 'header-two'},
-    {label: 'H3', style: 'header-three'},
-    {label: 'H4', style: 'header-four'},
-    {label: 'H5', style: 'header-five'},
-    {label: 'H6', style: 'header-six'},
-    {label: 'Blockquote', style: 'blockquote'},
-    {label: 'UL', style: 'unordered-list-item'},
-    {label: 'OL', style: 'ordered-list-item'},
-    {label: 'Code Block', style: 'code-block'},
+    {label: 'Tiêu đề 1', style: 'header-one'},
+    {label: 'Tiêu đề 2', style: 'header-two'},
+    {label: 'Tiêu đề 3', style: 'header-three'},
+    {label: 'Tiêu đề 4', style: 'header-four'},
+    {label: 'Tiêu đề 5', style: 'header-five'},
+    {label: 'Tiêu đề 6', style: 'header-six'},
+    {label: 'Chú thích', style: 'blockquote'},
+    {label: ':', style: 'unordered-list-item', icon: <FormatListBulletedIcon/>},
+    {label: '1.', style: 'ordered-list-item', icon: <FormatListNumberedIcon/>},
+    {label: 'Mã code', style: 'code-block', icon: <CodeIcon/>},
 ];
 
 export const BlockStyleControls = (props) => {
@@ -90,6 +99,7 @@ export const BlockStyleControls = (props) => {
                     label={type.label}
                     onToggle={handleToggle}
                     style={type.style}
+                    icon = {type.icon}
                 />
             )}
         </div>
