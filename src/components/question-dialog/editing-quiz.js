@@ -22,12 +22,13 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
-        margin: theme.spacing(3),
-        width: '100%'
+        display: 'flex',
+        flex: 1
     },
     textFieldContainer: {
         display: 'flex',
         flexDirection: 'row',
+        margin: theme.spacing(1)
     },
     radioGroup: {
         width: '100%'
@@ -103,6 +104,7 @@ export default function EditingQuiz(props) {
             <FormControlLabel value={answerId.toString()} control={<Radio className={classes.radio}/>} label=''/>
             <TextField multiline value={content}
                        fullWidth
+                       variant="outlined"
                        onChange={(event) => handleAnswerContentChange(event, answerId)}
                        InputProps={answerInputProps}/>
         </Grid>)
@@ -122,17 +124,15 @@ export default function EditingQuiz(props) {
         });
     }
 
-    return (<FormControl component="fieldset" className={classes.formControl}>
-        <Grid item xs={11} sm={11} md={11} className={classes.radioGroup}>
-            <RadioGroup name="edit-answer-radio" value={answerRadioValue}
-                        className={classes.radioGroup}
-                        aria-label="edit-answer-radio-1"
-                        onChange={handleRadioChange}>
-                {answers && answers.byId && answers.byId.map(renderAnswers)}
-                {/*{renderAddNewAnswerInput()}*/}
-            </RadioGroup>
-            <Button onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
-        </Grid>
+    return (<FormControl className={classes.formControl}>
+        <RadioGroup name="edit-answer-radio" value={answerRadioValue}
+                    className={classes.radioGroup}
+                    aria-label="edit-answer-radio-1"
+                    onChange={handleRadioChange}>
+            {answers && answers.byId && answers.byId.map(renderAnswers)}
+            {/*{renderAddNewAnswerInput()}*/}
+        </RadioGroup>
+        <Button onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
     </FormControl>);
 }
 

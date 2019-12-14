@@ -8,6 +8,7 @@ export const getOwnTestsAPI = () => ApiInstance.get('Tests/MyOwn');
 export const getOwnQuestionsAPI = () => ApiInstance.get('Questions/MyOwn');
 
 export const postTestAPI = (tests) => ApiInstance.post('Tests', tests);
+export const putTestAPI = (tests) => ApiInstance.put('Tests', tests);
 
 export const postContestAPI = (contest) => ApiInstance.post('Competitions', contest);
 export const putContestAPI = (contest) => ApiInstance.put('Competitions', contest);

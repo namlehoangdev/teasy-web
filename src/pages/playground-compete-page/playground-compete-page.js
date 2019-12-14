@@ -166,7 +166,7 @@ export default function PlaygroundCompetePage() {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(true);
     const {competingContest} = useSelector(state => state.playgroundReducer) || {};
-    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer)
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const {
         duration, results, description,
         test: testByHash, answers: answersByHash, questions: questionByHash,
@@ -188,7 +188,7 @@ export default function PlaygroundCompetePage() {
 
     const handleChange = panel => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
-    
+
   };
 
     useEffect(() => {
@@ -204,7 +204,7 @@ export default function PlaygroundCompetePage() {
     useEffect(() => {
         const {contestId} = locationState;
         console.log('get contest id: ', contestId);
-        dispatch(getContestById(contestId));     
+        dispatch(getContestById(contestId));
     }, []);
 
 

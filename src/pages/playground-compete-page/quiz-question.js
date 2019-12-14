@@ -7,6 +7,9 @@ import {snackColors} from "../../consts/color";
 
 
 const useStyles = makeStyles(theme => ({
+    radioGroup: {
+        margin: 0
+    },
     answerContainer: {
         display: 'flex',
         flexDirection: 'row',

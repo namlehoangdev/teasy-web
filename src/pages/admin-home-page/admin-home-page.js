@@ -253,7 +253,7 @@ export default function AdminHomePage() {
                     <Route path={`${path}/${PAGE_PATHS.createTest}`} component={CreateTestPage}/>
                     <Route path={`${path}/${PAGE_PATHS.createContest}`} component={CreateContestPage}/>
                     <Route path={`${path}/${PAGE_PATHS.editQuestion}`} component={EditQuestionPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.editTest}`} component={EditTestPage}/>
+                    <Route path={`${path}/${PAGE_PATHS.editTest}`} component={CreateTestPage}/>
                     <Route path={`${path}/${PAGE_PATHS.editContest}`} component={CreateContestPage}/>
                     <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={AdminContestResultsPage}/>
                 </Switch>
