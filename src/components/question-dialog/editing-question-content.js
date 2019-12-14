@@ -5,7 +5,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    FormControl, Grid,
+    FormControl, Grid, IconButton,
 } from '@material-ui/core';
 
 import PropTypes from 'prop-types';
@@ -13,17 +13,24 @@ import {QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
 import RichEditor from "../rich-editor/rich-editor";
 import {EditorState} from 'draft-js';
 import EditingQuiz from "./editing-quiz";
+import {Close as CloseIcon} from "@material-ui/icons";
+import {updateEditingTest} from "../../actions";
+import produce from "immer";
+import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
+import {useDispatch} from "react-redux";
 
 
 const useStyles = makeStyles(() => ({
     root: {display: 'flex'},
-    selectTypeBox: {width: '100%'}
+    selectTypeBox: {width: '100%'},
+    header: {flex: 1, justifyContent: 'space-between', alignItems: 'center'}
 }));
 
 export default function EditingQuestionContent(props) {
-    const {data, onChange} = props;
+    const {data, onChange, onRemove} = props;
     const classes = useStyles();
-    const {type: questionTypeCode = '', content} = data;
+    const {type: questionTypeCode = '', content, id} = data;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!content) {
@@ -50,6 +57,10 @@ export default function EditingQuestionContent(props) {
         onChange({...newData});
     }
 
+    function handleRemoveQuestion() {
+        onRemove && onRemove(id);
+    }
+
     function renderQuestionFormByType() {
         switch (questionTypeCode) {
             case QUESTION_TYPE_CODES.quiz:
@@ -72,8 +83,8 @@ export default function EditingQuestionContent(props) {
     }
 
     return (<div>
-        <Grid item xs={12} sm={8} md={5}>
-            <Grid item xs>
+        <Grid container direction="row" className={classes.header}>
+            <Grid item>
                 <FormControl className={classes.selectTypeBox}>
                     <Select value={(questionTypeCode === 0 || questionTypeCode > 0) ? questionTypeCode : -1}
                             onChange={handleChangeQuestionType}
@@ -88,6 +99,11 @@ export default function EditingQuestionContent(props) {
                         {Object.values(QUESTION_TYPE_CODES).map(renderQuestionTypeMenu)}
                     </Select>
                 </FormControl>
+            </Grid>
+            <Grid item>
+                <IconButton edge="start" color="inherit" onClick={handleRemoveQuestion} aria-label="close">
+                    <CloseIcon/>
+                </IconButton>
             </Grid>
         </Grid>
         <RichEditor readOnly={false} editorState={content} onChange={handleEditorChange}/>

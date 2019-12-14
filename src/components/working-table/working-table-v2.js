@@ -222,6 +222,16 @@ export default function WorkingTableV2(props) {
         )
     }
 
+    function renderBody() {
+        if (!filesById || (filesById.length === 0 && currentFolders.length === 0)) {
+            return (!isLoading && <TableRow className={classes.loadingTable}>Không có gì để hiển thị</TableRow>)
+        }
+        return (<React.Fragment>
+            {currentFolders.map(privateRenderFolders)}
+            {filesByHash && filesById && filesById.map(privateRenderFiles)}
+        </React.Fragment>)
+    };
+
     return (<div onDragOver={preProcessDragOver} className={classes.tableWrapper}>
         <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small"/>}>
             <Button draggable={draggable}
@@ -236,10 +246,10 @@ export default function WorkingTableV2(props) {
                     {renderHeaders && renderHeaders()}
                 </TableRow>
             </TableHead>
-            {isLoading ? <div className={classes.loadingTable}><CircularProgress/></div> : <TableBody>
-                {currentFolders.map(privateRenderFolders)}
-                {filesByHash && filesById && filesById.map(privateRenderFiles)}
-            </TableBody>}
+            {isLoading && <div className={classes.loadingTable}><CircularProgress/></div>}
+            <TableBody>
+                {renderBody()}
+            </TableBody>
         </Table>
     </div>)
 }

@@ -4,7 +4,7 @@ import APIs from '../apis';
 import {} from '../actions';
 import {
     GET_CONTEST_BY_ID, GET_OWN_CONTEST_RESULTS, GET_MARKED_CONTEST_RESULT,
-    GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS, POST_CONTEST_RESULT,
+    GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS, POST_CONTEST_RESULT, GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
 } from "../actions/action-types";
 import {normalizer} from "../utils/byid-utils";
 import {updateSharedContests} from "../actions";
@@ -17,6 +17,8 @@ import {showCircleLoading, hideCircleLoading} from '../actions/ui-effect-actions
 import {getMarkedContestResult} from "../actions";
 import {COMPETING_CONTEST_STATE} from "../consts";
 import {updateOwnContestResults} from "../actions";
+import {showMiniLoading} from "../actions";
+import {hideMiniLoading} from "../actions";
 
 const answerSchema = new schema.Entity('answers');
 const questionsSchema = new schema.Entity('questions', {
@@ -40,6 +42,25 @@ export function* getOwnContestResultsSaga() {
         console.log('getPublicContestsSaga failed: ', error);
     } finally {
         yield put(hideCircleLoading());
+    }
+}
+
+export function* getAnonymousContestMetadataByCodeSaga({payload}) {
+    const {code, onSuccess, onError} = payload;
+    try {
+        yield put(showMiniLoading());
+        const response = yield call(APIs.getAnonymousContestMetadataByCodeAPI, code);
+        console.log('getAnonymousContestMetadataByCode: ', response);
+        if (response) {
+            onSuccess && onSuccess(response);
+            yield put(updateCompetingContest(response.data));
+
+        }
+    } catch (error) {
+        console.log('getAnonymousContestMetadataByCode failed: ', error);
+        onError && onError(error);
+    } finally {
+        yield put(hideMiniLoading());
     }
 }
 
@@ -165,5 +186,6 @@ export default [
     takeLatest(POST_CONTEST_RESULT, postContestResultSaga),
     takeLatest(GET_CONTEST_BY_ID, getContestByIdSaga),
     takeLatest(GET_MARKED_CONTEST_RESULT, getMarkedContestResultSaga),
-    takeLatest(GET_OWN_CONTEST_RESULTS, getOwnContestResultsSaga)
+    takeLatest(GET_OWN_CONTEST_RESULTS, getOwnContestResultsSaga),
+    takeLatest(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, getAnonymousContestMetadataByCodeSaga)
 ];

@@ -34,7 +34,7 @@ const initialState = {
     isOpenAdminFullscreenDialog: false,
     contests: new DefaultNormalizer(),
     tests: new DefaultNormalizer(),
-    questions: normalizer(fakeQuestions), //new DefaultNormalizer(),
+    questions: new DefaultNormalizer(),
     questionDialog: {
         mode: QUESTION_DIALOG_MODE.create,
         isOpen: false
