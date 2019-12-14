@@ -36,7 +36,8 @@ import {
     updateCompetingResult
 } from "../../actions";
 import {useLocation} from 'react-router';
-import {Editor} from 'draft-js';
+//import {Editor} from 'draft-js';
+import Editor from 'draft-js-plugins-editor'
 import {disabledStyleWrapper, msToTime} from "../../utils";
 import QuizQuestion from "./quiz-question";
 import produce from "immer";
@@ -51,6 +52,8 @@ import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import RichEditor from 'components/rich-editor/rich-editor';
+
 
 const drawerWidth = 240;
 
@@ -274,7 +277,7 @@ export default function PlaygroundCompetePage() {
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                 <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
                 <Typography variant="subtitle2" noWrap align='center'>
-                    <b><Editor editorState={content} readOnly={true}/></b>
+                    <RichEditor editorState={content} readOnly={true}/>
                 </Typography>
                 <QuizQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
                               trueAnswer={trueAnswer}
