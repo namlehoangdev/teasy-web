@@ -322,17 +322,6 @@ export default function CreateContestPage() {
                     okLabel="Chọn"
                     onChange={handleDurationChange}
                 />
-                {/*<TextField*/}
-                {/*    id="create-contest-time"*/}
-                {/*    label="Diễn ra trong"*/}
-                {/*    type="time"*/}
-                {/*    style={{width: 100}}*/}
-                {/*    InputLabelProps={{shrink: true}}*/}
-                {/*    inputProps={{step: 300}}*/}
-                {/*    defaultValue='01:30'*/}
-                {/*    value={_duration}*/}
-                {/*    onChange={handleDurationChange}*/}
-                />
             </Grid>
             <Grid item xs={12} sm={8} md={8}>
                 <FormLabel component="legend">Mật khẩu cuộc thi</FormLabel>

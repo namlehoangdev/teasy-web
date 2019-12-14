@@ -24,7 +24,7 @@ import {
     setOpenAdminFullscreenDialog,
     updateEditingTest
 } from "../../actions";
-import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
+import {addToNormalizedList, DefaultNormalizer, removeFromNormalizedList} from "../../utils/byid-utils";
 import EditingQuestionContent from "../../components/question-dialog/editing-question-content";
 import produce from 'immer';
 import {EditorState} from "draft-js";
@@ -84,11 +84,20 @@ export default function CreateTestPage() {
         }))
     }
 
+    function handleRemoveQuestion(id) {
+        dispatch(updateEditingTest({
+            questions: produce(questions, draft => {
+                removeFromNormalizedList(draft, id);
+            })
+        }));
+    }
+
     function renderCreatingQuestions(questionId) {
         return (
             <Grid item xs={12} sm={12} md={12}>
                 <Paper key={questionId} className={classes.paper}>
                     <EditingQuestionContent data={questions.byHash[questionId]}
+                                            onRemove={handleRemoveQuestion}
                                             onChange={(data) => handleQuestionChange(questionId, data)}/>
                 </Paper>
             </Grid>)
@@ -182,7 +191,7 @@ export default function CreateTestPage() {
                 (<React.Fragment>
                     <DialogTitle id="form-dialog-title">Lưu thành công</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>Bạn đã lưu thành công ${name}</DialogContentText>
+                        <DialogContentText>Bạn đã lưu thành công {name}</DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setIsOpenDialog(false)} color="primary">Xem lại đề</Button>

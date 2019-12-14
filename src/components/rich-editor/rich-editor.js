@@ -57,7 +57,7 @@ export default function RichEditor(props) {
                     onChange={handleOnChange}
                     onTab={onTab}
                     placeholder="Nhập nội dung câu hỏi..."
-                    spellCheck={true}
+                    spellCheck={false}
                 />
             </div>
         </div>
