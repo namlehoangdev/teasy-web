@@ -23,7 +23,8 @@ import {
     ExpansionPanel,
     ExpansionPanelSummary,
     ExpansionPanelDetails,
-    Slider
+    Slider,
+    Snackbar
 } from "@material-ui/core";
 import clsx from "clsx";
 import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
@@ -55,7 +56,7 @@ import TimelapseIcon from '@material-ui/icons/Timelapse';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import RichEditor from 'components/rich-editor/rich-editor';
 import {CountdownRenderer} from "../../components";
-
+import CloseIcon from '@material-ui/icons/Close';
 
 const drawerWidth = 240;
 
@@ -192,6 +193,9 @@ export default function PlaygroundCompetePage() {
     const [durationCompetition, setDurationCompetition] = React.useState(0);
     const {contestId, isAnonymous, displayName} = locationState;
     const history = useHistory();
+    const [firstDuration, setfirstDuration] = React.useState(0);
+    const [alarm, setAlarm] = React.useState(0);
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -207,6 +211,12 @@ export default function PlaygroundCompetePage() {
         }
     }, [testIds]);
 
+    useEffect(() => {
+       if(durationCompetition > 0)
+       {
+         setfirstDuration(Date.now() + durationCompetition);
+       }
+    }, [durationCompetition]);
 
     useEffect(() => {
         console.log('get contest id: ', contestId);
@@ -306,11 +316,24 @@ export default function PlaygroundCompetePage() {
         return (<CountdownRenderer {...props}/>)
     }
 
+    function handleOnTick(e){
+      if(e.total == alarm){
+        setOpenSnackBar(true)
+      }
+    }
+
     function renderStartContestButton() {
 
         if (durationCompetition > 0) {
-            return (<Countdown date={Date.now() + durationCompetition} renderer={renderCountDown}/>);
+            return (<Countdown onTick={handleOnTick} date={firstDuration} renderer={renderCountDown}/>);
         }
+    }
+
+    function handleOnReminderChange(event, newValue){
+      const newDuration = newValue* 60000;
+      
+      const vo = firstDuration - durationCompetition;
+      setAlarm(firstDuration - (vo + newDuration))
     }
 
     function renderDrawerBlock() {
@@ -359,7 +382,8 @@ export default function PlaygroundCompetePage() {
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                         <Slider defaultValue={90} marks={marks} valueLabelDisplay="on" getAriaValueText={valuetext}
-                                aria-labelledby="discrete-slider-always" step={10} min={0}
+                                onChange={handleOnReminderChange}
+                                aria-labelledby="discrete-slider-always" step={1} min={0}             
                                 max={durationCompetition / 60000}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
@@ -387,7 +411,6 @@ export default function PlaygroundCompetePage() {
                 </DialogActions>
             </React.Fragment>)
     }
-
 
     const durationArray = msToTime(duration);
     return (
@@ -430,6 +453,30 @@ export default function PlaygroundCompetePage() {
                 <DialogTitle id="form-dialog-title">Nộp bài thi</DialogTitle>
                 {renderSubmitResult()}
             </Dialog>
+
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={openSnackBar}
+              autoHideDuration={6000}
+              ContentProps={{
+                'aria-describedby': 'message-id',
+              }}
+              message={<span id="message-id">Note archived</span>}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={()=>setOpenSnackBar(false)}
+                >
+                  <CloseIcon />
+                </IconButton>,
+              ]}
+             />
         </div>
     )
 }

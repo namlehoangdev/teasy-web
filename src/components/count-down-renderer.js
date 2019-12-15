@@ -27,7 +27,7 @@ export default function CountdownRenderer(props) {
     const classes = useStyles();
     return (
         <div className={classes.countDownContainer}>
-            {days && days > 0 && (<div className={classes.countDownBox}>
+            {days > 0 && (<div className={classes.countDownBox}>
                 <span className={classes.numberCountDown}>{days}</span>
                 <span className={classes.labelCountDown}>ngày</span>
             </div>)}
