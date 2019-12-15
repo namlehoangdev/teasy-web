@@ -6,19 +6,15 @@ import './rich-editor.scss';
 import {BlockStyleControls, InlineStyleControls} from './rich-controls';
 import createMathjaxPlugin from 'draft-js-mathjax-plugin'
 import Editor from 'draft-js-plugins-editor'
-
-
-const mathjaxPlugin = createMathjaxPlugin()
-
-const plugins = [
-  mathjaxPlugin,
-]
+import { disabledStyleWrapper } from 'utils';
+import insertTeX from 'draft-js-mathjax-plugin/lib/modifiers/insertTeX';
 
 
 
 export default function RichEditor(props) {
-    const {editorState, onChange} = props;
-    // const [editorState, setEditorState] = React.useState(EditorState.createEmpty()); 
+    const {editorState, onChange,readOnly} = props;
+    const [plugins, setPlugins] = React.useState([createMathjaxPlugin()]); 
+    
 
     function handleOnChange(editorState) {
         onChange && onChange(editorState);
@@ -47,10 +43,6 @@ export default function RichEditor(props) {
         handleOnChange(RichUtils.toggleInlineStyle(editorState, inlineStyle));
     }
 
-    // function onChange(e){
-    //   setEditorState(e)
-    // }
-
 
     let className = 'RichEditor-editor';
     let contentState = editorState.getCurrentContent();
@@ -61,21 +53,22 @@ export default function RichEditor(props) {
     }
 
     return (
-        <div className="RichEditor-root">
-            <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
-            <InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle}/>
-            <div onClick={()=>{}}>aaaa</div>
+        <div style={readOnly === true ? disabledStyleWrapper(true, {}, {opacity: 1, border: 0} ):{}} className="RichEditor-root">
+            {readOnly === false && <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>}
+            {readOnly === false &&<InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle}/>}
             <div className={className}>
-                <Editor
+              <div onClick={()=>{insertTeX(editorState,true)}}>aaaaaaa</div>
+                <Editor 
                     blockStyleFn={getBlockStyle}
                     customStyleMap={styleMap}
                     editorState={editorState}
                     handleKeyCommand={handleKeyCommand}
-                    onChange={onChange}
+                    onChange={handleOnChange}
                     onTab={onTab}
                     placeholder="Nhập nội dung câu hỏi..."
-                    spellCheck={true}
+                    spellCheck={false}
                     plugins={plugins}
+                    readOnly={readOnly}
                 />
             </div>
         </div>
@@ -83,7 +76,8 @@ export default function RichEditor(props) {
 }
 RichEditor.propTypes = {
     editorState: PropTypes.any,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    readOnly: PropTypes.any
 }
 
 // Custom overrides for "code" style.

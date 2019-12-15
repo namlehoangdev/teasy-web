@@ -106,7 +106,7 @@ export default function EditingQuestionContent(props) {
                 </IconButton>
             </Grid>
         </Grid>
-        <RichEditor editorState={content} onChange={handleEditorChange}/>
+        <RichEditor readOnly={false} editorState={content} onChange={handleEditorChange}/>
         {renderQuestionFormByType()}
     </div>);
 }
