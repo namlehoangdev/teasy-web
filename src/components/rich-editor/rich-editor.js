@@ -5,15 +5,52 @@ import 'draft-js/dist/Draft.css';
 import './rich-editor.scss';
 import {BlockStyleControls, InlineStyleControls} from './rich-controls';
 import createMathjaxPlugin from 'draft-js-mathjax-plugin'
-import Editor from 'draft-js-plugins-editor'
+import Editor, {composeDecorators} from 'draft-js-plugins-editor'
 import { disabledStyleWrapper } from 'utils';
+import createImagePlugin from 'draft-js-image-plugin';
+import ImageUpload from 'components/upload/ImageUpload';
+import createAlignmentPlugin from 'draft-js-alignment-plugin';
+import createResizeablePlugin from 'draft-js-resizeable-plugin';
+import createFocusPlugin from 'draft-js-focus-plugin';
+import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
+import "draft-js-image-plugin/lib/plugin.css"
+import "draft-js-focus-plugin/lib/plugin.css"
+import {makeStyles} from '@material-ui/core';
 
 
+const useStyles = makeStyles(theme => ({
+  toolbar:{
+    display:'flex',
+    flexDirection:'row',
+  },
+  inlineToolbar:{
+    
+  }
+}))
 
 export default function RichEditor(props) {
-    const {editorState, onChange,readOnly} = props;
-    const [plugins, setPlugins] = React.useState([createMathjaxPlugin()]); 
+
+    const classes = useStyles();
+    const blockDndPlugin = createBlockDndPlugin();
+    const focusPlugin = createFocusPlugin();
+    const resizeablePlugin = createResizeablePlugin({
+      horizontal: "absolute",
+      vertical: "absolute",
+  });
+    const alignmentPlugin = createAlignmentPlugin();
+    const decorator = composeDecorators(
+        resizeablePlugin.decorator,
+        alignmentPlugin.decorator,
+        focusPlugin.decorator,
+        blockDndPlugin.decorator
+      );
     
+    const imagePlugin = createImagePlugin({decorator});
+    const mathJaxPlugin = createMathjaxPlugin();
+
+    
+    const {editorState, onChange,readOnly} = props;
+    const [plugins, setPlugins] = React.useState([mathJaxPlugin,resizeablePlugin,alignmentPlugin,focusPlugin, blockDndPlugin,imagePlugin]); 
 
     function handleOnChange(editorState) {
         onChange && onChange(editorState);
@@ -51,10 +88,19 @@ export default function RichEditor(props) {
         }
     }
 
+    // const { AlignmentTool } = plugins[2];
+
     return (
         <div style={readOnly === true ? disabledStyleWrapper(true, {}, {opacity: 1, border: 0} ):{}} className="RichEditor-root">
-            {readOnly === false && <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>}
-            {readOnly === false &&<InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle}/>}
+            {readOnly === false && <div className={classes.toolbar}>
+              <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
+              <InlineStyleControls className={classes.InlineToolbar} editorState={editorState} onToggle={toggleInlineStyle}/>
+            </div>}
+            {readOnly === false && <ImageUpload
+            onUploaded={(url)=>{
+              onChange(plugins[5].addImage(editorState,url));
+            }}
+            buttonLabel="Chèn ảnh"/>}
             <div className={className}>
                 <Editor 
                     blockStyleFn={getBlockStyle}
