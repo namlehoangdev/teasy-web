@@ -15,7 +15,7 @@ import {
     InputAdornment,
     FormControlLabel,
     RadioGroup, Radio,
-    Card,CardActionArea,CardMedia,
+    Card, CardActionArea, CardMedia,
     CardContent, CardActions
 } from "@material-ui/core";
 import {Close as CloseIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon} from "@material-ui/icons";
@@ -72,11 +72,11 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'row'
     },
     card: {
-    width: '100%'
-  },
-  media: {
-    height: 250,
-  },
+        width: '100%'
+    },
+    media: {
+        height: 250,
+    },
 }));
 
 export default function CreateContestPage() {
@@ -90,7 +90,7 @@ export default function CreateContestPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [backgroundUrlState, setBackgroundUrlState] = useState('');
 
-    const { profile } = useSelector(state => state.authReducer);
+    const {profile} = useSelector(state => state.authReducer);
     const userId = profile.id;
 
     const history = useHistory();
@@ -98,7 +98,6 @@ export default function CreateContestPage() {
     const classes = useStyles();
 
     useEffect(() => {
-
         dispatch(getAllUsers());
         if (!tests || !tests.byId || tests.byId.length === 0) {
             dispatch(getOwnTests());
@@ -107,11 +106,20 @@ export default function CreateContestPage() {
         if (id) {
             const [hours, minutes] = msToTime(duration);
             setDuration(new Date(1997, 10, 3, hours, minutes));
+
+        } else {
+            const now = new Date();
+            dispatch(updateEditingContest({
+                duration: 1 * 3600000 + 30 * 60000,
+                startAt: now.toISOString()
+            }));
+            setDuration(new Date(1997, 10, 3, 1, 30));
         }
+
     }, []);
 
     useEffect(() => {
-      setBackgroundUrlState(backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png')
+        setBackgroundUrlState(backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png')
     }, [backgroundUrl]);
 
     useEffect(() => {
@@ -241,9 +249,9 @@ export default function CreateContestPage() {
         </div>)
     }
 
-    function handleUploaded(url){
-      setBackgroundUrlState(url)
-      dispatch(updateEditingContest({backgroundUrl: url}));
+    function handleUploaded(url) {
+        setBackgroundUrlState(url)
+        dispatch(updateEditingContest({backgroundUrl: url}));
     }
 
     return (<div>
@@ -276,30 +284,30 @@ export default function CreateContestPage() {
         <Grid container className={classes.page}>
             <Grid item xs={12} sm={8} md={8}>
                 <Card className={classes.card}>
-                  <CardActionArea>
-                    <CardMedia
-                      className={classes.media}
-                      image={backgroundUrlState}
-                      title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        Ảnh bìa cuộc thi
-                      </Typography>
-                      {/* <Typography variant="body2" color="textSecondary" component="p">
+                    <CardActionArea>
+                        <CardMedia
+                            className={classes.media}
+                            image={backgroundUrlState}
+                            title="Contemplative Reptile"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Ảnh bìa cuộc thi
+                            </Typography>
+                            {/* <Typography variant="body2" color="textSecondary" component="p">
                         Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
                         across all continents except Antarctica
                       </Typography> */}
-                    </CardContent>
-                  </CardActionArea>
-                  <CardActions>
-                    <ImageUpload
-                    category="Competition"
-                    userId= {userId}
-                    buttonLabel="Tải lên ảnh bìa cuộc thi"
-                    onUploaded={handleUploaded}
-                    />
-                  </CardActions>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <ImageUpload
+                            category="Competition"
+                            userId={userId}
+                            buttonLabel="Tải lên ảnh bìa cuộc thi"
+                            onUploaded={handleUploaded}
+                        />
+                    </CardActions>
                 </Card>
             </Grid>
             <Grid item xs={12} sm={8} md={8}>

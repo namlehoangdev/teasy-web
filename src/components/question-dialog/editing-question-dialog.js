@@ -45,7 +45,7 @@ export default function EditingQuestionDialog() {
                 fullWidth maxWidth='lg'>
             <DialogTitle id="create-dialog-title">{QUESTION_DIALOG_TITLE[questionDialogMode]}</DialogTitle>
             <DialogContent dividers>
-                <EditingQuestionContent data={editingQuestion} onChange={handleQuestionChange}/>
+                <EditingQuestionContent data={editingQuestion} onChange={handleQuestionChange} hideRemove/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>

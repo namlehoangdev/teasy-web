@@ -169,10 +169,13 @@ export default function AdminHomePage() {
                 dispatch(openCreateQuestionDialog());
                 break;
         }
-        dispatch(setOpenAdminFullscreenDialog(true));
-        setCreatePopAnchorEl(null);
-        setCurrentFullscreenPath(item.path);
-        history.push(`${path}/${item.path}`);
+        if (item.key !== 2) {
+            dispatch(setOpenAdminFullscreenDialog(true));
+            setCreatePopAnchorEl(null);
+            setCurrentFullscreenPath(item.path);
+            history.push(`${path}/${item.path}`);
+        }
+
     }
 
     function handleNavButtonClick(event, item, index) {

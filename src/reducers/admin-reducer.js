@@ -29,6 +29,7 @@ import {
     removeFromNormalizedList
 } from "../utils/byid-utils";
 import {fakeQuestions} from "../fake-data";
+import {EditorState} from 'draft-js';
 
 const initialState = {
     isOpenAdminFullscreenDialog: false,
@@ -82,7 +83,7 @@ export default function adminReducer(state = initialState, action) {
                     isOpen: true,
                     mode: QUESTION_DIALOG_MODE.create
                 };
-                draft.editingQuestion = {};
+                draft.editingQuestion = {content: EditorState.createEmpty()};
                 return;
             case CANCEL_CREATE_QUESTION_DIALOG:
                 draft.questionDialog = {isOpen: false, mode: null};
