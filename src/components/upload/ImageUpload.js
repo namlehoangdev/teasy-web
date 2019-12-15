@@ -79,6 +79,7 @@ function ImageUpload(props) {
   const [imageFile, setImageFile] = useState({name:''});
   const [url, setUrl] = useState('');
   const [progress, setProgress] = useState(0);
+  const [off, setOff] = useState(true);
 
   function handleChange(e) {
     setProgress(0);
@@ -89,6 +90,7 @@ function ImageUpload(props) {
   }
 
   function handleUpload() {
+    setOff(false)
     const image  = imageFile;
     const randomName = uuidv4();
     const uploadTask = storage.ref(`${category}/${userId}/${randomName}`).put(image);
@@ -103,6 +105,7 @@ function ImageUpload(props) {
       },
       error => {
         // Error function ...
+        setOff(true)
         onUploaded(error)
       },
       () => {
@@ -112,6 +115,7 @@ function ImageUpload(props) {
           .child(randomName)
           .getDownloadURL()
           .then(u => {
+            setOff(true)
             setUrl(u);
             onUploaded(u)
           });
@@ -126,7 +130,7 @@ function ImageUpload(props) {
 
     return (
      <div className={classes.root}>
-      <LinearProgress variant="determinate" value={progress} />
+      {off === false && <LinearProgress variant="determinate" value={progress} />}
       <div className={classes.picker}>
           <Button
             variant="contained"
@@ -135,7 +139,7 @@ function ImageUpload(props) {
             onClick={progress === 0 && imageFile.name !== '' && handleUpload}
             startIcon={progress === 100 ? <CloudDoneIcon color="primary"/> : <CloudUploadIcon />}
           >
-            {imageFile.name === '' && <Input 
+            {(imageFile.name === '' || progress === 100) && <Input 
               className={classes.input} 
               type="file" 
               onChange={handleChange} 

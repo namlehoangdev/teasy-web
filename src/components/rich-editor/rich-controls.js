@@ -67,12 +67,8 @@ InlineStyleControls.propTypes = {
 };
 
 const BLOCK_TYPES = [
-    {label: 'Tiêu đề 1', style: 'header-one'},
-    {label: 'Tiêu đề 2', style: 'header-two'},
-    {label: 'Tiêu đề 3', style: 'header-three'},
-    {label: 'Tiêu đề 4', style: 'header-four'},
-    {label: 'Tiêu đề 5', style: 'header-five'},
-    {label: 'Tiêu đề 6', style: 'header-six'},
+    {label: 'H1', style: 'header-one'},
+    {label: 'H2', style: 'header-two'},
     {label: 'Chú thích', style: 'blockquote'},
     {label: ':', style: 'unordered-list-item', icon: <FormatListBulletedIcon/>},
     {label: '1.', style: 'ordered-list-item', icon: <FormatListNumberedIcon/>},
