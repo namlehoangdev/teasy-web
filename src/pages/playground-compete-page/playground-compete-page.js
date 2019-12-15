@@ -36,7 +36,7 @@ import {
     updateCompetingContest,
     updateCompetingResult
 } from "../../actions";
-import {useLocation} from 'react-router';
+import {useHistory, useLocation} from 'react-router';
 //import {Editor} from 'draft-js';
 import Editor from 'draft-js-plugins-editor'
 import {disabledStyleWrapper, msToTime} from "../../utils";
@@ -191,6 +191,7 @@ export default function PlaygroundCompetePage() {
     const [expanded, setExpanded] = React.useState('panel1');
     const [durationCompetition, setDurationCompetition] = React.useState(0);
     const {contestId, isAnonymous, displayName} = locationState;
+    const history = useHistory();
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
