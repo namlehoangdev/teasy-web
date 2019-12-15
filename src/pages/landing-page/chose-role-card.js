@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { updateLoginMode } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import CheckIcon from '@material-ui/icons/Check';
-
+//
 const useStyles = makeStyles(theme => ({
   "@keyframes fadeAnimation": {
     from: { opacity: 0 },
