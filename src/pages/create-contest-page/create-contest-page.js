@@ -15,6 +15,8 @@ import {
     InputAdornment,
     FormControlLabel,
     RadioGroup, Radio,
+    Card,CardActionArea,CardMedia,
+    CardContent, CardActions
 } from "@material-ui/core";
 import {Close as CloseIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon} from "@material-ui/icons";
 import {TEXT} from "../../consts";
@@ -34,6 +36,7 @@ import {FormControl} from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 import {isDate} from "moment";
 import {isDateObject, msToTime} from "../../utils";
+import ImageUpload from '../../components/upload/ImageUpload';
 //TODO: change to permitted Users from array to map
 
 const useStyles = makeStyles(theme => ({
@@ -67,7 +70,13 @@ const useStyles = makeStyles(theme => ({
     passwordContainer: {
         display: 'flex',
         flexDirection: 'row'
-    }
+    },
+    card: {
+    width: '100%'
+  },
+  media: {
+    height: 250,
+  },
 }));
 
 export default function CreateContestPage() {
@@ -79,6 +88,10 @@ export default function CreateContestPage() {
     const {users} = useSelector(state => state.userReducer) || [];
     const [_duration, setDuration] = useState(new Date());
     const [showPassword, setShowPassword] = useState(false);
+    const [backgroundUrl, setBackgroundUrl] = useState('https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png');
+
+    const { profile } = useSelector(state => state.authReducer);
+    const userId = profile.id;
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -224,6 +237,10 @@ export default function CreateContestPage() {
         </div>)
     }
 
+    function handleUploaded(url){
+      setBackgroundUrl(url)
+    }
+
     return (<div>
         <AppBar className={classes.appBar}>
             <Toolbar>
@@ -252,6 +269,34 @@ export default function CreateContestPage() {
                           selectedTestIds={testIds}/>
 
         <Grid container className={classes.page}>
+            <Grid item xs={12} sm={8} md={8}>
+                <Card className={classes.card}>
+                  <CardActionArea>
+                    <CardMedia
+                      className={classes.media}
+                      image={backgroundUrl}
+                      title="Contemplative Reptile"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        Ảnh bìa cuộc thi
+                      </Typography>
+                      {/* <Typography variant="body2" color="textSecondary" component="p">
+                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                        across all continents except Antarctica
+                      </Typography> */}
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <ImageUpload
+                    category="Competition"
+                    userId= {userId}
+                    buttonLabel="Tải lên ảnh bìa cuộc thi"
+                    onUploaded={handleUploaded}
+                    />
+                  </CardActions>
+                </Card>
+            </Grid>
             <Grid item xs={12} sm={8} md={8}>
                 <TextField required label="Tên cuộc thi" margin="normal" fullWidth onChange={handleNameChange}
                            value={name}/>

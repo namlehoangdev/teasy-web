@@ -7,7 +7,6 @@ import {BlockStyleControls, InlineStyleControls} from './rich-controls';
 import createMathjaxPlugin from 'draft-js-mathjax-plugin'
 import Editor from 'draft-js-plugins-editor'
 import { disabledStyleWrapper } from 'utils';
-import insertTeX from 'draft-js-mathjax-plugin/lib/modifiers/insertTeX';
 
 
 
@@ -57,7 +56,6 @@ export default function RichEditor(props) {
             {readOnly === false && <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>}
             {readOnly === false &&<InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle}/>}
             <div className={className}>
-              <div onClick={()=>{insertTeX(editorState,true)}}>aaaaaaa</div>
                 <Editor 
                     blockStyleFn={getBlockStyle}
                     customStyleMap={styleMap}
