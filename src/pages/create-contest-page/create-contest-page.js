@@ -81,14 +81,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
-    const {id, isPublic, permittedUsers, testIds, isSecured, password, name, description, startAt, duration} = editingContest;
+    const {id, isPublic, permittedUsers, testIds, isSecured, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
     const {users} = useSelector(state => state.userReducer) || [];
     const [_duration, setDuration] = useState(new Date());
     const [showPassword, setShowPassword] = useState(false);
-    const [backgroundUrl, setBackgroundUrl] = useState('https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png');
+    const [backgroundUrlState, setBackgroundUrlState] = useState('');
 
     const { profile } = useSelector(state => state.authReducer);
     const userId = profile.id;
@@ -109,6 +109,10 @@ export default function CreateContestPage() {
             setDuration(new Date(1997, 10, 3, hours, minutes));
         }
     }, []);
+
+    useEffect(() => {
+      setBackgroundUrlState(backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png')
+    }, [backgroundUrl]);
 
     useEffect(() => {
         if (permittedUsers && permittedUsers.length > 0 && !isPublic && isPublic !== prevIsPublic) {
@@ -238,7 +242,8 @@ export default function CreateContestPage() {
     }
 
     function handleUploaded(url){
-      setBackgroundUrl(url)
+      setBackgroundUrlState(url)
+      dispatch(updateEditingContest({backgroundUrl: url}));
     }
 
     return (<div>
@@ -274,7 +279,7 @@ export default function CreateContestPage() {
                   <CardActionArea>
                     <CardMedia
                       className={classes.media}
-                      image={backgroundUrl}
+                      image={backgroundUrlState}
                       title="Contemplative Reptile"
                     />
                     <CardContent>
