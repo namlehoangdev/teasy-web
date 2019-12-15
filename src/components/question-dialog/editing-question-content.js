@@ -18,6 +18,7 @@ import {updateEditingTest} from "../../actions";
 import produce from "immer";
 import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
 import {useDispatch} from "react-redux";
+import EditingFillBlank from "./editing-fill-blank";
 
 
 const useStyles = makeStyles(() => ({
@@ -27,9 +28,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function EditingQuestionContent(props) {
-    const {data, onChange, onRemove} = props;
+    const {data, onChange, onRemove, hideRemove = false} = props;
     const classes = useStyles();
     const {type: questionTypeCode = '', content, id} = data;
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -68,7 +70,7 @@ export default function EditingQuestionContent(props) {
             case QUESTION_TYPE_CODES.essay:
                 return <div/>;
             case QUESTION_TYPE_CODES.fillBlank:
-                return <div/>;
+                return <EditingFillBlank data={data} onChange={handleQuestionFormChange}/>;
             case QUESTION_TYPE_CODES.matching:
                 return <div/>;
             case QUESTION_TYPE_CODES.quizMulti:
@@ -101,12 +103,13 @@ export default function EditingQuestionContent(props) {
                 </FormControl>
             </Grid>
             <Grid item>
-                <IconButton edge="start" color="inherit" onClick={handleRemoveQuestion} aria-label="close">
+                {!hideRemove &&
+                (<IconButton edge="start" color="inherit" onClick={handleRemoveQuestion} aria-label="close">
                     <CloseIcon/>
-                </IconButton>
+                </IconButton>)}
             </Grid>
         </Grid>
-        <RichEditor readOnly={false} editorState={content} onChange={handleEditorChange}/>
+        {content && <RichEditor readOnly={false} editorState={content} onChange={handleEditorChange}/>}
         {renderQuestionFormByType()}
     </div>);
 }

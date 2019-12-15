@@ -46,7 +46,7 @@ import produce from "immer";
 import {addToNormalizedList, DefaultNormalizer, denormalizer} from "../../utils/byid-utils";
 import Calculator from '../../components/calculator/component/App';
 import {snackColors} from "../../consts/color";
-import {COMPETING_CONTEST_STATE, TEXT} from "../../consts";
+import {COMPETING_CONTEST_STATE, QUESTION_TYPE_CODES, TEXT} from "../../consts";
 import GradientIcon from '@material-ui/icons/Gradient';
 import moment from 'moment';
 import Countdown from 'react-countdown-now';
@@ -57,6 +57,9 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import RichEditor from 'components/rich-editor/rich-editor';
 import {CountdownRenderer} from "../../components";
 import CloseIcon from '@material-ui/icons/Close';
+import EditingQuiz from "../../components/question-dialog/editing-quiz";
+import EditingFillBlank from "../../components/question-dialog/editing-fill-blank";
+import FillBlankQuestion from "./fill-blank-question";
 
 const drawerWidth = 240;
 
@@ -270,12 +273,11 @@ export default function PlaygroundCompetePage() {
             let questionType = 0;
             let count = 0;
             let trueAnswer = '';
-            if (isResponseFullAnswer) {
+            if (isResponseFullAnswer && answersById && rightAnswerIds) {
                 answersById.every((item) => {
                     if (rightAnswerIds[item]) {
                         trueAnswer = item;
                         questionType = 1;
-
                         return false;
                     }
                     count++;
@@ -286,30 +288,36 @@ export default function PlaygroundCompetePage() {
                 }
             }
             let chipStyle = {};
-            let chipText = '';
-            switch (questionType) {
-                case 1: {
-                    chipStyle = {backgroundColor: snackColors.success};
-                    chipText = 'Đúng';
-                    break;
-                }
-                case -1: {
-                    chipStyle = {backgroundColor: snackColors.error};
-                    chipText = 'Sai';
-                    break;
-                }
-            }
             return (<Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                 <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
                 <Typography variant="subtitle2" noWrap align='center'>
                     <RichEditor editorState={content} readOnly={true}/>
                 </Typography>
-                <QuizQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
-                              trueAnswer={trueAnswer}
-                              question={questionByHash[questionId]}/>
+                {renderQuestionByType(questionId, trueAnswer)}
             </Box>)
         });
+    }
+
+    function renderQuestionByType(questionId, trueAnswer) {
+        const {answers: answersById, type: questionTypeCode} = questionByHash[questionId];
+        switch (questionTypeCode) {
+            case QUESTION_TYPE_CODES.quiz:
+                return (<QuizQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
+                                      trueAnswer={trueAnswer}
+                                      question={questionByHash[questionId]}/>);
+            case QUESTION_TYPE_CODES.essay:
+                return <div/>;
+            case QUESTION_TYPE_CODES.fillBlank:
+                return <FillBlankQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
+                                          trueAnswer={trueAnswer}
+                                          question={questionByHash[questionId]}/>;
+            case QUESTION_TYPE_CODES.matching:
+                return <div/>;
+            case QUESTION_TYPE_CODES.quizMulti:
+                return <div/>;
+        }
+
     }
 
     function renderCountDown(props) {
@@ -400,13 +408,14 @@ export default function PlaygroundCompetePage() {
                 <DialogContent>
                     <DialogContentText>Nộp bài thành công</DialogContentText>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) &&
-                    <DialogContentText>Số câu trả lời
+                    rightAnswerIds && testRightAnswerIds && <DialogContentText>Số câu trả lời
                         đúng: {Object.keys(rightAnswerIds).length}/{Object.keys(testRightAnswerIds).length}
                     </DialogContentText>}
                 </DialogContent>
                 <DialogActions>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER)
-                    && <Button onClick={() => setIsOpenResultDialog(false)} color="primary">Xem đáp án</Button>}
+                    && <Button onClick={() => setIsOpenResultDialog(false)}
+                               color="primary">{hasFullAnswers ? 'Xem đáp án' : 'Xem lại câu trả lời'}</Button>}
                     <Button onClick={handleNavigateToResultsPage} color="primary">Về trang kết quả thi</Button>
                 </DialogActions>
             </React.Fragment>)

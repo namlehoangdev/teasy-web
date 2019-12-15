@@ -130,7 +130,6 @@ export default function EditingQuiz(props) {
                     aria-label="edit-answer-radio-1"
                     onChange={handleRadioChange}>
             {answers && answers.byId && answers.byId.map(renderAnswers)}
-            {/*{renderAddNewAnswerInput()}*/}
         </RadioGroup>
         <Button onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
     </FormControl>);

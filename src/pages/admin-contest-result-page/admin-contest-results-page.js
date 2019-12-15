@@ -1,25 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import './admin-contest-results-page.scss'
 import {
-    Button,
     Container,
-    Dialog, DialogActions, DialogContent, DialogContentText,
-    DialogTitle,
     Grid,
-    IconButton,
     makeStyles,
     Paper,
     TableCell,
     Typography
 } from "@material-ui/core";
-import {Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    deleteOwnContest, deleteOwnTest, getContestById, getContestResultsById, getOwnContestResults,
-    getOwnTests, updateAllContests, updateOwnContestResultById, updateOwnContestResults,
-    updateOwnTestById,
-    updateOwnTests
-} from "../../actions";
+import {getContestResultsById, updateOwnContestResultById, updateOwnContestResults} from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {isoToLocalDateString} from "../../utils";
 import {useLocation} from "react-router";
@@ -81,7 +71,6 @@ export default function AdminContestResultsPage() {
         const {displayName, ownerId, createdAt, rightAnswerIds, totalQuestion} = results.byHash[id];
         const anonymousLabel = ownerId ? '' : `\n(ẩn danh)`;
         return (<React.Fragment>
-            <TableCell align="left"> </TableCell>
             <TableCell align="left">{`${displayName} ${anonymousLabel}`}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
             <TableCell align="left"><b>{rightAnswerIds.length}/{totalQuestion}</b></TableCell>
@@ -90,7 +79,6 @@ export default function AdminContestResultsPage() {
 
     function renderFolders(folder) {
         return (<React.Fragment>
-            <TableCell align="left"><FolderIcon/></TableCell>
             <TableCell align="left">{folder}</TableCell>
             <TableCell align="left"> </TableCell>
         </React.Fragment>)
@@ -98,7 +86,6 @@ export default function AdminContestResultsPage() {
 
     function renderHeaders() {
         return (<React.Fragment>
-            <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left"><b>Tên thí sinh</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Ngày nộp bài</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Số câu đúng</b></TableCell>

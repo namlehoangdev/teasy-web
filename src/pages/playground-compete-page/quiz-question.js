@@ -42,7 +42,7 @@ export default function QuizQuestion(props) {
         const answerCharacter = String.fromCharCode(65 + index);
         const isSubmitted = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
         let resultStyle = {};
-        if (isSubmitted && value !== content && testRightAnswerIds[answerKey]) {
+        if (isSubmitted && value !== content && testRightAnswerIds && testRightAnswerIds[answerKey]) {
             resultStyle = {color: snackColors.success}
         }
         return (<Grid item key={answerKey} className={classes.answerContainer}>
@@ -55,7 +55,7 @@ export default function QuizQuestion(props) {
                         className={classes.radioGroup}
                         aria-label={questionId}
                         onChange={handleAnswerChange}>
-            {answersById.map(renderAnswers)}
+            {answersById && answersById.map(renderAnswers)}
         </RadioGroup>
     )
 }
