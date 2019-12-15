@@ -52,13 +52,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AdminContestResultsPage() {
-    const {results} = useSelector(state => state.playgroundReducer) || {};
+    const {contests = {}} = useSelector(state => state.adminReducer);
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const {state: locationState} = useLocation();
+    const {contestId} = locationState;
+    const contest = contests.byHash[contestId];
+    const {name: contestName, results = {}} = contest;
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
-        const {contestId} = locationState;
+
         console.log('get contest results by id: ', contestId);
         dispatch(getContestResultsById(contestId));
     }, []);
@@ -75,12 +78,13 @@ export default function AdminContestResultsPage() {
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {competitionName, createdAt, rightAnswers, totalQuestion} = results.byHash[id];
+        const {displayName, ownerId, createdAt, rightAnswerIds, totalQuestion} = results.byHash[id];
+        const anonymousLabel = ownerId ? '' : `\n(ẩn danh)`;
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
-            <TableCell align="left">{competitionName}</TableCell>
+            <TableCell align="left">{`${displayName} ${anonymousLabel}`}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
-            <TableCell align="left"><b>{rightAnswers}/{totalQuestion}</b></TableCell>
+            <TableCell align="left"><b>{rightAnswerIds.length}/{totalQuestion}</b></TableCell>
         </React.Fragment>)
     }
 
@@ -95,7 +99,7 @@ export default function AdminContestResultsPage() {
     function renderHeaders() {
         return (<React.Fragment>
             <TableCell component="th" scope="row" align="left">.</TableCell>
-            <TableCell component="th" scope="row" align="left"><b>Tên cuộc thi</b></TableCell>
+            <TableCell component="th" scope="row" align="left"><b>Tên thí sinh</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Ngày nộp bài</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Số câu đúng</b></TableCell>
         </React.Fragment>)
@@ -107,7 +111,7 @@ export default function AdminContestResultsPage() {
                 <Grid container spacing={3}>
                     <Paper className={classes.paper}>
                         <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Danh sách kết quả thi của {}</Typography>
+                                    component="h2" color="primary">Danh sách kết quả thi của {contestName}</Typography>
                         <WorkingTableV2 filesByHash={results.byHash}
                                         filesById={results.byId}
                                         isShowLoading={isShowCircleLoading}
