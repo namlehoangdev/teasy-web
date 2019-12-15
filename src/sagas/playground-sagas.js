@@ -3,8 +3,14 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    GET_CONTEST_BY_ID, GET_OWN_CONTEST_RESULTS, GET_MARKED_CONTEST_RESULT,
-    GET_PUBLIC_CONTESTS, GET_SHARED_CONTESTS, POST_CONTEST_RESULT, GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
+    GET_CONTEST_BY_ID,
+    GET_OWN_CONTEST_RESULTS,
+    GET_MARKED_CONTEST_RESULT,
+    GET_PUBLIC_CONTESTS,
+    GET_SHARED_CONTESTS,
+    POST_CONTEST_RESULT,
+    GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
+    GET_ANONYMOUS_CONTEST_BY_ID, POST_ANONYMOUS_CONTEST_RESULT, GET_MARKED_ANONYMOUS_CONTEST_RESULT,
 } from "../actions/action-types";
 import {normalizer} from "../utils/byid-utils";
 import {updateSharedContests} from "../actions";
@@ -19,6 +25,7 @@ import {COMPETING_CONTEST_STATE} from "../consts";
 import {updateOwnContestResults} from "../actions";
 import {showMiniLoading} from "../actions";
 import {hideMiniLoading} from "../actions";
+import {getMarkedAnonymousContestResult} from "../actions";
 
 const answerSchema = new schema.Entity('answers');
 const questionsSchema = new schema.Entity('questions', {
@@ -119,6 +126,28 @@ export function* getContestByIdSaga({payload}) {
     }
 }
 
+export function* getAnonymousContestBydIdSaga({payload}) {
+    try {
+        yield put(showCircleLoading());
+        const {id} = payload;
+        const response = yield call(APIs.getAnonymousContestByIdAPI, id);
+        console.log('getAnonymousContestBydIdSaga response: ', response);
+        if (response && response.data) {
+            const contest = response.data;
+            contest.test.questions && contest.test.questions.forEach(function (part, index) {
+                this.test.questions[index].content = convertStringToEditorState(this.test.questions[index].content);
+            }, contest);
+            const {entities} = normalize(contest.test, testSchema);
+            yield put(updateCompetingContest({...contest, ...entities, state: COMPETING_CONTEST_STATE.DOING}));
+        }
+    } catch (error) {
+        console.log('getAnonymousContestBydIdSaga failed: ', error);
+    } finally {
+        yield put(hideCircleLoading());
+    }
+
+}
+
 export function* postContestResultSaga({payload}) {
     try {
         yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.SUBMIT}));
@@ -137,6 +166,30 @@ export function* postContestResultSaga({payload}) {
         }
     } catch (error) {
         console.log('postContestResultAPI failed: ', error);
+    } finally {
+        yield put(hideCircleLoading());
+    }
+}
+
+
+export function* postAnonymousContestResultSaga({payload}) {
+    try {
+        yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.SUBMIT}));
+        const {params, hasFullAnswers} = payload;
+
+        console.log('payload: ', payload);
+        yield put(showCircleLoading());
+        const response = yield call(APIs.postAnonymousContestResultAPI, params);
+        console.log('postAnonymousContestResultAPI succeed: ', response);
+        if (response && response.data) {
+            if (hasFullAnswers) {
+                yield put(getMarkedAnonymousContestResult(response.data.id));
+            } else {
+                yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.RESPONSE_OF_NOT_FULL_ANSWER}));
+            }
+        }
+    } catch (error) {
+        console.log('postAnonymousContestResultAPI failed: ', error);
     } finally {
         yield put(hideCircleLoading());
     }
@@ -177,6 +230,41 @@ export function* getMarkedContestResultSaga({payload}) {
     }
 }
 
+export function* getMarkedAnonymousContestResultSaga({payload}) {
+    try {
+        const resultId = payload;
+        console.log('payload: ', payload);
+        yield put(showCircleLoading());
+        const response = yield call(APIs.getMarkedAnonymousContestResultAPI, resultId);
+        console.log('getMarkedAnonymousContestResultSaga succeed: ', response);
+        if (response && response.data) {
+            const {testRightAnswerIds, rightAnswerIds} = response.data;
+            const newTestRightAnswerIds = {};
+            testRightAnswerIds.forEach((item) => {
+                newTestRightAnswerIds[item] = true;
+            });
+
+            const newRightAnswerIds = {};
+            rightAnswerIds.forEach((item) => {
+                newRightAnswerIds[item] = true;
+            });
+
+            yield put(updateCompetingContest({
+                markedResults: {
+                    ...response.data,
+                    testRightAnswerIds: newTestRightAnswerIds,
+                    rightAnswerIds: newRightAnswerIds
+                },
+                state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
+            }));
+        }
+    } catch (error) {
+        console.log('getMarkedAnonymousContestResultSaga failed: ', error);
+    } finally {
+        yield put(hideCircleLoading());
+    }
+}
+
 
 /*-----saga watchers-----*/
 
@@ -184,8 +272,11 @@ export default [
     takeLatest(GET_PUBLIC_CONTESTS, getPublicContestsSaga),
     takeLatest(GET_SHARED_CONTESTS, getSharedContestsSaga),
     takeLatest(POST_CONTEST_RESULT, postContestResultSaga),
+    takeLatest(POST_ANONYMOUS_CONTEST_RESULT, postAnonymousContestResultSaga),
     takeLatest(GET_CONTEST_BY_ID, getContestByIdSaga),
     takeLatest(GET_MARKED_CONTEST_RESULT, getMarkedContestResultSaga),
+    takeLatest(GET_MARKED_ANONYMOUS_CONTEST_RESULT, getMarkedAnonymousContestResultSaga),
     takeLatest(GET_OWN_CONTEST_RESULTS, getOwnContestResultsSaga),
-    takeLatest(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, getAnonymousContestMetadataByCodeSaga)
+    takeLatest(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, getAnonymousContestMetadataByCodeSaga),
+    takeLatest(GET_ANONYMOUS_CONTEST_BY_ID, getAnonymousContestBydIdSaga)
 ];

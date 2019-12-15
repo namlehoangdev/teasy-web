@@ -17,7 +17,10 @@ import {
     GET_MARKED_CONTEST_RESULT,
     GET_OWN_CONTEST_RESULTS,
     UPDATE_OWN_CONTEST_RESULTS,
-    UPDATE_OWN_CONTEST_RESULT_BY_ID, GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, GET_ANONYMOUS_CONTEST_BY_ID
+    UPDATE_OWN_CONTEST_RESULT_BY_ID,
+    GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
+    GET_ANONYMOUS_CONTEST_BY_ID,
+    POST_ANONYMOUS_CONTEST_RESULT, GET_MARKED_ANONYMOUS_CONTEST_RESULT
 } from './action-types';
 
 export const setOpenPlaygroundFullscreenDialog = (value) => action(SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, {value});
@@ -31,7 +34,7 @@ export const getContestById = (id) => action(GET_CONTEST_BY_ID, {id});
 export const getAnonymousContestMetadataByCode = (code, onSuccess, onError) =>
     action(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, {code, onSuccess, onError});
 
-export const getAnonymousContestById = (id) => action(GET_ANONYMOUS_CONTEST_BY_ID, id);
+export const getAnonymousContestById = (id) => action(GET_ANONYMOUS_CONTEST_BY_ID, {id});
 
 
 export const updateSharedContests = (contests) => action(UPDATE_SHARED_CONTESTS, {contests});
@@ -48,7 +51,13 @@ export const updateCompetingResult = (result) => action(UPDATE_COMPETING_RESULT,
 
 export const postContestResult = (params, hasFullAnswers) => action(POST_CONTEST_RESULT, {params, hasFullAnswers});
 
+export const postAnonymousContestResult = (params, hasFullAnswers) => action(POST_ANONYMOUS_CONTEST_RESULT, {
+    params,
+    hasFullAnswers
+});
+
 export const getMarkedContestResult = (resultId) => action(GET_MARKED_CONTEST_RESULT, resultId);
+export const getMarkedAnonymousContestResult = (resultId) => action(GET_MARKED_ANONYMOUS_CONTEST_RESULT, resultId);
 
 export const getOwnContestResults = () => action(GET_OWN_CONTEST_RESULTS);
 

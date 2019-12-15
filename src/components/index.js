@@ -5,3 +5,5 @@ export {default as QuestionDialog} from './question-dialog/editing-question-dial
 export {default as WorkingTable} from './working-table/working-table';
 export {default as WorkingTableV2} from './working-table/working-table-v2';
 export {default as UnauthorizedDialog} from './unauthorized-dialog/unauthorized-dialog'
+export {default as PasswordInput} from './password-input';
+export {default as CountdownRenderer} from './count-down-renderer';

@@ -146,7 +146,6 @@ export default function PlaygroundHomePage() {
     const handleMenuItemClick = (event, index) => {
         setSelectedAvatarOptions(index);
         setOpen(false);
-        console.log(profile.name)
     };
 
     const handleToggle = () => {
@@ -205,7 +204,7 @@ export default function PlaygroundHomePage() {
                     </IconButton>
                     <Typography variant="h6" noWrap>{appBarTitle}</Typography>
                     <div className={classes.avatar}>
-                        <Typography variant="h6" noWrap>{profile.name}</Typography>
+                        {profile && profile.name && (<Typography variant="h6" noWrap>{profile.name}</Typography>)}
                         <Button
                             color="primary"
                             size="small"
@@ -283,4 +282,3 @@ export default function PlaygroundHomePage() {
         </div>
     );
 }
-

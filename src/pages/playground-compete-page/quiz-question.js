@@ -41,9 +41,6 @@ export default function QuizQuestion(props) {
         const {content} = answersByHash[answerKey];
         const answerCharacter = String.fromCharCode(65 + index);
         const isSubmitted = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
-        console.log('markedResults', markedResults);
-        console.log('value: ', value);
-        console.log('answerKey: ', answerKey);
         let resultStyle = {};
         if (isSubmitted && value !== content && testRightAnswerIds[answerKey]) {
             resultStyle = {color: snackColors.success}

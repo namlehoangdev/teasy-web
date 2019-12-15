@@ -29,13 +29,14 @@ import clsx from "clsx";
 import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getContestById,
+    getAnonymousContestById,
+    getContestById, postAnonymousContestResult,
     postContest,
-    postContestResult,
+    postContestResult, setOpenAdminFullscreenDialog,
     updateCompetingContest,
     updateCompetingResult
 } from "../../actions";
-import {useLocation} from 'react-router';
+import {useHistory, useLocation} from 'react-router';
 //import {Editor} from 'draft-js';
 import Editor from 'draft-js-plugins-editor'
 import {disabledStyleWrapper, msToTime} from "../../utils";
@@ -44,7 +45,7 @@ import produce from "immer";
 import {addToNormalizedList, DefaultNormalizer, denormalizer} from "../../utils/byid-utils";
 import Calculator from '../../components/calculator/component/App';
 import {snackColors} from "../../consts/color";
-import {COMPETING_CONTEST_STATE} from "../../consts";
+import {COMPETING_CONTEST_STATE, TEXT} from "../../consts";
 import GradientIcon from '@material-ui/icons/Gradient';
 import moment from 'moment';
 import Countdown from 'react-countdown-now';
@@ -53,6 +54,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import RichEditor from 'components/rich-editor/rich-editor';
+import {CountdownRenderer} from "../../components";
 
 
 const drawerWidth = 240;
@@ -138,7 +140,7 @@ const useStyles = makeStyles(theme => ({
     countDownBox: {
         display: 'flex',
         flexDirection: 'column',
-        margin:theme.spacing(1)
+        margin: theme.spacing(1)
     },
     numberCountDown: {
         ...theme.typography.h4
@@ -146,13 +148,13 @@ const useStyles = makeStyles(theme => ({
     labelCountDown: {
         ...theme.typography.body1
     },
-    heading:{
-      marginLeft: theme.spacing(1)
+    heading: {
+        marginLeft: theme.spacing(1)
     },
-    expansionDetail:{
-      display:'flex',
-      justifyContent:'center',
-      alignItems:'center'
+    expansionDetail: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }));
 
@@ -161,7 +163,7 @@ function checkLength(testIds) {
 }
 
 function valuetext(value) {
-  return `${value}°C`;
+    return `${value}°C`;
 }
 
 export default function PlaygroundCompetePage() {
@@ -188,14 +190,16 @@ export default function PlaygroundCompetePage() {
     const [endCountDown, setEndCountDown] = useState(true);
     const [expanded, setExpanded] = React.useState('panel1');
     const [durationCompetition, setDurationCompetition] = React.useState(0);
+    const {contestId, isAnonymous, displayName} = locationState;
+    const history = useHistory();
 
     const handleChange = panel => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
+        setExpanded(newExpanded ? panel : false);
 
-  };
+    };
 
     useEffect(() => {
-        if (checkLength(testIds)) {
+        if (checkLength(testIds) && testByHash) {
             const {name, questions} = testByHash[testIds[0]] || {};
             name && setTestName(name);
             questions && setQuestionsById(questions);
@@ -205,9 +209,13 @@ export default function PlaygroundCompetePage() {
 
 
     useEffect(() => {
-        const {contestId} = locationState;
         console.log('get contest id: ', contestId);
-        dispatch(getContestById(contestId));
+        if (isAnonymous) {
+            dispatch(getAnonymousContestById(contestId));
+
+        } else {
+            dispatch(getContestById(contestId));
+        }
     }, []);
 
 
@@ -217,11 +225,15 @@ export default function PlaygroundCompetePage() {
 
     function handleNavigateToResultsPage() {
         console.log('navigate to results page');
+        if (isAnonymous) {
+            history.replaceState(null, TEXT.appName, '/');
+        } else {
+            history.goBack();
+        }
+        dispatch(setOpenAdminFullscreenDialog(false));
     }
 
     function handleSubmit() {
-        console.log('handle submit: ');
-        const {contestId} = locationState;
         if (checkLength(testIds)) {
             console.log('testIds', testIds);
             const reqResults = denormalizer(results);
@@ -233,7 +245,11 @@ export default function PlaygroundCompetePage() {
                 results: reqResults
             };
             setIsOpenResultDialog(true);
-            dispatch(postContestResult(params, hasFullAnswers));
+            if (isAnonymous) {
+                dispatch(postAnonymousContestResult({...params, displayName: displayName}, hasFullAnswers));
+            } else {
+                dispatch(postContestResult(params, hasFullAnswers));
+            }
         }
     }
 
@@ -286,23 +302,8 @@ export default function PlaygroundCompetePage() {
         });
     }
 
-    function renderCountDown({total, days, hours, minutes, seconds}) {
-        return (
-            <div className={classes.countDownContainer}>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{hours}</span>
-                    <span className={classes.labelCountDown}>giờ</span>
-                </div>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{minutes}</span>
-                    <span className={classes.labelCountDown}>phút</span>
-                </div>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{seconds}</span>
-                    <span className={classes.labelCountDown}>giây</span>
-                </div>
-            </div>
-        )
+    function renderCountDown(props) {
+        return (<CountdownRenderer {...props}/>)
     }
 
     function renderStartContestButton() {
@@ -313,88 +314,54 @@ export default function PlaygroundCompetePage() {
     }
 
     function renderDrawerBlock() {
-        const marks = [
-            {
-              value: 0,
-              label: '0 phút',
-            },
-            {
-              value: durationCompetition/60000,
-              label: durationCompetition/60000 + " phút",
-            },
-          ];
+        const marks = [{value: 0, label: '0 phút'}, {
+            value: durationCompetition / 60000,
+            label: durationCompetition / 60000 + " phút"
+        }];
         return (<React.Fragment>
             <Box>
                 <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <TimelapseIcon></TimelapseIcon>
-                    <Typography className={classes.heading}>Thời gian còn lại</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails className={classes.expansionDetail}>
-                    {renderStartContestButton()}
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-                <ExpansionPanel>
-                    <ExpansionPanelSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <AssignmentTurnedInIcon></AssignmentTurnedInIcon>
-                      <Typography className={classes.heading}>Các câu đã làm</Typography>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}
+                                           aria-controls="panel1a-content" id="panel1a-header">
+                        <TimelapseIcon/><Typography className={classes.heading}>Thời gian còn lại</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className={classes.expansionDetail}>
-                    <Grid container wrap>
-                      {questionsById.map((item, index) => {
-                          const color = (results && results.byHash[item]) ? 'primary' : 'default';
-                          return (
-                              <Button size='small' key={item} color={color}>
-                                  <b>{index}</b>
-                              </Button>)
-                      })}
-                    </Grid>
-                  </ExpansionPanelDetails>
+                        {renderStartContestButton()}
+                    </ExpansionPanelDetails>
                 </ExpansionPanel>
-
                 <ExpansionPanel>
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <GradientIcon></GradientIcon>
-                    <Typography className={classes.heading}>Máy tính</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Calculator></Calculator>
-                  </ExpansionPanelDetails>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content"
+                                           id="panel2a-header">
+                        <AssignmentTurnedInIcon/><Typography className={classes.heading}>Các câu đã làm</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails className={classes.expansionDetail}>
+                        <Grid container wrap>
+                            {questionsById.map((item, index) => {
+                                const color = (results && results.byHash[item]) ? 'primary' : 'default';
+                                return (
+                                    <Button size='small' key={index.toString()} color={color}><b>{index}</b></Button>)
+                            })}
+                        </Grid>
+                    </ExpansionPanelDetails>
                 </ExpansionPanel>
-                 <ExpansionPanel>
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <AccessAlarmIcon></AccessAlarmIcon>
-                    <Typography className={classes.heading}>Hẹn giờ</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Slider
-                        defaultValue={90}
-                        getAriaValueText={valuetext}
-                        aria-labelledby="discrete-slider-always"
-                        step={10}
-                        marks={marks}
-                        valueLabelDisplay="on"
-                        min={0}
-                        max={durationCompetition/60000}
-                      />
-                  </ExpansionPanelDetails>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content"
+                                           id="panel3a-header">
+                        <GradientIcon/><Typography className={classes.heading}>Máy tính</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails><Calculator/></ExpansionPanelDetails>
+                </ExpansionPanel>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content"
+                                           id="panel4a-header">
+                        <AccessAlarmIcon/>
+                        <Typography className={classes.heading}>Hẹn giờ</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <Slider defaultValue={90} marks={marks} valueLabelDisplay="on" getAriaValueText={valuetext}
+                                aria-labelledby="discrete-slider-always" step={10} min={0}
+                                max={durationCompetition / 60000}/>
+                    </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Box>
         </React.Fragment>)
@@ -410,7 +377,8 @@ export default function PlaygroundCompetePage() {
                     <DialogContentText>Nộp bài thành công</DialogContentText>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) &&
                     <DialogContentText>Số câu trả lời
-                        đúng: {Object.keys(rightAnswerIds).length}/{Object.keys(testRightAnswerIds).length}</DialogContentText>}
+                        đúng: {Object.keys(rightAnswerIds).length}/{Object.keys(testRightAnswerIds).length}
+                    </DialogContentText>}
                 </DialogContent>
                 <DialogActions>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER)
@@ -435,19 +403,16 @@ export default function PlaygroundCompetePage() {
                 </Toolbar>
             </AppBar>
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
-                <Grid container spacing={3}>
-                    <Grid item spacing={3} xs={12} sm={12} md={12}>
-                        <Paper className={classes.paper}>
-                            <Typography variant="h5" noWrap align='center'>{contestName}</Typography>
-                            <Typography variant="h5" noWrap align='center'>{testName}</Typography>
-                            <Typography variant="h6" noWrap align='center'>{description}</Typography>
-                            <Typography variant="subtitle1" noWrap align='center'>Số câu: {questionsById.length} - Thời
-                                gian
-                                làm bài: {durationArray[0]} giờ {durationArray[1]} phút</Typography>
-                            {renderQuestions()}
-                        </Paper>
-                    </Grid>
-                </Grid>
+                <Box spacing={3}>
+                    <Paper className={classes.paper}>
+                        <Typography variant="h5" noWrap align='center'>{contestName}</Typography>
+                        <Typography variant="h5" noWrap align='center'>{testName}</Typography>
+                        <Typography variant="h6" noWrap align='center'>{description}</Typography>
+                        <Typography variant="subtitle1" noWrap align='center'>Số câu: {questionsById.length} - Thời
+                            gian làm bài: {durationArray[0]} giờ {durationArray[1]} phút</Typography>
+                        {renderQuestions()}
+                    </Paper>
+                </Box>
             </main>
             <Drawer className={classes.drawer} variant="persistent" anchor="right"
                     open={openDrawer} classes={{paper: classes.drawerPaper}}>

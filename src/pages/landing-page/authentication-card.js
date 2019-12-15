@@ -41,7 +41,6 @@ function AuthenticationCard(props) {
     const {onFacebookCallback, onGoogleSuccess, onGoogleFailure, onThirdPartyClick} = props;
     const [code, setCode] = useState('');
     const [codeHelperText, setCodeHelperText] = useState('');
-    const [isError, setIsError] = useState(false);
     const history = useHistory();
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -63,8 +62,7 @@ function AuthenticationCard(props) {
     }
 
     function handleCodeChange(event) {
-        if (isError) {
-            setIsError(false);
+        if (codeHelperText !== '') {
             setCodeHelperText("");
         }
         setCode(event.target.value);
@@ -72,7 +70,6 @@ function AuthenticationCard(props) {
 
     function handleEnterRoomByCodePress() {
         if (!code || code.length === 0) {
-            setIsError(true);
             setCodeHelperText('Mã phòng thi không hợp lệ');
         } else {
             const onGetContestSuccess = (response) => {
@@ -80,7 +77,6 @@ function AuthenticationCard(props) {
                 history.push({pathname: `${PAGE_PATHS.waiting}`});
             };
             const onGetContestError = (response) => {
-                setIsError(true);
                 setCodeHelperText('Mã phòng thi không đúng');
             };
             dispatch(getAnonymousContestMetadataByCode(code, onGetContestSuccess, onGetContestError))
@@ -127,7 +123,7 @@ function AuthenticationCard(props) {
                     <TextField id="roomCode" name="roomCode" variant="outlined" fullWidth
                                helperText={codeHelperText}
                                onChange={handleCodeChange}
-                               error={isError}
+                               error={codeHelperText !== ''}
                                label={TEXT.roomCode}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>

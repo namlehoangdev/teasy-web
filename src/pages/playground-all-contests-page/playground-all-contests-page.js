@@ -15,8 +15,8 @@ import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import moment from 'moment';
 import {isoToLocalDateString, msToTime} from "../../utils";
 import Countdown from 'react-countdown-now';
-import { useHistory } from "react-router";
-import { PAGE_PATHS } from "../../consts";
+import {useHistory} from "react-router";
+import {PAGE_PATHS} from "../../consts";
 import Calculator from 'components/calculator/component/App';
 
 const useStyles = makeStyles(theme => ({
@@ -78,7 +78,6 @@ export default function PlaygroundAllContestsPage() {
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const [focusedDetailId, setFocusedDetailId] = useState(-1);
     const [focusedFiles, setFocusedFiles] = useState({});
-    const [endCountDown, setEndCountDown] = useState(true);
     const history = useHistory();
 
     const dispatch = useDispatch();
@@ -176,11 +175,9 @@ export default function PlaygroundAllContestsPage() {
         const diff = moment(startAt).diff(moment.utc(), 'ms');
         console.log('diff: ', diff);
         if (diff > 0) {
-            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}
-                               onStart={() => setEndCountDown(false)} onComplete={() => setEndCountDown(true)}/>);
+            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
         }
-        return (
-            <StartButtonWrapper onMoun={() => setEndCountDown(true)} onClick={() => handleStartContestClick(item)}/>)
+        return (<StartButtonWrapper onClick={() => handleStartContestClick(item)}/>)
     }
 
     function renderDetail() {
