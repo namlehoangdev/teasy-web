@@ -63,3 +63,9 @@ export const COMPETING_CONTEST_STATE = {
     RESPONSE_OF_HAS_FULL_ANSWER: '',
     RESPONSE_OF_NOT_FULL_ANSWER: '',
 };
+
+export const QUESTION_STATE = {
+    NOT_SCORED: 'NOT_SCORED',
+    RIGHT: 'RIGHT',
+    WRONG: 'WRONG'
+};

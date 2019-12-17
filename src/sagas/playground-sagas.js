@@ -12,7 +12,7 @@ import {
     GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
     GET_ANONYMOUS_CONTEST_BY_ID, POST_ANONYMOUS_CONTEST_RESULT, GET_MARKED_ANONYMOUS_CONTEST_RESULT,
 } from "../actions/action-types";
-import {normalizer} from "../utils/byid-utils";
+import {DefaultNormalizer, normalizer} from "../utils/byid-utils";
 import {updateSharedContests} from "../actions";
 import {updatePublicContests} from "../actions";
 import {updateCompetingContest} from "../actions";
@@ -203,7 +203,7 @@ export function* getMarkedContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedContestResultAPI, resultId);
         console.log('getMarkedContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers} = response.data;
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
@@ -213,12 +213,18 @@ export function* getMarkedContestResultSaga({payload}) {
             rightAnswerIds.forEach((item) => {
                 newRightAnswerIds[item] = true;
             });
+            let newFillBlankRightAnswers = new DefaultNormalizer();
+            if (fillBlankRightAnswers) {
+                newFillBlankRightAnswers = normalizer(fillBlankRightAnswers, 'questionId');
+            }
+            console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
 
             yield put(updateCompetingContest({
                 markedResults: {
                     ...response.data,
                     testRightAnswerIds: newTestRightAnswerIds,
-                    rightAnswerIds: newRightAnswerIds
+                    rightAnswerIds: newRightAnswerIds,
+                    fillBlankRightAnswers: newFillBlankRightAnswers
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));

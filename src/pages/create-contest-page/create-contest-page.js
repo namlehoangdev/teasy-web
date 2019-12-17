@@ -106,7 +106,6 @@ export default function CreateContestPage() {
         if (id) {
             const [hours, minutes] = msToTime(duration);
             setDuration(new Date(1997, 10, 3, hours, minutes));
-
         } else {
             const now = new Date();
             dispatch(updateEditingContest({

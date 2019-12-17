@@ -1,9 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {Box, TextField, FormControlLabel, Grid, makeStyles, Radio, RadioGroup, Typography} from "@material-ui/core";
+import React, {useState} from 'react';
+import {
+    TextField,
+    makeStyles,
+    Chip
+} from "@material-ui/core";
 import PropTypes from 'prop-types';
 import {useSelector} from "react-redux";
-import {COMPETING_CONTEST_STATE} from "../../consts";
-import {snackColors} from "../../consts/color";
+import {COMPETING_CONTEST_STATE, QUESTION_STATE} from "../../consts";
 
 
 const useStyles = makeStyles(theme => ({
@@ -14,12 +17,16 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    chipContainer: {
+        display: 'flex',
+        flexDirection: 'row'
     }
 }));
 
 export default function FillBlankQuestion(props) {
     const classes = useStyles();
-    const {onAnswerChange, question, answersById, trueAnswer} = props;
+    const {onAnswerChange, question, answersById, questionState, rightAnswers} = props;
     const {competingContest} = useSelector(state => state.playgroundReducer) || {};
     const {answers: answersByHash, markedResults = {}, state} = competingContest;
     const {testRightAnswerIds} = markedResults;
@@ -36,11 +43,26 @@ export default function FillBlankQuestion(props) {
         onAnswerChange && onAnswerChange(result, questionId);
     }
 
+    function renderFullAnswers() {
+        return (<div className={classes.chipContainer}>
+            Câu trả lời đúng:
+            {rightAnswers && rightAnswers.map((item) => {
+                const {id, content} = item;
+                return (<Chip key={id} label={content}
+                              variant="outlined"/>)
+            })}
+        </div>)
+    }
 
-    return (<TextField id="filled-textarea"
-                       InputProps={{disableUnderline: true}}
+
+    return (
+        <React.Fragment>
+            {state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER && renderFullAnswers()}
+            <TextField id="filled-textarea"
+                       error={questionState === QUESTION_STATE.WRONG}
                        placeholder="Điền đáp án" multiline variant="filled" value={value}
-                       onChange={handleAnswerChange}/>)
+                       onChange={handleAnswerChange}/>
+        </React.Fragment>)
 }
 
 FillBlankQuestion.propTypes = {

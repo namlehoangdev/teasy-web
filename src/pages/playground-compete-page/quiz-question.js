@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function QuizQuestion(props) {
     const classes = useStyles();
-    const {onAnswerChange, question, answersById, trueAnswer} = props;
+    const {onAnswerChange, question, answersById, questionState, trueAnswer} = props;
     const {competingContest} = useSelector(state => state.playgroundReducer) || {};
     const {answers: answersByHash, markedResults = {}, state} = competingContest;
     const {testRightAnswerIds} = markedResults;

@@ -46,7 +46,7 @@ import produce from "immer";
 import {addToNormalizedList, DefaultNormalizer, denormalizer} from "../../utils/byid-utils";
 import Calculator from '../../components/calculator/component/App';
 import {snackColors} from "../../consts/color";
-import {COMPETING_CONTEST_STATE, QUESTION_TYPE_CODES, TEXT} from "../../consts";
+import {COMPETING_CONTEST_STATE, QUESTION_TYPE_CODES, TEXT, QUESTION_STATE} from "../../consts";
 import GradientIcon from '@material-ui/icons/Gradient';
 import moment from 'moment';
 import Countdown from 'react-countdown-now';
@@ -170,6 +170,7 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
+
 export default function PlaygroundCompetePage() {
     const classes = useStyles();
     const theme = useTheme();
@@ -185,7 +186,7 @@ export default function PlaygroundCompetePage() {
         state,
         markedResults = {}
     } = competingContest;
-    const {testRightAnswerIds, rightAnswerIds} = markedResults;
+    const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers} = markedResults;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
@@ -215,10 +216,9 @@ export default function PlaygroundCompetePage() {
     }, [testIds]);
 
     useEffect(() => {
-       if(durationCompetition > 0)
-       {
-         setfirstDuration(Date.now() + durationCompetition);
-       }
+        if (durationCompetition > 0) {
+            setfirstDuration(Date.now() + durationCompetition);
+        }
     }, [durationCompetition]);
 
     useEffect(() => {
@@ -266,51 +266,88 @@ export default function PlaygroundCompetePage() {
         }
     }
 
-    function renderQuestions() {
-        return questionsById.map((questionId, index) => {
-            const {answers: answersById, content} = questionByHash[questionId];
-            const isResponseFullAnswer = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
-            let questionType = 0;
-            let count = 0;
+    function generateQuestionState(questionId, answersById, type) {
+        let questionState = QUESTION_STATE.NOT_SCORED;
+        if (state !== COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) {
+            return {questionState};
+        }
+        if (type === QUESTION_TYPE_CODES.quiz) {
             let trueAnswer = '';
-            if (isResponseFullAnswer && answersById && rightAnswerIds) {
+            if (rightAnswerIds && answersById) {
+                let count = 0;
                 answersById.every((item) => {
                     if (rightAnswerIds[item]) {
                         trueAnswer = item;
-                        questionType = 1;
+                        questionState = QUESTION_STATE.RIGHT;
                         return false;
                     }
                     count++;
                     return true;
                 });
                 if (count === answersById.length) {
-                    questionType = -1;
+                    questionState = QUESTION_STATE.WRONG;
                 }
             }
+            return {trueAnswer, questionState};
+        }
+        if (type === QUESTION_TYPE_CODES.fillBlank) {
+            if (fillBlankRightAnswers) {
+                if (!fillBlankRightAnswers.byHash) {
+                    return {questionState};
+                }
+                const {rightAnswers = []} = fillBlankRightAnswers.byHash[questionId];
+                const content = results.byHash[questionId] && results.byHash[questionId].content;
+                if (!content) return {questionState: QUESTION_STATE.WRONG, rightAnswers};
+                for (let i = 0; i < rightAnswers.length; i++) {
+                    if (rightAnswers[i].content === content) {
+                        console.log('get here: ', {questionState: QUESTION_STATE.RIGHT, rightAnswers});
+                        return {questionState: QUESTION_STATE.RIGHT, rightAnswers};
+                    }
+                }
+                console.log('get here: ', {questionState: QUESTION_STATE.WRONG, rightAnswers});
+                return {questionState: QUESTION_STATE.WRONG, rightAnswers};
+            }
+        }
+        return {questionState};
+    }
+
+    function renderQuestions() {
+        return questionsById.map((questionId, index) => {
+            const {answers: answersById, content, type} = questionByHash[questionId];
+            const isResponseFullAnswer = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
+            let extraProps = {};
+            if (isResponseFullAnswer) {
+                extraProps = generateQuestionState(questionId, answersById, type);
+            }
             let chipStyle = {};
+            if (extraProps.questionState === QUESTION_STATE.RIGHT) {
+                chipStyle = {backgroundColor: snackColors.success};
+            } else if (extraProps.questionState === QUESTION_STATE.WRONG) {
+                chipStyle = {backgroundColor: snackColors.error};
+            }
             return (<Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                 <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
                 <Typography variant="subtitle2" noWrap align='center'>
                     <RichEditor editorState={content} readOnly={true}/>
                 </Typography>
-                {renderQuestionByType(questionId, trueAnswer)}
+                {renderQuestionByType(questionId, extraProps)}
             </Box>)
         });
     }
 
-    function renderQuestionByType(questionId, trueAnswer) {
+    function renderQuestionByType(questionId, extraProps) {
         const {answers: answersById, type: questionTypeCode} = questionByHash[questionId];
         switch (questionTypeCode) {
             case QUESTION_TYPE_CODES.quiz:
-                return (<QuizQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
-                                      trueAnswer={trueAnswer}
+                return (<QuizQuestion {...extraProps}
+                                      answersById={answersById} onAnswerChange={handleAnswerChange}
                                       question={questionByHash[questionId]}/>);
             case QUESTION_TYPE_CODES.essay:
                 return <div/>;
             case QUESTION_TYPE_CODES.fillBlank:
-                return <FillBlankQuestion answersById={answersById} onAnswerChange={handleAnswerChange}
-                                          trueAnswer={trueAnswer}
+                return <FillBlankQuestion {...extraProps}
+                                          answersById={answersById} onAnswerChange={handleAnswerChange}
                                           question={questionByHash[questionId]}/>;
             case QUESTION_TYPE_CODES.matching:
                 return <div/>;
@@ -324,10 +361,10 @@ export default function PlaygroundCompetePage() {
         return (<CountdownRenderer {...props}/>)
     }
 
-    function handleOnTick(e){
-      if(e.total == alarm){
-        setOpenSnackBar(true)
-      }
+    function handleOnTick(e) {
+        if (e.total == alarm) {
+            setOpenSnackBar(true)
+        }
     }
 
     function renderStartContestButton() {
@@ -337,11 +374,11 @@ export default function PlaygroundCompetePage() {
         }
     }
 
-    function handleOnReminderChange(event, newValue){
-      const newDuration = newValue* 60000;
-      
-      const vo = firstDuration - durationCompetition;
-      setAlarm(firstDuration - (vo + newDuration))
+    function handleOnReminderChange(event, newValue) {
+        const newDuration = newValue * 60000;
+
+        const vo = firstDuration - durationCompetition;
+        setAlarm(firstDuration - (vo + newDuration))
     }
 
     function renderDrawerBlock() {
@@ -391,7 +428,7 @@ export default function PlaygroundCompetePage() {
                     <ExpansionPanelDetails>
                         <Slider defaultValue={90} marks={marks} valueLabelDisplay="on" getAriaValueText={valuetext}
                                 onChange={handleOnReminderChange}
-                                aria-labelledby="discrete-slider-always" step={1} min={0}             
+                                aria-labelledby="discrete-slider-always" step={1} min={0}
                                 max={durationCompetition / 60000}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
@@ -464,28 +501,28 @@ export default function PlaygroundCompetePage() {
             </Dialog>
 
             <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={openSnackBar}
-              autoHideDuration={6000}
-              ContentProps={{
-                'aria-describedby': 'message-id',
-              }}
-              message={<span id="message-id">Note archived</span>}
-              action={[
-                <IconButton
-                  key="close"
-                  aria-label="close"
-                  color="inherit"
-                  className={classes.close}
-                  onClick={()=>setOpenSnackBar(false)}
-                >
-                  <CloseIcon />
-                </IconButton>,
-              ]}
-             />
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={openSnackBar}
+                autoHideDuration={6000}
+                ContentProps={{
+                    'aria-describedby': 'message-id',
+                }}
+                message={<span id="message-id">Note archived</span>}
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={() => setOpenSnackBar(false)}
+                    >
+                        <CloseIcon/>
+                    </IconButton>,
+                ]}
+            />
         </div>
     )
 }
