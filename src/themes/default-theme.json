@@ -79,7 +79,7 @@
     "divider": "rgba(0, 0, 0, 0.12)",
     "background": {
       "paper": "#fff",
-      "default": "#fff",
+      "default": "#e0e0e0",
       "level2": "#f5f5f5",
       "level1": "#fff"
     },
@@ -132,35 +132,35 @@
       "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
       "fontWeight": 300,
       "fontSize": "6rem",
-      "lineHeight": 1,
+      "lineHeight": 1.167,
       "letterSpacing": "-0.01562em"
     },
     "h2": {
       "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
       "fontWeight": 300,
       "fontSize": "3.75rem",
-      "lineHeight": 1,
+      "lineHeight": 1.2,
       "letterSpacing": "-0.00833em"
     },
     "h3": {
       "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
       "fontWeight": 400,
       "fontSize": "3rem",
-      "lineHeight": 1.04,
+      "lineHeight": 1.167,
       "letterSpacing": "0em"
     },
     "h4": {
       "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
       "fontWeight": 400,
       "fontSize": "2.125rem",
-      "lineHeight": 1.17,
+      "lineHeight": 1.235,
       "letterSpacing": "0.00735em"
     },
     "h5": {
       "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
       "fontWeight": 400,
       "fontSize": "1.5rem",
-      "lineHeight": 1.33,
+      "lineHeight": 1.334,
       "letterSpacing": "0em"
     },
     "h6": {
