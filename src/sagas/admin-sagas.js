@@ -3,7 +3,7 @@ import {showLoading, hideLoading} from 'react-redux-loading-bar'
 import APIs from '../apis';
 import {} from '../actions';
 import {
-    DELETE_OWN_CONTEST, DELETE_OWN_TEST, GET_CONTEST_RESULTS_BY_ID,
+    DELETE_OWN_CONTEST, DELETE_OWN_QUESTION, DELETE_OWN_TEST, GET_CONTEST_RESULTS_BY_ID,
     GET_OWN_CONTESTS, GET_OWN_QUESTIONS,
     GET_OWN_TESTS,
     POST_CONTEST, POST_QUESTION,
@@ -24,6 +24,7 @@ import {updateAllContestById} from "../actions";
 import {updatePartitionOfContestById} from "../actions";
 import {updateOwnQuestionById} from "../actions";
 import {addNewOwnQuestion} from "../actions";
+import {updateRemovedOwnQuestionById} from "../actions";
 
 const answerSchema = {
     answers: {
@@ -240,12 +241,21 @@ export function* putQuestionSaga({payload}) {
     try {
         console.log('putQuestionSaga: ', payload);
         yield put(showLoading());
-        const response = yield call(APIs.putQuestionAPI, payload);
+        const requestParams = {
+            ...payload,
+            content: convertFromEditorStateToString(payload.content),
+            answers: payload.answers ? denormalizer(payload.answers) : [],
+        };
+        const response = yield call(APIs.putQuestionAPI, requestParams);
         console.log('putQuestionSaga succeed: ', response);
         if (response && response.data) {
             const {id} = response.data;
-            const contest = {...response.data};
-            yield put(updateOwnQuestionById(id, contest));
+            const question = {
+                ...response.data,
+                content: convertStringToEditorState(response.data.content),
+                answers: normalizer(response.data.answers)
+            };
+            yield put(updateOwnQuestionById(id, question));
         }
     } catch (error) {
         console.log('putQuestionSaga failed: ', error);
@@ -266,6 +276,23 @@ export function* deleteOwnContestSaga({payload}) {
         }
     } catch (error) {
         console.log('deleteOwnContestSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+export function* deleteOwnQuestionSaga({payload}) {
+    try {
+        console.log('deleteOwnQuestionSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.deleteOwnQuestionAPI, payload);
+        console.log('deleteOwnQuestionSaga succeed: ', response);
+        if (response) {
+            console.log('response: ', response);
+            yield put(updateRemovedOwnQuestionById(payload));
+        }
+    } catch (error) {
+        console.log('deleteOwnQuestionSaga failed: ', error);
     } finally {
         yield put(hideLoading());
     }
@@ -301,7 +328,8 @@ export default [
     takeLatest(DELETE_OWN_TEST, deleteTestSaga),
     takeLatest(GET_CONTEST_RESULTS_BY_ID, getContestResultsById),
     takeLatest(POST_QUESTION, postQuestionSaga),
-    takeLatest(PUT_QUESTION, putQuestionSaga)
+    takeLatest(PUT_QUESTION, putQuestionSaga),
+    takeLatest(DELETE_OWN_QUESTION, deleteOwnQuestionSaga)
 ];
 
 

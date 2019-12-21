@@ -16,7 +16,7 @@ import {Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon} from "@mat
 import {QUESTION_TYPE_TEXT} from "../../consts";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    deleteOwnQuestion, getOwnQuestions,
+    deleteOwnQuestion, getOwnQuestions, openCreateQuestionDialog, updateEditingQuestion,
     updateOwnQuestionById,
     updateOwnQuestions
 } from "../../actions";
@@ -69,7 +69,8 @@ export default function AdminQuestionsPage() {
 
 
     function handleEditQuestionIconClick(id) {
-
+        dispatch(openCreateQuestionDialog());
+        dispatch(updateEditingQuestion(questions.byHash[id]));
     }
 
     function handleCancelRemoveDialog() {

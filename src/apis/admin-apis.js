@@ -14,7 +14,7 @@ export const postContestAPI = (contest) => ApiInstance.post('Competitions', cont
 export const putContestAPI = (contest) => ApiInstance.put('Competitions', contest);
 
 export const postQuestionAPI = (question) => ApiInstance.post('Questions', question);
-export const putQuestionAPI = (question) => ApiInstance.put('Questions', question);
+export const putQuestionAPI = (question) => ApiInstance.put(`Questions`, question);
 
 export const deleteOwnContestAPI = (contestId) => ApiInstance.delete(`Competitions/${contestId}`);
 export const deleteOwnTestAPI = (testId) => ApiInstance.delete(`Tests/${testId}`);

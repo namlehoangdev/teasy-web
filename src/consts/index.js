@@ -69,3 +69,16 @@ export const QUESTION_STATE = {
     RIGHT: 'RIGHT',
     WRONG: 'WRONG'
 };
+
+export const CONTEST_TYPE_CODE = {
+    MATH: 0, PHYSICS: 1, CHEMISTRY: 2, ENGLISH: 3, IT: 4, ELSE: -1
+};
+
+export const CONTEST_TYPE_TEXT = {
+    [CONTEST_TYPE_CODE.MATH]: 'Toán',
+    [CONTEST_TYPE_CODE.PHYSICS]: 'Lý',
+    [CONTEST_TYPE_CODE.MATH]: 'Hóa',
+    [CONTEST_TYPE_CODE.ENGLISH]: 'Anh',
+    [CONTEST_TYPE_CODE.IT]: 'IT',
+    [CONTEST_TYPE_CODE.ELSE]: 'Khác'
+};
