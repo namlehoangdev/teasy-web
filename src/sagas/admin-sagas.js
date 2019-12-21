@@ -235,7 +235,7 @@ export function* putQuestionSaga({payload}) {
     } finally {
         yield put(hideLoading());
     }
-
+}
 
 export function* deleteOwnContestSaga({payload}) {
     try {
