@@ -33,7 +33,7 @@ import {EditorState} from 'draft-js';
 
 const initialState = {
     isOpenAdminFullscreenDialog: false,
-    contests:fakeNormalizedContest, //new DefaultNormalizer(),
+    contests: new DefaultNormalizer(),
     tests: new DefaultNormalizer(),
     questions: new DefaultNormalizer(),
     questionDialog: {
