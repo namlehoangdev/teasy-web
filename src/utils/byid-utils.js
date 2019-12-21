@@ -1,5 +1,4 @@
 export function normalizer(array, key = 'id') {
-
     if (!Array.isArray(array)) {
         return array;
     }

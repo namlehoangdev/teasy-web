@@ -31,7 +31,7 @@ import {
     CLEAR_EDITING_CONTEST,
     CLEAR_EDITING_TEST,
     CLEAR_EDITING_QUESTION,
-    GET_CONTEST_RESULTS_BY_ID, UPDATE_PARTITION_OF_CONTEST_BY_ID
+    GET_CONTEST_RESULTS_BY_ID, UPDATE_PARTITION_OF_CONTEST_BY_ID, ADD_OWN_QUESTION
 } from './action-types';
 
 export const setOpenAdminFullscreenDialog = value => action(SET_OPEN_ADMIN_FULLSCREEN_DIALOG, {value});
@@ -70,15 +70,15 @@ export const updateOwnContests = (contests) => action(UPDATE_OWN_CONTESTS, {cont
 
 export const updateOwnContestById = (id, contest) => action(UPDATE_OWN_CONTEST_BY_ID, {id, contest});
 
-export const addNewOwnContest = (contest) => action(ADD_OWN_CONTEST,         contest);
-export const addNewOwnTest = (test) => action(ADD_OWN_CONTEST,               test);
-export const addNewOwnQuestion = (question) => action(ADD_OWN_CONTEST, question);
+export const addNewOwnContest = (contest) => action(ADD_OWN_CONTEST, contest);
+export const addNewOwnTest = (test) => action(ADD_OWN_CONTEST, test);
+export const addNewOwnQuestion = (question) => action(ADD_OWN_QUESTION, question);
 
 export const postTest = (test, onSuccess) => action(POST_TEST, {test, onSuccess});
 
 export const postContest = (contest) => action(POST_CONTEST, contest);
 export const putContest = (contest) => action(PUT_CONTEST, contest);
-export const postQuestion= (question) => action(POST_QUESTION,question);
+export const postQuestion = (question) => action(POST_QUESTION, question);
 export const putQuestion = (question) => action(PUT_QUESTION, question);
 export const putTest = (test, onSuccess) => action(PUT_TEST, {test, onSuccess});
 

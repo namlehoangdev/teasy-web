@@ -17,7 +17,7 @@ import {
     ADD_OWN_CONTEST,
     CLEAR_EDITING_CONTEST,
     CLEAR_EDITING_TEST,
-    CLEAR_EDITING_QUESTION, UPDATE_PARTITION_OF_CONTEST_BY_ID
+    CLEAR_EDITING_QUESTION, UPDATE_PARTITION_OF_CONTEST_BY_ID, ADD_OWN_QUESTION
 } from "../actions/action-types";
 import {QUESTION_DIALOG_MODE} from "../consts";
 import {produce} from "immer";
@@ -134,6 +134,11 @@ export default function adminReducer(state = initialState, action) {
 
             case ADD_OWN_CONTEST: {
                 addToNormalizedList(draft.contests, payload);
+                return;
+            }
+
+            case ADD_OWN_QUESTION: {
+                addToNormalizedList(draft.questions, payload);
                 return;
             }
             case CLEAR_EDITING_CONTEST: {

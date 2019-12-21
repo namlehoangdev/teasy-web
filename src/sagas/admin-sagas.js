@@ -4,13 +4,13 @@ import APIs from '../apis';
 import {} from '../actions';
 import {
     DELETE_OWN_CONTEST, DELETE_OWN_TEST, GET_CONTEST_RESULTS_BY_ID,
-    GET_OWN_CONTESTS,
+    GET_OWN_CONTESTS, GET_OWN_QUESTIONS,
     GET_OWN_TESTS,
     POST_CONTEST, POST_QUESTION,
     POST_TEST, PUT_CONTEST, PUT_QUESTION, PUT_TEST, UPDATE_OWN_QUESTIONS,
 } from "../actions/action-types";
 import {updateOwnContests} from "../actions";
-import {DefaultNormalizer, normalize, denormalize, normalizer} from "../utils/byid-utils";
+import {DefaultNormalizer, normalize, denormalize, normalizer, denormalizer} from "../utils/byid-utils";
 import {convertFromEditorStateToString, convertStringToEditorState} from "../utils/editor-converter";
 import {updateOwnTests} from "../actions";
 import {updateOwnQuestions} from "../actions";
@@ -24,6 +24,12 @@ import {updateAllContestById} from "../actions";
 import {updatePartitionOfContestById} from "../actions";
 import {updateOwnQuestionById} from "../actions";
 import {addNewOwnQuestion} from "../actions";
+
+const answerSchema = {
+    answers: {
+        id: 'id'
+    }
+};
 
 
 const questionsSchema = {
@@ -113,7 +119,12 @@ export function* getOwnQuestionsSaga() {
         const response = yield call(APIs.getOwnQuestionsAPI);
         console.log('getOwnQuestionsSaga response: ', response);
         if (response.data) {
-            const questions = normalizer(response.data);
+            const {questions} = normalize({questions: response.data}, questionsSchema);
+            console.log('normalized questions: ', questions);
+            questions.byId.forEach(function (part, index) {
+                this.byHash[part].content = convertStringToEditorState(this.byHash[part].content);
+            }, questions);
+            console.log('data:', questions);
             yield put(updateOwnQuestions(questions));
         }
     } catch (error) {
@@ -200,19 +211,25 @@ export function* putContestSaga({payload}) {
 }
 
 
-
-
-
 export function* postQuestionSaga({payload}) {
     try {
         console.log('postQuestionSaga: ', payload);
         yield put(showLoading());
-        const response = yield call(APIs.postQuestionAPI, payload);
+        let requestParams = denormalize(payload, answerSchema);
+        console.log('request params: ', requestParams);
+        requestParams.content = convertFromEditorStateToString(payload.content)
+
+        const response = yield call(APIs.postQuestionAPI, requestParams);
         console.log('postContestSaga succeed: ', response);
         if (response && response.data) {
-            yield put(addNewOwnQuestion(response.data));
+            yield put(addNewOwnQuestion({
+                ...response.data,
+                content: convertStringToEditorState(response.data.content),
+                answers: normalizer(response.data.answers)
+            }));
         }
-    } catch (error) {
+    } catch
+        (error) {
         console.log('postQuestionSaga failed: ', error);
     } finally {
         yield put(hideLoading());
@@ -277,14 +294,14 @@ export default [
     takeLatest(PUT_TEST, putTestSaga),
     takeLatest(GET_OWN_CONTESTS, getOwnContestsSaga),
     takeLatest(GET_OWN_TESTS, getOwnTestsSaga),
-    takeLatest(UPDATE_OWN_QUESTIONS, getOwnQuestionsSaga),
+    takeLatest(GET_OWN_QUESTIONS, getOwnQuestionsSaga),
     takeLatest(POST_TEST, postTestSaga),
     takeLatest(POST_CONTEST, postContestSaga),
     takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga),
     takeLatest(DELETE_OWN_TEST, deleteTestSaga),
     takeLatest(GET_CONTEST_RESULTS_BY_ID, getContestResultsById),
-    takeLatest(POST_QUESTION,postQuestionSaga),
-    takeLatest(PUT_QUESTION,putQuestionSaga),
+    takeLatest(POST_QUESTION, postQuestionSaga),
+    takeLatest(PUT_QUESTION, putQuestionSaga)
 ];
 
 

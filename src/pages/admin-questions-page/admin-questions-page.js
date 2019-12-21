@@ -21,6 +21,7 @@ import {
     updateOwnQuestions
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
+import RichEditor from "../../components/rich-editor/rich-editor";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -85,11 +86,13 @@ export default function AdminQuestionsPage() {
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {content, type, point} = questions.byHash[id];
+        const {content, type, level} = questions.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
-            <TableCell align="left">{content}</TableCell>
-            <TableCell align="left">{point}</TableCell>
+            <TableCell align="left">
+                <RichEditor editorState={content} readOnly={true}/>
+            </TableCell>
+            <TableCell align="left">{level}</TableCell>
             <TableCell align="left">{QUESTION_TYPE_TEXT[type]}</TableCell>
             <TableCell align="left">
                 <IconButton onClick={() => handleEditQuestionIconClick(id)}>
@@ -116,7 +119,7 @@ export default function AdminQuestionsPage() {
         return (<React.Fragment>
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left"><b>Nội dung</b></TableCell>
-            <TableCell component="th" scope="row" align="left"><b>Điểm số</b></TableCell>
+            <TableCell component="th" scope="row" align="left"><b>Độ khó</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Loại</b></TableCell>
             <TableCell component="th" scope="row" align="left"> </TableCell>
         </React.Fragment>)

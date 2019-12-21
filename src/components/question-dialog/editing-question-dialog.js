@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import {useSelector, useDispatch} from "react-redux";
 import {QUESTION_DIALOG_MODE, TEXT} from "../../consts";
-import {cancelCreateQuestionDialog, updateEditingQuestion} from "../../actions";
+import {cancelCreateQuestionDialog, postQuestion, putQuestion, updateEditingQuestion} from "../../actions";
 
 import EditingQuestionContent from "./editing-question-content";
 
@@ -30,13 +30,18 @@ export default function EditingQuestionDialog() {
     const dispatch = useDispatch();
     const {questionDialog, editingQuestion} = useSelector(state => state.adminReducer);
     const {mode: questionDialogMode, isOpen,} = questionDialog;
+    const {id} = editingQuestion;
 
     function handleCloseDialog() {
         dispatch(cancelCreateQuestionDialog());
     }
 
     function handleSubmit() {
-
+        if (id) {
+            dispatch(putQuestion(editingQuestion));
+        } else {
+            dispatch(postQuestion(editingQuestion));
+        }
     }
 
     function handleQuestionChange(changedData) {
