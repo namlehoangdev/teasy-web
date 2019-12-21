@@ -1,5 +1,5 @@
   
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Grid, IconButton,Input, makeStyles, Typography, Card, CardActionArea, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import { useDispatch, useSelector } from "react-redux";
 import storage from "../../Firebase/index";
@@ -80,6 +80,7 @@ function ImageUpload(props) {
   const [url, setUrl] = useState('');
   const [progress, setProgress] = useState(0);
   const [off, setOff] = useState(true);
+  const [imageId, setImageId] = useState(uuidv4());
 
   function handleChange(e) {
     setProgress(0);
@@ -89,11 +90,16 @@ function ImageUpload(props) {
     }
   }
 
+  useEffect(() => {
+         if(progress === 0 && imageFile.name !== ''){
+        handleUpload();
+      }
+    }, [imageFile.name]);
+
   function handleUpload() {
     setOff(false)
     const image  = imageFile;
-    const randomName = uuidv4();
-    const uploadTask = storage.ref(`${category}/${userId}/${randomName}`).put(image);
+    const uploadTask = storage.ref(`${category}/${userId}/${imageId}`).put(image);
     uploadTask.on(
       "state_changed",
       snapshot => {
@@ -112,7 +118,7 @@ function ImageUpload(props) {
         // complete function ...
         storage
           .ref(`${category}/${userId}`)
-          .child(randomName)
+          .child(imageId)
           .getDownloadURL()
           .then(u => {
             setOff(true)
@@ -136,7 +142,7 @@ function ImageUpload(props) {
             variant="contained"
             component="label"
             color="default"
-            onClick={progress === 0 && imageFile.name !== '' && handleUpload}
+            //onClick={progress === 0 && imageFile.name !== '' && handleUpload}
             startIcon={progress === 100 ? <CloudDoneIcon color="primary"/> : <CloudUploadIcon />}
           >
             {(imageFile.name === '' || progress === 100) && <Input 
