@@ -6,8 +6,8 @@ import {
     DELETE_OWN_CONTEST, DELETE_OWN_TEST, GET_CONTEST_RESULTS_BY_ID,
     GET_OWN_CONTESTS,
     GET_OWN_TESTS,
-    POST_CONTEST,
-    POST_TEST, PUT_CONTEST, PUT_TEST, UPDATE_OWN_QUESTIONS,
+    POST_CONTEST, POST_QUESTION,
+    POST_TEST, PUT_CONTEST, PUT_QUESTION, PUT_TEST, UPDATE_OWN_QUESTIONS,
 } from "../actions/action-types";
 import {updateOwnContests} from "../actions";
 import {DefaultNormalizer, normalize, denormalize, normalizer} from "../utils/byid-utils";
@@ -22,6 +22,8 @@ import {showCircleLoading} from "../actions";
 import {hideCircleLoading} from "../actions";
 import {updateAllContestById} from "../actions";
 import {updatePartitionOfContestById} from "../actions";
+import {updateOwnQuestionById} from "../actions";
+import {addNewOwnQuestion} from "../actions";
 
 
 const questionsSchema = {
@@ -197,6 +199,44 @@ export function* putContestSaga({payload}) {
     }
 }
 
+
+
+
+
+export function* postQuestionSaga({payload}) {
+    try {
+        console.log('postQuestionSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.postQuestionAPI, payload);
+        console.log('postContestSaga succeed: ', response);
+        if (response && response.data) {
+            yield put(addNewOwnQuestion(response.data));
+        }
+    } catch (error) {
+        console.log('postQuestionSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+}
+
+export function* putQuestionSaga({payload}) {
+    try {
+        console.log('putQuestionSaga: ', payload);
+        yield put(showLoading());
+        const response = yield call(APIs.putQuestionAPI, payload);
+        console.log('putQuestionSaga succeed: ', response);
+        if (response && response.data) {
+            const {id} = response.data;
+            const contest = {...response.data};
+            yield put(updateOwnQuestionById(id, contest));
+        }
+    } catch (error) {
+        console.log('putQuestionSaga failed: ', error);
+    } finally {
+        yield put(hideLoading());
+    }
+
+
 export function* deleteOwnContestSaga({payload}) {
     try {
         console.log('deleteOwnContestSaga: ', payload);
@@ -242,7 +282,9 @@ export default [
     takeLatest(POST_CONTEST, postContestSaga),
     takeLatest(DELETE_OWN_CONTEST, deleteOwnContestSaga),
     takeLatest(DELETE_OWN_TEST, deleteTestSaga),
-    takeLatest(GET_CONTEST_RESULTS_BY_ID, getContestResultsById)
-]
+    takeLatest(GET_CONTEST_RESULTS_BY_ID, getContestResultsById),
+    takeLatest(POST_QUESTION,postQuestionSaga),
+    takeLatest(PUT_QUESTION,putQuestionSaga),
+];
 
 
