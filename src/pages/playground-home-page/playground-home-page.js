@@ -213,7 +213,7 @@ export default function PlaygroundHomePage() {
                             onClick={handleToggle}
                         >
                             <Avatar alt="Remy Sharp"
-                                    src='https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg'/>
+                                    src= {profile.avatarUrl || 'https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg'} />
                         </Button>
                         <Popper className={classes.avatarOptions} open={open} anchorEl={anchorRef.current} transition
                                 disablePortal>
