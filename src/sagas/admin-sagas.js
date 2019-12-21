@@ -180,7 +180,7 @@ export function* putTestSaga({payload}) {
 export function* postContestSaga({payload}) {
     try {
         console.log('post contest saga: ', payload);
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.postContestAPI, payload);
         console.log('postContestSaga succeed: ', response);
         if (response && response.data) {
@@ -189,14 +189,14 @@ export function* postContestSaga({payload}) {
     } catch (error) {
         console.log('postContestSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 
 export function* putContestSaga({payload}) {
     try {
         console.log('putContestSaga: ', payload);
-        yield put(showLoading());
+        yield put(showCircleLoading());
         const response = yield call(APIs.putContestAPI, payload);
         console.log('putContestSaga succeed: ', response);
         if (response && response.data) {
@@ -207,7 +207,7 @@ export function* putContestSaga({payload}) {
     } catch (error) {
         console.log('putContestSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideCircleLoading());
     }
 }
 

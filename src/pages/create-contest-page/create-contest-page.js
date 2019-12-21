@@ -19,7 +19,7 @@ import {
     FormControlLabel,
     RadioGroup, Radio,
     Card, CardActionArea, CardMedia,
-    CardContent, CardActions
+    CardContent, CardActions, DialogTitle, Dialog, CircularProgress
 } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
@@ -49,6 +49,9 @@ import ImageUpload from '../../components/upload/ImageUpload';
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import ElevationScroll from "../../components/elevation-scroll";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogContent from "@material-ui/core/DialogContent";
 //TODO: change to permitted Users from array to map
 
 const useStyles = makeStyles(theme => ({
@@ -59,8 +62,8 @@ const useStyles = makeStyles(theme => ({
         width: 'auto',
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2),
-        [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-            width: 600,
+        [theme.breakpoints.up(800 + theme.spacing(2) * 2)]: {
+            width: 800,
             marginLeft: 'auto',
             marginRight: 'auto',
         },
@@ -158,6 +161,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const {id, isPublic, type, permittedUsers, testIds, isSecured, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
@@ -166,6 +170,7 @@ export default function CreateContestPage() {
     const [_duration, setDuration] = useState(new Date());
     const [showPassword, setShowPassword] = useState(false);
     const [backgroundUrlState, setBackgroundUrlState] = useState('');
+    const [isOpenSubmittedDialog, setIsOpenSubmittedDialog] = useState(false);
 
     const {profile} = useSelector(state => state.authReducer);
     const userId = profile.id;
@@ -298,7 +303,7 @@ export default function CreateContestPage() {
             alert('Vui lòng chọn ít nhất 1 đề thi');
             return;
         }
-
+        setIsOpenSubmittedDialog(true);
         if (id) {
             dispatch(putContest(editingContest));
         } else {
@@ -358,6 +363,10 @@ export default function CreateContestPage() {
     function handleUploaded(url) {
         setBackgroundUrlState(url);
         dispatch(updateEditingContest({backgroundUrl: url}));
+    }
+
+    function handleBack() {
+        history.goBack();
     }
 
     return (<div>
@@ -603,6 +612,31 @@ export default function CreateContestPage() {
                     </Grid>
                 </Paper>
             </main>
+            <Dialog open={isOpenSubmittedDialog}
+                    aria-labelledby="form-dialog-title">
+                {
+                    isShowCircleLoading ?
+                        (<React.Fragment>
+                            <DialogTitle id="form-dialog-title">Vui lòng chờ</DialogTitle>
+                            <DialogContent>
+                                <span style={{display:'flex',flexDirection:'row'}} ><CircularProgress/>
+                                <DialogContentText>Đang {id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi</DialogContentText>
+                                </span>
+                            </DialogContent>
+                        </React.Fragment>)
+                        :
+                        (
+                            <React.Fragment>
+                                <DialogTitle id="form-dialog-title">{id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi thành
+                                    công</DialogTitle>
+                                <DialogActions>
+                                    <Button
+                                        onClick={handleBack} color="primary">
+                                        Quay lại
+                                    </Button>
+                                </DialogActions>
+                            </React.Fragment>)}
+            </Dialog>
         </div>
     )
 }

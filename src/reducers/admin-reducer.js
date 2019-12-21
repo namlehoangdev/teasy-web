@@ -28,12 +28,12 @@ import {
     normalizer,
     removeFromNormalizedList
 } from "../utils/byid-utils";
-import {fakeQuestions} from "../fake-data";
+import {fakeNormalizedContest, fakeQuestions} from "../fake-data";
 import {EditorState} from 'draft-js';
 
 const initialState = {
     isOpenAdminFullscreenDialog: false,
-    contests: new DefaultNormalizer(),
+    contests:fakeNormalizedContest, //new DefaultNormalizer(),
     tests: new DefaultNormalizer(),
     questions: new DefaultNormalizer(),
     questionDialog: {
