@@ -35,6 +35,10 @@ export default function EditingQuestionDialog() {
         dispatch(cancelCreateQuestionDialog());
     }
 
+    function handleSubmit() {
+
+    }
+
     function handleQuestionChange(changedData) {
         dispatch(updateEditingQuestion(changedData));
     }
@@ -49,7 +53,7 @@ export default function EditingQuestionDialog() {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>
-                <Button onClick={handleCloseDialog} variant="contained" color="primary">{TEXT.create}</Button>
+                <Button onClick={handleSubmit} variant="contained" color="primary">{TEXT.create}</Button>
             </DialogActions>
         </Dialog>
     );

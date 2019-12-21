@@ -70,7 +70,7 @@ export const updateOwnContests = (contests) => action(UPDATE_OWN_CONTESTS, {cont
 
 export const updateOwnContestById = (id, contest) => action(UPDATE_OWN_CONTEST_BY_ID, {id, contest});
 
-export const addNewOwnContest = (contest) => action(ADD_OWN_CONTEST,         contest);
+export const addNewOwnContest = (contest) => action(ADD_OWN_CONTEST,            contest);
 export const addNewOwnTest = (test) => action(ADD_OWN_CONTEST,               test);
 export const addNewOwnQuestion = (question) => action(ADD_OWN_CONTEST, question);
 
