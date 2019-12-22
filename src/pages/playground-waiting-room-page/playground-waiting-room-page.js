@@ -114,7 +114,7 @@ export default function PlaygroundWaitingRoomPage() {
 
     function onGetContestSuccess() {
         dispatch(setOpenPlaygroundFullscreenDialog(true));
-        history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId}});
+        history.replace({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId}});
     }
 
     function onGetContestError(error) {

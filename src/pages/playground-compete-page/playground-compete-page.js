@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
     Grid,
     makeStyles,
@@ -206,16 +206,16 @@ export default function PlaygroundCompetePage() {
 
     };
 
-    useEffect(() => {
+    useMemo(() => {
         console.log('vao day');
         if (checkLength(testIds) && testByHash) {
-            console.log('vao day 2');
+            console.log('vao day 2', testByHash);
             const {name, questions} = testByHash[testIds[0]] || {};
             name && setTestName(name);
             questions && setQuestionsById(questions);
             setDurationCompetition(competingContest.duration)
         }
-    }, []);
+    }, [testIds]);
 
     useEffect(() => {
         if (durationCompetition > 0) {

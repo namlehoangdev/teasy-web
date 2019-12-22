@@ -6,7 +6,7 @@ import './rich-editor.scss';
 import {BlockStyleControls, InlineStyleControls} from './rich-controls';
 import createMathjaxPlugin from 'draft-js-mathjax-plugin'
 import Editor, {composeDecorators} from 'draft-js-plugins-editor'
-import { disabledStyleWrapper } from 'utils';
+import {disabledStyleWrapper} from 'utils';
 import createImagePlugin from 'draft-js-image-plugin';
 import ImageUpload from 'components/upload/ImageUpload';
 import createAlignmentPlugin from 'draft-js-alignment-plugin';
@@ -19,13 +19,11 @@ import {makeStyles} from '@material-ui/core';
 import {useSelector} from "react-redux";
 
 const useStyles = makeStyles(theme => ({
-  toolbar:{
-    display:'flex',
-    flexDirection:'row',
-  },
-  inlineToolbar:{
-    
-  }
+    toolbar: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    inlineToolbar: {}
 }))
 
 export default function RichEditor(props) {
@@ -34,25 +32,25 @@ export default function RichEditor(props) {
     const blockDndPlugin = createBlockDndPlugin();
     const focusPlugin = createFocusPlugin();
     const resizeablePlugin = createResizeablePlugin({
-      horizontal: "absolute",
-      vertical: "absolute",
-  });
+        horizontal: "absolute",
+        vertical: "absolute",
+    });
     const alignmentPlugin = createAlignmentPlugin();
     const decorator = composeDecorators(
         resizeablePlugin.decorator,
         alignmentPlugin.decorator,
         focusPlugin.decorator,
         blockDndPlugin.decorator
-      );
-    
+    );
+
     const imagePlugin = createImagePlugin({decorator});
     const mathJaxPlugin = createMathjaxPlugin();
-    const {profile} = useSelector(state => state.authReducer);
-    const userId = profile.id;
+    const {profile = {}} = useSelector(state => state.authReducer) || {};
+    const {id: userId} = profile || {};
 
-    
-    const {editorState, onChange,readOnly} = props;
-    const [plugins, setPlugins] = React.useState([mathJaxPlugin,resizeablePlugin,alignmentPlugin,focusPlugin, blockDndPlugin,imagePlugin]); 
+
+    const {editorState, onChange, readOnly} = props;
+    const [plugins, setPlugins] = React.useState([mathJaxPlugin, resizeablePlugin, alignmentPlugin, focusPlugin, blockDndPlugin, imagePlugin]);
 
     function handleOnChange(editorState) {
         onChange && onChange(editorState);
@@ -93,20 +91,22 @@ export default function RichEditor(props) {
     // const { AlignmentTool } = plugins[2];
 
     return (
-        <div style={readOnly === true ? disabledStyleWrapper(true, {}, {opacity: 1, border: 0} ):{}} className="RichEditor-root">
+        <div style={readOnly === true ? disabledStyleWrapper(true, {}, {opacity: 1, border: 0}) : {}}
+             className="RichEditor-root">
             {readOnly === false && <div className={classes.toolbar}>
-              <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
-              <InlineStyleControls className={classes.InlineToolbar} editorState={editorState} onToggle={toggleInlineStyle}/>
+                <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
+                <InlineStyleControls className={classes.InlineToolbar} editorState={editorState}
+                                     onToggle={toggleInlineStyle}/>
             </div>}
             {readOnly === false && <ImageUpload
-            onUploaded={(url)=>{
-              onChange(plugins[5].addImage(editorState,url));
-            }}
-            category="Question"
-            userId={userId}
-            buttonLabel="Chèn ảnh"/>}
+                onUploaded={(url) => {
+                    onChange(plugins[5].addImage(editorState, url));
+                }}
+                category="Question"
+                userId={userId}
+                buttonLabel="Chèn ảnh"/>}
             <div className={className}>
-                <Editor 
+                <Editor
                     blockStyleFn={getBlockStyle}
                     customStyleMap={styleMap}
                     editorState={editorState}

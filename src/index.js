@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, Router} from 'react-router-dom';
 import {ConnectedRouter} from "connected-react-router";
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
@@ -39,14 +39,15 @@ function App() {
     return <MuiThemeProvider theme={isDark ? themes.dark : themes.default}>
         <ConnectedRouter history={history}>
             <UnauthorizedDialog open={isOpenUnauthorizedDialog} handleClose={handleLogout}/>
-            <Switch>
-                <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
-                <Route path={PAGE_PATHS.admin} component={AdminHomePage}/>
-                <Route path={PAGE_PATHS.playground} component={PlaygroundHomePage}/>
-                <Route path={PAGE_PATHS.anonymousWaiting} component={PlaygroundAnonymousWaitingRoomPage}/>
-                <Route path={PAGE_PATHS.waiting} component={PlaygroundWaitingRoomPage}/>
-                <Route path="*" component={NotFoundPage}/>
-            </Switch>
+
+            <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
+            <Route path={PAGE_PATHS.anonymousWaiting} component={PlaygroundAnonymousWaitingRoomPage}/>
+            <Route path={PAGE_PATHS.waiting} component={PlaygroundWaitingRoomPage}/>
+
+            <Route path={PAGE_PATHS.admin} component={AdminHomePage}/>
+            <Route path={PAGE_PATHS.playground} component={PlaygroundHomePage}/>
+
+            {/*<Route path="*" component={NotFoundPage}/>*/}
         </ConnectedRouter>
     </MuiThemeProvider>
 }

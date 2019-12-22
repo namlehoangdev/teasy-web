@@ -24,11 +24,19 @@ import {
     MenuList,
     MenuItem, Dialog, Slide
 } from '@material-ui/core';
-import {Route, Switch} from "react-router";
+import {Route, Switch, useLocation} from "react-router";
 import {
     CreateContestPage,
-    CreateQuestionPage, CreateTestPage, EditContestPage, EditQuestionPage, EditTestPage,
-    PlaygroundAllContestsPage, PlaygroundCompetePage, PlaygroundContestResultsPage, PlaygroundSharedContestsPage
+    CreateQuestionPage,
+    CreateTestPage,
+    EditContestPage,
+    EditQuestionPage,
+    EditTestPage,
+    PlaygroundAllContestsPage,
+    PlaygroundCompetePage,
+    PlaygroundContestResultsPage,
+    PlaygroundSharedContestsPage,
+    PlaygroundWaitingRoomPage
 } from "../index";
 import {
     Menu as MenuIcon,
@@ -128,6 +136,7 @@ export default function PlaygroundHomePage() {
     const {isOpenPlaygroundFullscreenDialog} = useSelector(state => state.playgroundReducer);
     const [openDrawer, setOpenDrawer] = useState(false);
     const [appBarTitle, setAppBarTitle] = useState('');
+    const location = useLocation()
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {language} = useSelector(state => state.settingReducer);
     //const [open, setOpen] = useState(false);
@@ -142,9 +151,12 @@ export default function PlaygroundHomePage() {
         //     pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`,
         //     state: {contestId: '5ddeeb25439d7d1054b28a41'}
         // });
-        // setSelectedIndex(0);
-        // setAppBarTitle(listNavItemMap[0].name);
-        // history.push(`${path}/${PAGE_PATHS.allContests}`);
+        console.log('location : ', location);
+        if (location.pathname === '/playground') {
+            setSelectedIndex(0);
+            setAppBarTitle(listNavItemMap[0].name);
+            history.push(`${path}/${PAGE_PATHS.allContests}`);
+        }
     }, []);
 
 
