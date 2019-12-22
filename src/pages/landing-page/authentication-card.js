@@ -5,7 +5,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import GoogleLogin from 'react-google-login';
 import {Facebook as FacebookIcon} from '@material-ui/icons';
 import {TEXT} from "../../consts/text-consts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getAnonymousContestMetadataByCode, updateEditingContest} from "../../actions";
 import {useHistory} from "react-router";
 import {PAGE_PATHS} from "../../consts";
@@ -44,6 +44,8 @@ function AuthenticationCard(props) {
     const history = useHistory();
     const classes = useStyles();
     const dispatch = useDispatch();
+
+    const {language} = useSelector(state => state.settingReducer);
 
     function handleFacebookCallBack(data) {
         onFacebookCallback && onFacebookCallback(data);
@@ -93,7 +95,7 @@ function AuthenticationCard(props) {
                         onFailure={handleGoogleFailure}
                         className={classes.google}
                         cookiePolicy={'single_host_origin'}
-                        buttonText={TEXT.loginWithGoogle}
+                        buttonText={language.loginWithGoogle}
                         onClick={handleThirdPartyClick}
                     />
                 </Grid>
@@ -109,7 +111,7 @@ function AuthenticationCard(props) {
                             <Button variant="contained" color="primary"
                                     size="large" className={classes.facebook}
                                     onClick={renderProps.onClick} startIcon={<FacebookIcon/>}>
-                                {TEXT.loginWithFacebook}
+                                {language.loginWithFacebook}
                             </Button>)
                         }
                     />
@@ -117,19 +119,19 @@ function AuthenticationCard(props) {
 
                 <Grid item xs={12} sm={12}>
                     <Typography className={classes.orText} variant="body2" color="textSecondary"
-                                align="center">{TEXT.or}</Typography>
+                                align="center">{language.or}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <TextField id="roomCode" name="roomCode" variant="outlined" fullWidth
                                helperText={codeHelperText}
                                onChange={handleCodeChange}
                                error={codeHelperText !== ''}
-                               label={TEXT.roomCode}/>
+                               label={language.roomCode}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Button type="submit" variant="contained" color="primary" className={classes.submit}
                             onClick={handleEnterRoomByCodePress}>
-                        {TEXT.enterRoom}
+                        {language.enterRoom}
                     </Button>
                 </Grid>
             </Grid>

@@ -16,7 +16,7 @@ import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import "draft-js-image-plugin/lib/plugin.css"
 import "draft-js-focus-plugin/lib/plugin.css"
 import {makeStyles} from '@material-ui/core';
-
+import {useSelector} from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   toolbar:{
@@ -47,6 +47,8 @@ export default function RichEditor(props) {
     
     const imagePlugin = createImagePlugin({decorator});
     const mathJaxPlugin = createMathjaxPlugin();
+    const {profile} = useSelector(state => state.authReducer);
+    const userId = profile.id;
 
     
     const {editorState, onChange,readOnly} = props;
@@ -100,6 +102,8 @@ export default function RichEditor(props) {
             onUploaded={(url)=>{
               onChange(plugins[5].addImage(editorState,url));
             }}
+            category="Question"
+            userId={userId}
             buttonLabel="Chèn ảnh"/>}
             <div className={className}>
                 <Editor 
