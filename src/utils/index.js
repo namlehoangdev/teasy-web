@@ -26,3 +26,7 @@ export function getHttpsResponseDefinition(statusCode) {
     }
     return HTTP_STATUS_CODES_DEFINITIONS.notValidCodes;
 }
+
+export function isNullOrEmpty(value) {
+    return !value || value && value.length === 0;
+}

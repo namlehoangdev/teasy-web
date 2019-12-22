@@ -1,8 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {
-    makeStyles, Button, TableCell, Paper, Typography, Grid, Container, Table, TableRow
+    makeStyles,
+    Button,
+
+    Paper,
+    Typography,
+    Grid,
+    Container, CircularProgress,
 } from "@material-ui/core";
-import {Folder as FolderIcon} from "@material-ui/icons";
+import clsx from "clsx";
+import {Folder as FolderIcon, MoreVert as MoreVertIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getPublicContests,
@@ -13,11 +20,13 @@ import {
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import moment from 'moment';
-import {isoToLocalDateString, msToTime} from "../../utils";
+import {isNullOrEmpty, isoToLocalDateString, msToTime} from "../../utils";
 import Countdown from 'react-countdown-now';
 import {useHistory} from "react-router";
-import {PAGE_PATHS} from "../../consts";
+import {CONTEST_TYPE_CODE, CONTEST_TYPE_TEXT, PAGE_PATHS} from "../../consts";
 import Calculator from 'components/calculator/component/App';
+import Collapse from "@material-ui/core/Collapse";
+import PlaygroundContestItem from './playground-contest-item';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -57,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     },
     labelCountDown: {
         ...theme.typography.body1
-    }
+    },
 }));
 
 function StartButtonWrapper(props) {
@@ -93,159 +102,25 @@ export default function PlaygroundAllContestsPage() {
         }
     }, [contests.byId]);
 
-
-    function renderFiles(id) {
-        const {name, ownerName, createdAt} = contests.byHash[id];
-        return (<React.Fragment>
-            <TableCell align="left"> </TableCell>
-            <TableCell align="left">{name}</TableCell>
-            <TableCell align="left">{ownerName}</TableCell>
-            <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
-        </React.Fragment>)
-
+    function handleItemClick(id) {
+        history.push({pathname: `${PAGE_PATHS.waiting}/${id}`});
+        //history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId: id}});
     }
 
-    function renderFolders(folder) {
-        return (<React.Fragment>
-            <TableCell align="left"><FolderIcon/></TableCell>
-            <TableCell align="left">{folder}</TableCell>
-            <TableCell align="left"> </TableCell>
-            <TableCell align="left"> </TableCell>
-        </React.Fragment>)
+
+    function renderContest(id) {
+        const params = contests.byHash[id];
+        return (<PlaygroundContestItem {...params} onItemClick={handleItemClick}/>)
     }
-
-    function renderHeaders() {
-        return (<React.Fragment>
-            <TableCell component="th" scope="row" align="left">.</TableCell>
-            <TableCell component="th" scope="row" align="left">Tên cuộc thi</TableCell>
-            <TableCell component="th" scope="row" align="left">Người chia sẻ</TableCell>
-            <TableCell component="th" scope="row" align="left">Ngày tạo</TableCell>
-        </React.Fragment>)
-    }
-
-    function handleFilesChange(files) {
-        dispatch(updateAllContests(files));
-    }
-
-    function handleFileByIdChange(id, file) {
-        dispatch(updateAllContestById(id, file));
-    }
-
-    function handleFileClick(id) {
-        setFocusedDetailId(id);
-        setFocusedFiles({[id]: true});
-    }
-
-    function handleStartContestClick(item) {
-        console.log(item);
-        dispatch(setOpenPlaygroundFullscreenDialog(true));
-        history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId: item.id}});
-    }
-
-    function renderCountDown({total, days, hours, minutes, seconds}) {
-        return (
-            <div className={classes.countDownContainer}>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{days}</span>
-                    <span className={classes.labelCountDown}>ngày</span>
-                </div>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{hours}</span>
-                    <span className={classes.labelCountDown}>giờ</span>
-                </div>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{minutes}</span>
-                    <span className={classes.labelCountDown}>phút</span>
-                </div>
-                <div className={classes.countDownBox}>
-                    <span className={classes.numberCountDown}>{seconds}</span>
-                    <span className={classes.labelCountDown}>giây</span>
-                </div>
-            </div>
-        )
-    }
-
-    function renderStartContestButton() {
-        if (focusedDetailId === -1) {
-            return null;
-        }
-        const item = contests.byHash[focusedDetailId];
-        const {startAt, duration} = item;
-
-        const diff = moment(startAt).diff(moment.utc(), 'ms');
-        console.log('diff: ', diff);
-        if (diff > 0) {
-            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
-        }
-        return (<StartButtonWrapper onClick={() => handleStartContestClick(item)}/>)
-    }
-
-    function renderDetail() {
-        if (focusedDetailId === -1) {
-            return null;
-        }
-        const {name, description, startAt, createdAt, isPublic, code, isSecured, duration, password, permittedUsers, ownerName, test} = contests.byHash[focusedDetailId];
-        return (<Paper className={classes.paper}>
-            <Typography gutterBottom variant="h6" component="h2" color="primary">Chi tiết</Typography>
-            <Table size="small">
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
-                    <TableCell className={classes.detailCell}>{name}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Mô tả</TableCell>
-                    <TableCell className={classes.detailCell}>{description}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Trạng thái</TableCell>
-                    <TableCell className={classes.detailCell}>{isPublic ? 'công khai' : 'riêng tư'}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Người tạo</TableCell>
-                    <TableCell className={classes.detailCell}>{ownerName}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Thời gian bắt đầu</TableCell>
-                    <TableCell
-                        className={classes.detailCell}>{isoToLocalDateString(startAt)}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                    <TableCell className={classes.detailCell}>{msToTime(duration)}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                    <TableCell className={classes.detailCell}>{isoToLocalDateString(createdAt)}</TableCell>
-                </TableRow>
-            </Table>
-            {renderStartContestButton()}
-        </Paper>)
-    }
-
 
     return (<div className={classes.root}>
         <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-                <Grid item xs={12} md={7} lg={8}>
-                    <Paper className={classes.paper}>
-                        <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Tất cả cuộc thi</Typography>
-                        <WorkingTableV2 isLoading={isShowCircleLoading}
-                                        filesByHash={contests.byHash}
-                                        filesById={contests.byId}
-                                        selectedFilesHash={focusedFiles}
-                                        dragDisplayProperty="content"
-                                        setFiles={handleFilesChange}
-                                        setFileById={handleFileByIdChange}
-                                        renderFiles={renderFiles}
-                                        renderFolders={renderFolders}
-                                        renderHeaders={renderHeaders}
-                                        onFileClick={handleFileClick}/>
-                    </Paper>
+                <Grid item xs={12} md={7} lg={8} alignItems='center' justify='center'
+                      style={{display: 'flex', flexDirection: 'row'}}>
+                    {isShowCircleLoading && <CircularProgress/>}
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
-                    {renderDetail()}
-                </Grid>
+                {contests.byId.map(renderContest)}
             </Grid>
         </Container>
     </div>)

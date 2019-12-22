@@ -484,6 +484,7 @@ export default function CreateContestPage() {
                                                                           className={classes.radio}/>}
                                                           label='Bắt đầu lúc'/>
                                         {startAt && <DateTimePicker ampm={false}
+                                                                    disablePast={true}
                                                                     value={startAt} onChange={handleStartDateChange}/>}
                                     </RadioGroup>
                                 </Grid>
@@ -619,7 +620,7 @@ export default function CreateContestPage() {
                         (<React.Fragment>
                             <DialogTitle id="form-dialog-title">Vui lòng chờ</DialogTitle>
                             <DialogContent>
-                                <span style={{display:'flex',flexDirection:'row'}} ><CircularProgress/>
+                                <span style={{display: 'flex', flexDirection: 'row'}}><CircularProgress/>
                                 <DialogContentText>Đang {id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi</DialogContentText>
                                 </span>
                             </DialogContent>

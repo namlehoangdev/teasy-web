@@ -11,11 +11,12 @@ import {
 import {addToNormalizedList, DefaultNormalizer} from "../utils/byid-utils";
 import {normalize, schema} from 'normalizr';
 import {produce} from "immer";
+import {fakePlaygroundContests} from "../fake-data";
 
 const initialState = {
     isOpenPlaygroundFullscreenDialog: false,
     competingContest: {},
-    contests: new DefaultNormalizer(),
+    contests: fakePlaygroundContests, // new DefaultNormalizer(),
     results: new DefaultNormalizer(),
     sharedContestIds: [],
     publicContestIds: [],

@@ -17,6 +17,7 @@ import {PAGE_PATHS} from "./consts";
 import {useSelector} from 'react-redux';
 import {UnauthorizedDialog} from "./components";
 import {logout} from "./actions";
+import 'moment/locale/vi'
 
 
 function App() {
