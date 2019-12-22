@@ -91,7 +91,8 @@ export default function PlaygroundWaitingRoomPage() {
     const {search, pathname} = useLocation();
     const {isShowMiniLoading, isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const {contestId, thirdPartyId, queryToken} = queryString.parse(search);
-    const {token} = useSelector(state => state.authReducer.profile);
+    const profile = useSelector(state => state.authReducer) || {};
+    const {token} = profile;
     const [errorPasswordText, setErrorPasswordText] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState(null);
