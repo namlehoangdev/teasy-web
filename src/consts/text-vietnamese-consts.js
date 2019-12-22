@@ -28,8 +28,17 @@ const TYPE = 'Loại';
 const ADD_MORE_ANSWER = 'Thêm câu trả lời';
 const ALL_CONTESTS = 'Tất cả cuộc thi';
 const MY_SHARED_CONTESTS = 'Được chia sẻ với tôi';
-const CONTESTS_HISTORY = 'Kết quả thi'
-
+const CONTESTS_HISTORY = 'Kết quả thi';
+const EASY_TEST_CREATE = 'Tạo cuộc thi dễ dàng';
+const EASY_CONTEST_CREATE = 'Tạo đề thi đa dạng';
+const EASY_QUESTION_CREATE = 'Quản lý ngân hàng câu hỏi';
+const EASY_COMPETITION_COMPETE= 'Tham gia thi dễ dàng';
+const EASY_PUBLIC_COMPETE = 'Đề thi đạng từ cộng đồng';
+const EASY_MANAGE_RUSULT = 'Quản lý kết quả thi hiệu quả';
+const CREATE_CONTEST = 'Tạo cuộc thi';
+const JOIN_CONTEST = 'Tham gia thi';
+const HI= 'Xin chào';
+const CHOOSE_ROLE = 'Hãy lựa chọn vai trò của bạn ';
 
 export default {
   appName: APP_NAME,
@@ -62,6 +71,16 @@ export default {
   addMoreAnswer: ADD_MORE_ANSWER,
   allContests: ALL_CONTESTS,
   mySharedContests: MY_SHARED_CONTESTS,
-  contestsHistory: CONTESTS_HISTORY
+  contestsHistory: CONTESTS_HISTORY,
+  easyTestCreate: EASY_TEST_CREATE,
+  easyContestCreate: EASY_CONTEST_CREATE,
+  easyQuestionCreate: EASY_QUESTION_CREATE,
+  easyCompetitionCompete: EASY_COMPETITION_COMPETE,
+  easyPublicCompete: EASY_PUBLIC_COMPETE,
+  easyManageResult: EASY_MANAGE_RUSULT,
+  createContest: CREATE_CONTEST,
+  joinContest: JOIN_CONTEST,
+  hi: HI,
+  chooseRole:CHOOSE_ROLE
 };
 

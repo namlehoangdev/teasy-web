@@ -134,6 +134,7 @@ function LandingPage() {
   const sliderRef = useRef(null);
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
 
   useEffect(() => {
@@ -170,18 +171,21 @@ function LandingPage() {
   }
 
 
-  const [open, setOpen] = React.useState(false);
+  //const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     dispatch(updateLanguageMode({ language: LANGUAGE[event.target.innerText] }))
-    setOpen(false);
+    //setOpen(false);
+
+    setAnchorEl(false);
   };
 
-  const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen);
+  const handleToggle = (event) => {
+    //setOpen(prevOpen => !prevOpen);
+    setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
   const handleClose = event => {
@@ -189,7 +193,7 @@ function LandingPage() {
       return;
     }
 
-    setOpen(false);
+    //setOpen(false);
   };
 
 
@@ -204,6 +208,8 @@ function LandingPage() {
     }
   };
 
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popper' : undefined;
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -216,7 +222,7 @@ function LandingPage() {
         <ThemeSetting />
         <IconButton size={'small'} className={classes.languageSetting} color={"primary"}
           onClick={handleToggle}>{options[selectedIndex]}</IconButton>
-        <Popper className={classes.languageOptions} open={open} anchorEl={anchorRef.current} transition
+        <Popper id={id} className={classes.languageOptions} open={open} anchorEl={anchorEl} transition
           disablePortal>
           {({ TransitionProps, placement }) => (
             <Grow
@@ -250,10 +256,10 @@ function LandingPage() {
       </Typography>
       <Grid item xs={12} sm={8} md={5} elevation={6} className={token ? classes.descriptionAnim : classes.description}>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          {token ? "Xin chào, " + profile.name : language.appDescription}
+          {token ? language.hi + ", " + profile.name : language.appDescription}
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          {token && "Hãy lựa chọn vai trò của bạn "}
+          {token && language.chooseRole}
         </Typography>
       </Grid>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.paper}>

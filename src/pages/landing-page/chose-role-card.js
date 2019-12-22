@@ -46,6 +46,7 @@ function ChoseRoleCard() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { token } = useSelector(state => state.authReducer);
+  const {language} = useSelector(state => state.settingReducer);
 
   function handleAdminPageClick() {
     dispatch(updateLoginMode(LOGIN_MODE.admin));
@@ -73,24 +74,24 @@ function ChoseRoleCard() {
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
-                  {TEXT.gotoAdmin}
+                  {language.gotoAdmin}
                 </Typography>
                 <div className={classes.criteria}>
                   <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
                   <Typography variant="body2" color="textSecondary" component="p">
-                    Tạo cuộc thi dễ dàng
-                </Typography>
-                </div>
-                <div className={classes.criteria}>
-                  <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    Tạo đề thi đa dạng
+                    {language.easyContestCreate}
                 </Typography>
                 </div>
                 <div className={classes.criteria}>
                   <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
                   <Typography variant="body2" color="textSecondary" component="p">
-                    Quản lý ngân hàng câu hỏi
+                    {language.easyTestCreate}
+                </Typography>
+                </div>
+                <div className={classes.criteria}>
+                  <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {language.easyQuestionCreate}
                 </Typography>
                 </div>
               </CardContent>
@@ -98,7 +99,7 @@ function ChoseRoleCard() {
             <CardActions>
               <Button fullWidth variant="contained" color="primary"
                 onClick={handleAdminPageClick}>
-                {TEXT.createContest}
+                {language.createContest}
               </Button>
             </CardActions>
           </Card>
@@ -116,24 +117,24 @@ function ChoseRoleCard() {
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
-                  {TEXT.gotoPlayground}
+                  {language.gotoPlayground}
                 </Typography>
                 <div className={classes.criteria}>
                   <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
                   <Typography variant="body2" color="textSecondary" component="p">
-                    Tham gia thi dễ dàng
-                </Typography>
-                </div>
-                <div className={classes.criteria}>
-                  <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    Đề thi đạng từ cộng đồng
+                    {language.easyCompetitionCompete}
                 </Typography>
                 </div>
                 <div className={classes.criteria}>
                   <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
                   <Typography variant="body2" color="textSecondary" component="p">
-                    Quản lý kết quả thi hiệu quả
+                    {language.easyPublicCompete}
+                </Typography>
+                </div>
+                <div className={classes.criteria}>
+                  <CheckIcon className={classes.tickIcon} color="primary"></CheckIcon>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {language.easyManageResult}
                 </Typography>
                 </div>
               </CardContent>
@@ -141,7 +142,7 @@ function ChoseRoleCard() {
             <CardActions>
               <Button fullWidth variant="contained" color="primary"
                 onClick={handlePlaygroundClick}>
-                {TEXT.joinContest}
+                {language.joinContest}
               </Button>
             </CardActions>
           </Card>
@@ -149,14 +150,14 @@ function ChoseRoleCard() {
         {/* <Grid item xs={12} sm={12}>
           <Button fullWidth variant="contained" color="primary"
             onClick={handleAdminPageClick}>
-            {TEXT.gotoAdmin}
+            {language.gotoAdmin}
           </Button>
         </Grid>
 
         <Grid item xs={12} sm={12}>
           <Button fullWidth variant="contained" color="primary"
             onClick={handlePlaygroundClick}>
-            {TEXT.gotoPlayground}
+            {language.gotoPlayground}
           </Button>
         </Grid> */}
       </Grid>

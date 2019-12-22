@@ -26,7 +26,16 @@ const CANCEL = 'Cancel';
 const DISMISS = 'Dismiss';
 const TYPE = 'Type';
 const ADD_MORE_ANSWER = 'Add answer';
-
+const EASY_TEST_CREATE = 'Create test easily';
+const EASY_CONTEST_CREATE = 'Create contest easily';
+const EASY_QUESTION_CREATE = 'Create question easily';
+const EASY_COMPETITION_COMPETE= 'Join competition easily';
+const EASY_PUBLIC_COMPETE = 'Competitions from community';
+const EASY_MANAGE_RUSULT = 'Manage your result easily';
+const CREATE_CONTEST = 'Create Contest';
+const JOIN_CONTEST = 'Do tests';
+const HI= 'Hi';
+const CHOOSE_ROLE = 'Please choose your role ';
 
 export default {
   appName: APP_NAME,
@@ -56,6 +65,16 @@ export default {
   cancel: CANCEL,
   dismiss: DISMISS,
   type: TYPE,
-  addMoreAnswer: ADD_MORE_ANSWER
+  addMoreAnswer: ADD_MORE_ANSWER,
+  easyTestCreate: EASY_TEST_CREATE,
+  easyContestCreate: EASY_CONTEST_CREATE,
+  easyQuestionCreate: EASY_QUESTION_CREATE,
+  easyCompetitionCompete: EASY_COMPETITION_COMPETE,
+  easyPublicCompete: EASY_PUBLIC_COMPETE,
+  easyManageResult: EASY_MANAGE_RUSULT,
+  createContest: CREATE_CONTEST,
+  joinContest: JOIN_CONTEST,
+  hi: HI,
+  chooseRole:CHOOSE_ROLE
 };
 
