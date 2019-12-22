@@ -207,22 +207,21 @@ export default function PlaygroundCompetePage() {
     };
 
     useEffect(() => {
+        console.log('vao day');
         if (checkLength(testIds) && testByHash) {
+            console.log('vao day 2');
             const {name, questions} = testByHash[testIds[0]] || {};
             name && setTestName(name);
             questions && setQuestionsById(questions);
             setDurationCompetition(competingContest.duration)
         }
-    }, [testIds]);
+    }, []);
 
     useEffect(() => {
         if (durationCompetition > 0) {
             setfirstDuration(Date.now() + durationCompetition);
         }
     }, [durationCompetition]);
-
-    useEffect(() => {
-    }, []);
 
 
     function handleAnswerChange(item, questionId) {
