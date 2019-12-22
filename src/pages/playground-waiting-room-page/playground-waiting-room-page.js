@@ -1,9 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import {
     Button,
     Grid,
-    TextField,
-    Container,
     Box,
     makeStyles,
     Paper,
@@ -11,16 +9,26 @@ import {
     TableCell,
     TableBody,
     TableRow,
-    Typography
+    Typography, LinearProgress, FormControl, InputAdornment, IconButton, RadioGroup, TextField
 } from "@material-ui/core";
-import {useHistory} from "react-router";
+import {useHistory, useLocation, useParams, useRouteMatch} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
-import {isoToLocalDateString, msToTime} from "../../utils";
+import {disabledStyleWrapper, isoToLocalDateString, msToTime} from "../../utils";
 import moment from "moment";
+import _ from 'lodash';
+import queryString from 'query-string';
 import Countdown from "react-countdown-now";
 import {CountdownRenderer} from "../../components";
-import {setOpenPlaygroundFullscreenDialog} from "../../actions";
+import {
+    getAnonymousContestById, getContestById,
+    getContestMetadata,
+    postLoginByThirdParty,
+    setOpenPlaygroundFullscreenDialog
+} from "../../actions";
 import {PAGE_PATHS} from "../../consts";
+import Input from "@material-ui/core/Input";
+import {Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon} from "@material-ui/icons";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -73,38 +81,65 @@ export default function PlaygroundWaitingRoomPage() {
         startAt,
         createdAt,
         isPublic,
-        code,
-        isSecured,
         duration,
-        password,
-        permittedUsers,
         ownerName,
-        test
+        isSecured
     } = competingContest;
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
-    const [displayName, setDisplayName] = useState('');
-    const [errorText, setErrorText] = useState('');
+    const {search, pathname} = useLocation();
+    const {isShowMiniLoading, isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
+    const {contestId, thirdPartyId, queryToken} = queryString.parse(search);
+    const {token} = useSelector(state => state.authReducer.profile);
+    const [errorPasswordText, setErrorPasswordText] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [password, setPassword] = useState(null);
+
+
+    useEffect(() => {
+        if (queryToken) {
+            dispatch(postLoginByThirdParty({isTokenOnly: true, token: queryToken, thirdPartyId}))
+        } else {
+            dispatch(getContestMetadata(contestId));
+        }
+    }, []);
+
+    useMemo(() => {
+        if (token) {
+            dispatch(getContestMetadata(contestId));
+        }
+    }, [token]);
+
+    function onGetContestSuccess() {
+        dispatch(setOpenPlaygroundFullscreenDialog(true));
+        history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId}});
+    }
+
+    function onGetContestError(error) {
+        console.log('error: ', error);
+        if (_.get(error, 'data.errorContent', '') === 'Password is not correct') {
+            setErrorPasswordText('Mật khẩu không hợp lệ');
+        }
+    }
 
     function handleStartContestClick() {
-        if (!displayName || displayName.length === 0 || displayName.length < 3) {
-            setErrorText('Vui lòng điền tên hiển thị dự thi có đồ dài lớn hơn 3');
+        if (isSecured && (!password || password.length === 0)) {
+            setErrorPasswordText('Vui lòng điền mật khẩu');
         } else {
-            dispatch(setOpenPlaygroundFullscreenDialog(true));
-            history.push({
-                pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`,
-                state: {contestId: id, isAnonymous: true, displayName: displayName}
-            });
+            const params = password ? {password} : {};
+            dispatch(getContestById(contestId, params, onGetContestSuccess, onGetContestError));
         }
+
     }
 
-    function handleDisplayNameChange(event) {
-        if (errorText !== '') {
-            setErrorText('');
+    function handlePasswordChange(event) {
+        if (errorPasswordText !== '') {
+            setErrorPasswordText('');
         }
-        setDisplayName(event.target.value);
+        setPassword(event.target.value);
     }
+
 
     function renderCountDown(props) {
         return <CountdownRenderer {...props} />;
@@ -123,7 +158,8 @@ export default function PlaygroundWaitingRoomPage() {
 
     return (
         <Grid container component="main" className={classes.root}>
-            <Paper className={classes.paper}>
+            {isShowMiniLoading || isShowCircleLoading && <LinearProgress/>}
+            <Paper className={classes.paper} style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
                 <Typography gutterBottom variant="h6" component="h2" color="primary">
                     Chi tiết
                 </Typography>
@@ -169,12 +205,29 @@ export default function PlaygroundWaitingRoomPage() {
                         </TableRow>
                     </TableBody>
                 </Table>
+
                 <Box mt={3}>
-                    <TextField value={displayName} onChange={handleDisplayNameChange}
-                               fullWidth
-                               helperText={errorText}
-                               label="Tên dự thi" variant="outlined"
-                               error={errorText !== ''}/>
+                    {isSecured && (<FormControl className={classes.passwordContainer}>
+                        <InputLabel
+                            style={(errorPasswordText !== '') ? {color: 'red'} : {}}
+                            htmlFor="standard-adornment-password">{errorPasswordText === '' ? 'Mật khẩu' : errorPasswordText}</InputLabel>
+                        <Input id="standard-adornment-password"
+                               type={showPassword ? 'text' : 'password'}
+                               error={errorPasswordText !== ''}
+                               value={password}
+                               onChange={handlePasswordChange}
+                               endAdornment={
+                                   <InputAdornment position="end">
+                                       <IconButton
+                                           aria-label="toggle password visibility"
+                                           onClick={() => setShowPassword(!showPassword)}
+                                           onMouseDown={(event) => event.preventDefault()}>
+                                           {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                                       </IconButton>
+                                   </InputAdornment>
+                               }
+                        />
+                    </FormControl>)}
                 </Box>
                 <Box mt={3}>
                     {renderStartContestButton()}

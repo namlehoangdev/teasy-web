@@ -195,7 +195,7 @@ export default function PlaygroundCompetePage() {
     const [endCountDown, setEndCountDown] = useState(true);
     const [expanded, setExpanded] = React.useState('panel1');
     const [durationCompetition, setDurationCompetition] = React.useState(0);
-    const {contestId, isAnonymous, displayName} = locationState;
+    const {contestId, isAnonymous, displayName, password} = locationState;
     const history = useHistory();
     const [firstDuration, setfirstDuration] = React.useState(0);
     const [alarm, setAlarm] = React.useState(0);
@@ -222,13 +222,6 @@ export default function PlaygroundCompetePage() {
     }, [durationCompetition]);
 
     useEffect(() => {
-        console.log('get contest id: ', contestId);
-        if (isAnonymous) {
-            dispatch(getAnonymousContestById(contestId));
-
-        } else {
-            dispatch(getContestById(contestId));
-        }
     }, []);
 
 

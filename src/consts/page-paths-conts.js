@@ -13,6 +13,7 @@ const EDIT_CONTEST_PATH = 'edit/contest';
 const ALL_CONTESTS_PATH = 'all-contests';
 const SHARED_CONTESTS_PATH = 'shared-contests';
 const CONTEST_RESULTS_PATH = 'contest-results';
+const ANONYMOUS_WAITING_PATH = '/anonymous-waiting';
 const WAITING_PATH = '/waiting';
 const COMPETE = 'compete';
 
@@ -33,6 +34,7 @@ export const PAGE_PATHS = {
     sharedContests: SHARED_CONTESTS_PATH,
     contestResults: CONTEST_RESULTS_PATH,
     compete: COMPETE,
+    anonymousWaiting: ANONYMOUS_WAITING_PATH,
     waiting: WAITING_PATH
 };
 

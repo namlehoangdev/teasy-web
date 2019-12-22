@@ -4,23 +4,23 @@ const SUCCESS = "SUCCESS";
 const FAILURE = "FAILURE";
 
 export const API_STATUS = {
-  request: REQUEST,
-  success: SUCCESS,
-  failure: FAILURE
+    request: REQUEST,
+    success: SUCCESS,
+    failure: FAILURE
 };
 
 function createRequestType(base) {
-  return [REQUEST, SUCCESS, FAILURE].reduce(
-    (accumulator, currentActionState) => {
-      accumulator[currentActionState] = `${base}_${currentActionState}`;
-      return accumulator;
-    },
-    {}
-  );
+    return [REQUEST, SUCCESS, FAILURE].reduce(
+        (accumulator, currentActionState) => {
+            accumulator[currentActionState] = `${base}_${currentActionState}`;
+            return accumulator;
+        },
+        {}
+    );
 }
 
 export function action(type, payload = {}) {
-  return { type, payload };
+    return {type, payload};
 }
 
 /*------------------------------------------------UI-EFFECTS------------------------------------------------*/
@@ -35,7 +35,7 @@ export const LOGIN = "LOGIN";
 export const UPDATE_LOGIN_MODE = "UPDATE_LOGIN_MODE";
 export const LOGOUT = "LOGOUT";
 export const UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG =
-  "UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG";
+    "UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG";
 
 /*------------------------------------------------USERS------------------------------------------------*/
 export const GET_ALL_USERS = "GET_ALL_USER_API";
@@ -84,7 +84,7 @@ export const UPDATE_REMOVED_TEST_BY_ID = "UPDATE_REMOVED_TEST_BY_ID";
 export const UPDATE_REMOVED_QUESTION_BY_ID = "UPDATE_REMOVED_QUESTION_BY_ID";
 
 export const SET_OPEN_ADMIN_FULLSCREEN_DIALOG =
-  "SET_OPEN_ADMIN_FULLSCREEN_DIALOG";
+    "SET_OPEN_ADMIN_FULLSCREEN_DIALOG";
 
 /*------------------------------------------------SETTING------------------------------------------------*/
 export const UPDATE_THEME_MODE = "UPDATE_THEME_MODE";
@@ -95,11 +95,12 @@ export const GET_SHARED_CONTESTS = "GET_SHARED_CONTESTS";
 export const GET_PUBLIC_CONTESTS = "GET_PUBLIC_CONTESTS";
 export const GET_CONTEST_BY_ID = "GET_CONTEST_BY_ID";
 export const GET_ANONYMOUS_CONTEST_BY_ID = "GET_ANONYMOUS_CONTEST_BY_ID";
+export const GET_CONTEST_METADATA = "GET_CONTEST_METADATA_BY_CODE";
 export const GET_ANONYMOUS_CONTEST_METADATA_BY_CODE =
-  "GET_ANONYMOUS_CONTEST_METADATA_BY_CODE";
+    "GET_ANONYMOUS_CONTEST_METADATA_BY_CODE";
 export const GET_MARKED_CONTEST_RESULT = "GET_MARKED_CONTEST_RESULT";
 export const GET_MARKED_ANONYMOUS_CONTEST_RESULT =
-  "GET_MARKED_ANONYMOUS_CONTEST_RESULT";
+    "GET_MARKED_ANONYMOUS_CONTEST_RESULT";
 export const GET_OWN_CONTEST_RESULTS = "GET_OWN_CONTEST_RESULTS";
 
 export const POST_CONTEST_RESULT = "POST_CONTEST_RESULT";
@@ -114,9 +115,9 @@ export const UPDATE_COMPETING_CONTEST = "UPDATE_COMPETING_TEST";
 export const UPDATE_COMPETING_RESULT = "UPDATE_COMPETING_RESULTS";
 export const UPDATE_ALL_CONTEST_BY_ID = "UPDATE_ALL_CONTEST_BY_ID";
 export const UPDATE_PARTITION_OF_CONTEST_BY_ID =
-  "UPDATE_PARTITION_OF_CONTEST_BY_ID";
+    "UPDATE_PARTITION_OF_CONTEST_BY_ID";
 export const UPDATE_OWN_CONTEST_RESULT_BY_ID =
-  "UPDATE_OWN_CONTEST_RESULT_BY_ID";
+    "UPDATE_OWN_CONTEST_RESULT_BY_ID";
 
 export const SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG =
-  "SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG";
+    "SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG";

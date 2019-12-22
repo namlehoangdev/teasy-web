@@ -23,7 +23,6 @@ export default function authReducer(state = initialState, action) {
             return {...state, loginMode: payload};
         case UPDATE_IS_OPEN_UNAUTHORIZED_DIALOG:
             return {...state, isOpenUnauthorizedDialog: payload};
-
         case LOGOUT:
             return initialState;
         default:
