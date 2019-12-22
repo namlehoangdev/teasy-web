@@ -5,9 +5,12 @@ export const getPublicContestsAPI = () => ApiInstance.get('Competitions');
 
 export const getSharedContestsAPI = () => ApiInstance.get('Competitions/MyShared');
 
-export const getContestByIdAPI = (id) => ApiInstance.get(`Competitions/${id}`);
+export const getContestMetadataAPI = (code) => ApiInstance.get(`Competitions/Metadata/${code}`);
 
-export const getAnonymousContestByIdAPI = (id) => ApiInstance.get(`Competitions/Anonymous/${id}`);
+export const getContestByIdAPI = (id, {password}) => ApiInstance.get(`Competitions/${id}?password=${password}`);
+
+
+export const getAnonymousContestByIdAPI = (id, {password}) => ApiInstance.get(`Competitions/Anonymous/${id}?password=${password}`);
 
 export const getAnonymousContestMetadataByCodeAPI = (code) => ApiInstance.get(`Competitions/Metadata/Anonymous/${code}`);
 
@@ -18,6 +21,7 @@ export const getAnonymousContestMetadataByCodeAPI = (code) => ApiInstance.get(`C
 // export const postTestAPI = (tests) => ApiInstance.post('Tests', tests);
 //
 export const postContestResultAPI = (params) => ApiInstance.post('Results', params);
+
 export const postAnonymousContestResultAPI = (params) => ApiInstance.post('Results/Anonymous', params);
 
 export const getMarkedContestResultAPI = (id) => ApiInstance.get(`Results/MyCompetitionResult/${id}`);

@@ -108,8 +108,8 @@ const useStyles = makeStyles(theme => ({
     goback: {
         marginTop: 'auto'
     },
-    paperOptions:{
-      width:'20%',
+    paperOptions: {
+        width: '20%',
 
     }
 }));
@@ -150,12 +150,11 @@ export default function PlaygroundHomePage() {
 
     const handleMenuItemClick = (event, index) => {
         setSelectedAvatarOptions(index);
-        if(index === 0){
-          console.log('Doi profile');
-        }
-        else if(index === 1){
-          console.log('Dang xuat');
-          dispatch(logout())
+        if (index === 0) {
+            console.log('Doi profile');
+        } else if (index === 1) {
+            console.log('Dang xuat');
+            dispatch(logout())
         }
         setAnchorEl(false);
     };
@@ -228,8 +227,8 @@ export default function PlaygroundHomePage() {
                             aria-haspopup="true"
                             onClick={handleToggle}
                         >
-                            <Avatar alt="Remy Sharp"
-                                    src= {profile.avatarUrl || 'https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg'} />
+                            <Avatar alt="Ẩn danh"
+                                    src={(profile && profile.avatarUrl) || 'https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg'}/>
                         </Button>
                         <Popper id={id} className={classes.avatarOptions} open={open} anchorEl={anchorEl} transition
                                 disablePortal>

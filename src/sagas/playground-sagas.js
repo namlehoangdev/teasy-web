@@ -10,7 +10,10 @@ import {
     GET_SHARED_CONTESTS,
     POST_CONTEST_RESULT,
     GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
-    GET_ANONYMOUS_CONTEST_BY_ID, POST_ANONYMOUS_CONTEST_RESULT, GET_MARKED_ANONYMOUS_CONTEST_RESULT,
+    GET_ANONYMOUS_CONTEST_BY_ID,
+    POST_ANONYMOUS_CONTEST_RESULT,
+    GET_MARKED_ANONYMOUS_CONTEST_RESULT,
+    GET_CONTEST_METADATA,
 } from "../actions/action-types";
 import {DefaultNormalizer, normalizer} from "../utils/byid-utils";
 import {updateSharedContests} from "../actions";
@@ -52,7 +55,26 @@ export function* getOwnContestResultsSaga() {
     }
 }
 
-export function* getAnonymousContestMetadataByCodeSaga({payload}) {
+
+export function* getContestMetadataByCodeSaga({payload}) {
+    const {code, onSuccess, onError} = payload;
+    try {
+        yield put(showMiniLoading());
+        const response = yield call(APIs.getContestMetadataAPI, code);
+        console.log('getContestMetadataByCodeSaga: ', response);
+        if (response) {
+            onSuccess && onSuccess(response);
+            yield put(updateCompetingContest(response.data));
+        }
+    } catch (error) {
+        console.log('getContestMetadataByCodeSaga failed: ', error);
+        onError && onError(error);
+    } finally {
+        yield put(hideMiniLoading());
+    }
+}
+
+export function* getAnonymousContestMetadataSaga({payload}) {
     const {code, onSuccess, onError} = payload;
     try {
         yield put(showMiniLoading());
@@ -106,10 +128,11 @@ export function* getSharedContestsSaga() {
 }
 
 export function* getContestByIdSaga({payload}) {
+    const {id, params, onSuccess, onError} = payload;
+
     try {
         yield put(showCircleLoading());
-        const {id} = payload;
-        const response = yield call(APIs.getContestByIdAPI, id);
+        const response = yield call(APIs.getContestByIdAPI, id, params);
         console.log('getContestByIdSaga response: ', response);
         if (response && response.data) {
             const contest = response.data;
@@ -118,19 +141,21 @@ export function* getContestByIdSaga({payload}) {
             }, contest);
             const {entities} = normalize(contest.test, testSchema);
             yield put(updateCompetingContest({...contest, ...entities, state: COMPETING_CONTEST_STATE.DOING}));
+            onSuccess && onSuccess();
         }
     } catch (error) {
         console.log('getContestByIdSaga failed: ', error);
+        onError && onError(error);
     } finally {
         yield put(hideCircleLoading());
     }
 }
 
 export function* getAnonymousContestBydIdSaga({payload}) {
+    const {id, params, onSuccess, onError} = payload;
     try {
         yield put(showCircleLoading());
-        const {id} = payload;
-        const response = yield call(APIs.getAnonymousContestByIdAPI, id);
+        const response = yield call(APIs.getAnonymousContestByIdAPI, id, params);
         console.log('getAnonymousContestBydIdSaga response: ', response);
         if (response && response.data) {
             const contest = response.data;
@@ -139,9 +164,11 @@ export function* getAnonymousContestBydIdSaga({payload}) {
             }, contest);
             const {entities} = normalize(contest.test, testSchema);
             yield put(updateCompetingContest({...contest, ...entities, state: COMPETING_CONTEST_STATE.DOING}));
+            onSuccess && onSuccess();
         }
     } catch (error) {
         console.log('getAnonymousContestBydIdSaga failed: ', error);
+        onError && onError(error);
     } finally {
         yield put(hideCircleLoading());
     }
@@ -283,6 +310,7 @@ export default [
     takeLatest(GET_MARKED_CONTEST_RESULT, getMarkedContestResultSaga),
     takeLatest(GET_MARKED_ANONYMOUS_CONTEST_RESULT, getMarkedAnonymousContestResultSaga),
     takeLatest(GET_OWN_CONTEST_RESULTS, getOwnContestResultsSaga),
-    takeLatest(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, getAnonymousContestMetadataByCodeSaga),
+    takeLatest(GET_CONTEST_METADATA, getContestMetadataByCodeSaga),
+    takeLatest(GET_ANONYMOUS_CONTEST_METADATA_BY_CODE, getAnonymousContestMetadataSaga),
     takeLatest(GET_ANONYMOUS_CONTEST_BY_ID, getAnonymousContestBydIdSaga)
 ];

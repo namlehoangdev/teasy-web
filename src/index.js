@@ -6,7 +6,14 @@ import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 
 import {Provider, useDispatch} from 'react-redux';
-import {LandingPage, AdminHomePage, PlaygroundHomePage, NotFoundPage, PlaygroundWaitingRoomPage} from './pages';
+import {
+    LandingPage,
+    AdminHomePage,
+    PlaygroundHomePage,
+    NotFoundPage,
+    PlaygroundAnonymousWaitingRoomPage,
+    PlaygroundWaitingRoomPage
+} from './pages';
 import {PersistGate} from 'redux-persist/integration/react'
 import {MuiThemeProvider} from '@material-ui/core';
 import themes from './themes';
@@ -36,6 +43,7 @@ function App() {
                 <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
                 <Route path={PAGE_PATHS.admin} component={AdminHomePage}/>
                 <Route path={PAGE_PATHS.playground} component={PlaygroundHomePage}/>
+                <Route path={PAGE_PATHS.anonymousWaiting} component={PlaygroundAnonymousWaitingRoomPage}/>
                 <Route path={PAGE_PATHS.waiting} component={PlaygroundWaitingRoomPage}/>
                 <Route path="*" component={NotFoundPage}/>
             </Switch>

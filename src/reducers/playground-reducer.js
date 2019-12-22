@@ -16,7 +16,7 @@ import {fakePlaygroundContests} from "../fake-data";
 const initialState = {
     isOpenPlaygroundFullscreenDialog: false,
     competingContest: {},
-    contests: fakePlaygroundContests, // new DefaultNormalizer(),
+    contests: new DefaultNormalizer(),
     results: new DefaultNormalizer(),
     sharedContestIds: [],
     publicContestIds: [],

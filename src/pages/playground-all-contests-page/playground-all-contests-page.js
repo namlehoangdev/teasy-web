@@ -103,7 +103,7 @@ export default function PlaygroundAllContestsPage() {
     }, [contests.byId]);
 
     function handleItemClick(id) {
-        history.push({pathname: `${PAGE_PATHS.waiting}/${id}`});
+        history.push({pathname: `${PAGE_PATHS.anonymousWaiting}/${id}`});
         //history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId: id}});
     }
 

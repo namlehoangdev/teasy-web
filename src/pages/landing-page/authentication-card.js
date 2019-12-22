@@ -74,7 +74,7 @@ function AuthenticationCard(props) {
         } else {
             const onGetContestSuccess = (response) => {
                 dispatch(updateEditingContest(response));
-                history.push({pathname: `${PAGE_PATHS.waiting}`});
+                history.push({pathname: `${PAGE_PATHS.anonymousWaiting}`});
             };
             const onGetContestError = (response) => {
                 setCodeHelperText('Mã phòng thi không đúng');
@@ -128,7 +128,6 @@ function AuthenticationCard(props) {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Button type="submit" variant="contained" color="primary" className={classes.submit}
-
                             onClick={handleEnterRoomByCodePress}>
                         {TEXT.enterRoom}
                     </Button>
