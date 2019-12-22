@@ -42,11 +42,11 @@ import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
 import {PAGE_PATHS} from "../../consts";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog} from "../../actions";
+import {setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog, logout} from "../../actions";
 
 const drawerWidth = 240;
 
-const options = ['Edit profile', 'Settings', 'Sign out'];
+const options = ['Edit profile', 'Sign out'];
 
 const useStyles = makeStyles(theme => ({
     root: {display: 'flex'},
@@ -107,6 +107,10 @@ const useStyles = makeStyles(theme => ({
     },
     goback: {
         marginTop: 'auto'
+    },
+    paperOptions:{
+      width:'20%',
+
     }
 }));
 
@@ -126,10 +130,11 @@ export default function PlaygroundHomePage() {
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {language} = useSelector(state => state.settingReducer);
-    const [open, setOpen] = useState(false);
+    //const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
     const [selectedAvatarOptions, setSelectedAvatarOptions] = useState(0);
     const {profile} = useSelector(state => state.authReducer);
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     useEffect(() => {
         // dispatch(setOpenPlaygroundFullscreenDialog(true));
@@ -145,18 +150,26 @@ export default function PlaygroundHomePage() {
 
     const handleMenuItemClick = (event, index) => {
         setSelectedAvatarOptions(index);
-        setOpen(false);
+        if(index === 0){
+          console.log('Doi profile');
+        }
+        else if(index === 1){
+          console.log('Dang xuat');
+          dispatch(logout())
+        }
+        setAnchorEl(false);
     };
 
-    const handleToggle = () => {
-        setOpen(prevOpen => !prevOpen);
+    const handleToggle = (event) => {
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+        //setOpen(prevOpen => !prevOpen);
     };
 
     const handleClose = event => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
-        setOpen(false);
+        //setOpen(false);
     };
 
 
@@ -193,6 +206,9 @@ export default function PlaygroundHomePage() {
         </ListItem>)
     }
 
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popper' : undefined;
+
     return (
         <div className={classes.root}>
             <CssBaseline/>
@@ -215,7 +231,7 @@ export default function PlaygroundHomePage() {
                             <Avatar alt="Remy Sharp"
                                     src= {profile.avatarUrl || 'https://s3-media3.fl.yelpcdn.com/bphoto/2xPzBYm-wlXLv0WQksBA2Q/l.jpg'} />
                         </Button>
-                        <Popper className={classes.avatarOptions} open={open} anchorEl={anchorRef.current} transition
+                        <Popper id={id} className={classes.avatarOptions} open={open} anchorEl={anchorEl} transition
                                 disablePortal>
                             {({TransitionProps, placement}) => (
                                 <Grow
@@ -224,7 +240,7 @@ export default function PlaygroundHomePage() {
                                         transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
                                     }}
                                 >
-                                    <Paper id="menu-list-grow">
+                                    <Paper className={classes.paperOptions} id="menu-list-grow">
                                         <ClickAwayListener onClickAway={handleClose}>
                                             <MenuList>
                                                 {options.map((option, index) => (

@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection:'row'
   },
   input:{
-    width:'80%',
+    width:'100%',
   },
   fileName:{
     display:'flex',
@@ -157,7 +157,7 @@ function ImageUpload(props) {
              {progress !== 100 && imageFile.name !== '' && "Tải lên"}
           </Button>
           {imageFile.name && <div className={classes.fileName}>
-            <Typography className={classes.name}>{imageFile.name}</Typography>
+            <Typography className={classes.name}>{imageFile.name.substring(0, 10) + "..."}</Typography>
             <IconButton onClick={handleClose} color="primary" aria-label="upload picture" component="span">
               <CancelIcon />
             </IconButton>
