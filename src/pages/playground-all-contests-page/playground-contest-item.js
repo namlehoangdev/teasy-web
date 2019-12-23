@@ -18,10 +18,17 @@ import Collapse from "@material-ui/core/Collapse";
 import React from "react";
 import Countdown from "react-countdown-now";
 import Button from "@material-ui/core/Button";
+import Display from '../../components/calculator/component/Display';
 
 
 const useStyles = makeStyles(theme => ({
-    root: {},
+    root: {
+      marginLeft:'auto',
+      marginRight:'auto',
+      display: 'flex',
+      alignItems:'center',
+      justifyContent:'center'
+    },
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
@@ -60,9 +67,11 @@ const useStyles = makeStyles(theme => ({
         ...theme.typography.body1
     },
 
-    card: {},
+    card: {
+      maxWidth: theme.spacing(60),
+    },
     media: {
-        maxHeight: 300
+        maxHeight: theme.spacing(20),
     },
     expand: {
         transform: 'rotate(0deg)',
@@ -77,6 +86,23 @@ const useStyles = makeStyles(theme => ({
     avatar: {
         backgroundColor: theme.palette.primary,
     },
+    actionContainer:{
+      display:'flex',
+      flexDirection:'column',
+      marginLeft:'auto',
+      marginTop:'auto'
+    },
+    vaophong:{
+      marginLeft:'auto',
+    },
+    joiner:{
+      marginLeft:'auto'
+    },
+    contentContainer:{
+      display:'flex',
+      flexDirection:'row',
+    }
+
 }));
 
 
@@ -129,7 +155,7 @@ export default function PlaygroundContestItem(props) {
     }
 
     return (
-        <Grid item xs={12} md={7} lg={8}>
+        <Grid className={classes.root} item xs={12} md={7} lg={8}>
             <Card className={classes.card} onClick={handleItemClick}>
                 <CardMedia
                     component='img'
@@ -137,49 +163,36 @@ export default function PlaygroundContestItem(props) {
                     src={backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png'}
                     title="Paella dish"
                 />
-                <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {moment(startAt).locale('vi').format('llll').toUpperCase()}
-                    </Typography>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {name && name.toUpperCase()}
-                    </Typography>
-                    {<Typography variant="body1" color="textSecondary" component="p">
-                        {joinedPerson} {`người đã tham gia`.toUpperCase()}
-                    </Typography>}
-                    {type !== CONTEST_TYPE_CODE.ELSE &&
-                    <Typography variant="body1" color="textSecondary" component="p">
-                        Thể loại {CONTEST_TYPE_TEXT[type]}
-                    </Typography>}
-                    {!isNullOrEmpty(description) && <Typography variant="body2" color="textSecondary" component="p">
-                        {description}
-                    </Typography>}
-                </CardContent>
-                <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        Tạo bởi {ownerName}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small" color="primary" onClick={handleItemClick}>
-                        Vào phòng chờ
-                    </Button>
-                </CardActions>
-                {/*<CardActions disableSpacing>*/}
-                {/*    <IconButton*/}
-                {/*        className={clsx(classes.expand, {*/}
-                {/*            [classes.expandOpen]: expanded,*/}
-                {/*        })}*/}
-                {/*        onClick={handleExpandClick}*/}
-                {/*        aria-expanded={expanded}*/}
-                {/*        aria-label="show more"*/}
-                {/*    >*/}
-                {/*        <ExpandMoreIcon/>*/}
-                {/*    </IconButton>*/}
-                {/*</CardActions>*/}
-                {/*<Collapse in={expanded} timeout="auto" unmountOnExit>*/}
-                {/*    {renderDetail()}*/}
-                {/*</Collapse>*/}
+                <CardContent className={classes.contentContainer}>
+                    <div>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                          {moment(startAt).locale('vi').format('llll').toUpperCase()}
+                      </Typography>
+                      <Typography variant="h5" component="h5">
+                          {name && name}
+                      </Typography>                                 
+                      {type !== CONTEST_TYPE_CODE.ELSE &&
+                      <Typography variant="body1" color="textSecondary" component="p">
+                          Thể loại {CONTEST_TYPE_TEXT[type]}
+                      </Typography>}
+                      {!isNullOrEmpty(description) && <Typography variant="body2" color="textSecondary" component="p">
+                          {description.length > 20 ? description.substring(0, 20) + "..." : description}
+                      </Typography>}
+                      <Typography variant="body2" color="textSecondary" component="p">
+                            Tạo bởi {ownerName}
+                      </Typography>
+                    </div>
+                
+                   <CardActions className={classes.actionContainer}>
+                      <Button className={classes.vaophong} size="small" color="primary" onClick={handleItemClick}>
+                          Vào phòng thi
+                      </Button>
+                      <Typography className={classes.joiner}  variant="body2" color="textSecondary" component="p">
+                          {joinedPerson} {`lượt thi`}
+                      </Typography>
+                   </CardActions>
+
+                </CardContent>         
             </Card>
         </Grid>)
 }
