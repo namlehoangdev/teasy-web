@@ -134,7 +134,7 @@ export default function PlaygroundHomePage() {
     const dispatch = useDispatch();
     const {path} = useRouteMatch();
     const {isOpenPlaygroundFullscreenDialog} = useSelector(state => state.playgroundReducer);
-    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(true);
     const [appBarTitle, setAppBarTitle] = useState('');
     const location = useLocation()
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -151,7 +151,7 @@ export default function PlaygroundHomePage() {
         //     pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`,
         //     state: {contestId: '5ddeeb25439d7d1054b28a41'}
         // });
-        console.log('location : ', location);
+        console.log('did mount playground home : ', location, path);
         if (location.pathname === '/playground') {
             setSelectedIndex(0);
             setAppBarTitle(listNavItemMap[0].name);
@@ -220,8 +220,8 @@ export default function PlaygroundHomePage() {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popper' : undefined;
 
-    return (
-        <div className={classes.root}>
+    function renderMainPlayground() {
+        return (<React.Fragment>
             <CssBaseline/>
             <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
                 <Toolbar>
@@ -294,18 +294,30 @@ export default function PlaygroundHomePage() {
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <div className={classes.drawerHeader}/>
                 <Switch>
-                    <Route path={`${path}/${PAGE_PATHS.allContests}`} component={PlaygroundAllContestsPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.sharedContests}`} component={PlaygroundSharedContestsPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={PlaygroundContestResultsPage}/>
+                    <Route exact path={`${path}/${PAGE_PATHS.allContests}`} component={PlaygroundAllContestsPage}/>
+                    <Route exact path={`${path}/${PAGE_PATHS.sharedContests}`}
+                           component={PlaygroundSharedContestsPage}/>
+                    <Route exact path={`${path}/${PAGE_PATHS.contestResults}`}
+                           component={PlaygroundContestResultsPage}/>
+
                 </Switch>
             </main>
+        </React.Fragment>)
+    }
 
-            <Dialog fullScreen open={isOpenPlaygroundFullscreenDialog} TransitionComponent={Transition}
-                    onClose={() => dispatch(setOpenPlaygroundFullscreenDialog(false))}>
-                <Switch>
-                    <Route path={`${path}/${PAGE_PATHS.compete}`} component={PlaygroundCompetePage}/>
-                </Switch>
-            </Dialog>
+    function renderCompeteDialog() {
+        return (<Dialog fullScreen open={isOpenPlaygroundFullscreenDialog} TransitionComponent={Transition}
+                        onClose={() => dispatch(setOpenPlaygroundFullscreenDialog(false))}>
+            <PlaygroundCompetePage/>
+        </Dialog>)
+    }
+
+    return (
+        <div className={classes.root}>
+            <Switch>
+                <Route exact path={`${path}/${PAGE_PATHS.compete}`} render={renderCompeteDialog}/>/>
+                <Route render={renderMainPlayground}/>
+            </Switch>
         </div>
     );
 }

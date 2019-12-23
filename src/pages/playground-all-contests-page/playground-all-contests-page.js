@@ -104,7 +104,7 @@ export default function PlaygroundAllContestsPage() {
 
     function handleItemClick(id) {
         console.log('history: ', history);
-        history.replace(`${PAGE_PATHS.waiting}?contestId=${id}`);
+        history.push(`${PAGE_PATHS.waiting}?contestId=${id}`);
         //history.push({pathname: `${PAGE_PATHS.playground} /${PAGE_PATHS.compete}`, state: {contestId: id}});
     }
 

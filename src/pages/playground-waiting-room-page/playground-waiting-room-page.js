@@ -36,7 +36,6 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
-        padding: theme.spacing(2),
         height: "100vh"
     },
     paper: {
@@ -99,6 +98,7 @@ export default function PlaygroundWaitingRoomPage() {
 
 
     useEffect(() => {
+        console.log('did mount playground waiting room page: ', history);
         if (queryToken) {
             dispatch(postLoginByThirdParty({isTokenOnly: true, token: queryToken, thirdPartyId}))
         } else {
@@ -114,6 +114,7 @@ export default function PlaygroundWaitingRoomPage() {
 
     function onGetContestSuccess() {
         dispatch(setOpenPlaygroundFullscreenDialog(true));
+
         history.replace({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId}});
     }
 
@@ -148,6 +149,7 @@ export default function PlaygroundWaitingRoomPage() {
 
     function renderStartContestButton() {
         const diff = moment(startAt).diff(moment.utc(), "ms");
+
         console.log("diff: ", diff);
         if (diff > 0) {
             return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
@@ -157,83 +159,88 @@ export default function PlaygroundWaitingRoomPage() {
             thi</Button>)
     }
 
+    const [hours, minutes] = msToTime(duration);
     return (
         <Grid container component="main" className={classes.root}>
-            {isShowMiniLoading || isShowCircleLoading && <LinearProgress/>}
-            <Paper className={classes.paper} style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
-                <Typography gutterBottom variant="h6" component="h2" color="primary">
-                    Chi tiết
-                </Typography>
-                <Table size="small">
-                    <TableBody>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
-                            <TableCell className={classes.detailCell}>{name}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Mô tả</TableCell>
-                            <TableCell className={classes.detailCell}>{description}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Trạng thái</TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {isPublic ? "công khai" : "riêng tư"}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Người tạo</TableCell>
-                            <TableCell className={classes.detailCell}>{ownerName}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>
-                                Thời gian bắt đầu
-                            </TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {isoToLocalDateString(startAt)}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {msToTime(duration)}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {isoToLocalDateString(createdAt)}
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+            {/*/!*{(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}*!/ */}
+            <Grid item component={Paper}
+                  style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
+                {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
+                <div className={classes.paper}>
+                    <Typography gutterBottom variant="h6" component="h2" color="primary">
+                        Chi tiết
+                    </Typography>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
+                                <TableCell className={classes.detailCell}>{name}</TableCell>
+                            </TableRow>
+                            {description && <TableRow>
+                                <TableCell className={classes.detailCell}>Mô tả</TableCell>
+                                <TableCell className={classes.detailCell}>{description}</TableCell>
+                            </TableRow>}
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Trạng thái</TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {isPublic ? "công khai" : "riêng tư"}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Người tạo</TableCell>
+                                <TableCell className={classes.detailCell}>{ownerName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>
+                                    Thời gian bắt đầu
+                                </TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {isoToLocalDateString(startAt)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {hours}:{minutes}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {isoToLocalDateString(createdAt)}
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
 
-                <Box mt={3}>
-                    {isSecured && (<FormControl className={classes.passwordContainer}>
-                        <InputLabel
-                            style={(errorPasswordText !== '') ? {color: 'red'} : {}}
-                            htmlFor="standard-adornment-password">{errorPasswordText === '' ? 'Mật khẩu' : errorPasswordText}</InputLabel>
-                        <Input id="standard-adornment-password"
-                               type={showPassword ? 'text' : 'password'}
-                               error={errorPasswordText !== ''}
-                               value={password}
-                               onChange={handlePasswordChange}
-                               endAdornment={
-                                   <InputAdornment position="end">
-                                       <IconButton
-                                           aria-label="toggle password visibility"
-                                           onClick={() => setShowPassword(!showPassword)}
-                                           onMouseDown={(event) => event.preventDefault()}>
-                                           {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-                                       </IconButton>
-                                   </InputAdornment>
-                               }
-                        />
-                    </FormControl>)}
-                </Box>
-                <Box mt={3}>
-                    {renderStartContestButton()}
-                </Box>
-            </Paper>
+                    <Box mt={3}>
+                        {isSecured && (<FormControl className={classes.passwordContainer}>
+                            <InputLabel
+                                style={(errorPasswordText !== '') ? {color: 'red'} : {}}
+                                htmlFor="standard-adornment-password">{errorPasswordText === '' ? 'Mật khẩu' : errorPasswordText}</InputLabel>
+                            <Input id="standard-adornment-password"
+                                   type={showPassword ? 'text' : 'password'}
+                                   error={errorPasswordText !== ''}
+                                   value={password}
+                                   onChange={handlePasswordChange}
+                                   endAdornment={
+                                       <InputAdornment position="end">
+                                           <IconButton
+                                               aria-label="toggle password visibility"
+                                               onClick={() => setShowPassword(!showPassword)}
+                                               onMouseDown={(event) => event.preventDefault()}>
+                                               {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                                           </IconButton>
+                                       </InputAdornment>
+                                   }
+                            />
+                        </FormControl>)}
+                    </Box>
+                    <Box mt={3}>
+                        {renderStartContestButton()}
+                    </Box>
+                </div>
+            </Grid>
         </Grid>
     );
 }

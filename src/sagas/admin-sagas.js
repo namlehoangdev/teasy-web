@@ -213,16 +213,18 @@ export function* putContestSaga({payload}) {
 
 
 export function* postQuestionSaga({payload}) {
+    const {question, onSuccess, onError} = payload;
     try {
-        console.log('postQuestionSaga: ', payload);
+        console.log('postQuestionSaga: ', question);
         yield put(showLoading());
-        let requestParams = denormalize(payload, answerSchema);
+        let requestParams = denormalize(question, answerSchema);
         console.log('request params: ', requestParams);
-        requestParams.content = convertFromEditorStateToString(payload.content)
+        requestParams.content = convertFromEditorStateToString(question.content);
 
         const response = yield call(APIs.postQuestionAPI, requestParams);
         console.log('postContestSaga succeed: ', response);
         if (response && response.data) {
+            onSuccess && onSuccess(response.data);
             yield put(addNewOwnQuestion({
                 ...response.data,
                 content: convertStringToEditorState(response.data.content),
@@ -232,23 +234,26 @@ export function* postQuestionSaga({payload}) {
     } catch
         (error) {
         console.log('postQuestionSaga failed: ', error);
+        onError && onError(error);
     } finally {
         yield put(hideLoading());
     }
 }
 
 export function* putQuestionSaga({payload}) {
+    const {question, onSuccess, onError} = payload;
     try {
         console.log('putQuestionSaga: ', payload);
         yield put(showLoading());
         const requestParams = {
-            ...payload,
-            content: convertFromEditorStateToString(payload.content),
-            answers: payload.answers ? denormalizer(payload.answers) : [],
+            ...question,
+            content: convertFromEditorStateToString(question.content),
+            answers: question.answers ? denormalizer(question.answers) : [],
         };
         const response = yield call(APIs.putQuestionAPI, requestParams);
         console.log('putQuestionSaga succeed: ', response);
         if (response && response.data) {
+            onSuccess && onSuccess(response.data);
             const {id} = response.data;
             const question = {
                 ...response.data,
@@ -258,6 +263,7 @@ export function* putQuestionSaga({payload}) {
             yield put(updateOwnQuestionById(id, question));
         }
     } catch (error) {
+        onError && onError(error);
         console.log('putQuestionSaga failed: ', error);
     } finally {
         yield put(hideLoading());
@@ -282,16 +288,19 @@ export function* deleteOwnContestSaga({payload}) {
 }
 
 export function* deleteOwnQuestionSaga({payload}) {
+    const {questionId, onSuccess, onError} = payload;
     try {
-        console.log('deleteOwnQuestionSaga: ', payload);
+        console.log('deleteOwnQuestionSaga: ', questionId);
         yield put(showLoading());
-        const response = yield call(APIs.deleteOwnQuestionAPI, payload);
+        const response = yield call(APIs.deleteOwnQuestionAPI, questionId);
         console.log('deleteOwnQuestionSaga succeed: ', response);
         if (response) {
             console.log('response: ', response);
-            yield put(updateRemovedOwnQuestionById(payload));
+            onSuccess && onSuccess();
+            yield put(updateRemovedOwnQuestionById(questionId));
         }
     } catch (error) {
+        onError && onError();
         console.log('deleteOwnQuestionSaga failed: ', error);
     } finally {
         yield put(hideLoading());

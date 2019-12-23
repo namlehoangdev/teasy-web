@@ -13,6 +13,7 @@ import {QUESTION_DIALOG_MODE, TEXT} from "../../consts";
 import {cancelCreateQuestionDialog, postQuestion, putQuestion, updateEditingQuestion} from "../../actions";
 
 import EditingQuestionContent from "./editing-question-content";
+import {useSnackbar} from "notistack";
 
 
 const QUESTION_DIALOG_TITLE = {
@@ -31,16 +32,27 @@ export default function EditingQuestionDialog() {
     const {questionDialog, editingQuestion} = useSelector(state => state.adminReducer);
     const {mode: questionDialogMode, isOpen,} = questionDialog;
     const {id} = editingQuestion;
+    const {enqueueSnackbar} = useSnackbar();
 
     function handleCloseDialog() {
         dispatch(cancelCreateQuestionDialog());
     }
 
+    function handleSuccess() {
+        enqueueSnackbar('Đã lưu câu hỏi', {variant: 'success'});
+        dispatch(cancelCreateQuestionDialog());
+    }
+
+    function handleError() {
+        enqueueSnackbar('Đã lưu câu hỏi', {variant: 'error'});
+        dispatch(cancelCreateQuestionDialog());
+    }
+
     function handleSubmit() {
         if (id) {
-            dispatch(putQuestion(editingQuestion));
+            dispatch(putQuestion(editingQuestion, handleSuccess, handleError));
         } else {
-            dispatch(postQuestion(editingQuestion));
+            dispatch(postQuestion(editingQuestion, handleSuccess, handleError));
         }
     }
 
@@ -58,7 +70,8 @@ export default function EditingQuestionDialog() {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>
-                <Button onClick={handleSubmit} variant="contained" color="primary">{TEXT.create}</Button>
+                <Button onClick={handleSubmit} variant="contained"
+                        color="primary">{id ? TEXT.create : TEXT.edit}</Button>
             </DialogActions>
         </Dialog>
     );

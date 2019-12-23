@@ -203,7 +203,6 @@ export default function PlaygroundCompetePage() {
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
-
     };
 
     useMemo(() => {

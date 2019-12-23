@@ -204,6 +204,7 @@ export default function AdminHomePage() {
     }
 
     return (
+
         <div className={classes.root}>
             <CssBaseline/>
             <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
@@ -243,9 +244,9 @@ export default function AdminHomePage() {
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <div className={classes.drawerHeader}/>
                 <Switch>
-                    <Route path={`${path}/${PAGE_PATHS.questions}`} component={AdminQuestionsPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.tests}`} component={AdminTestsPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.contest}`} component={AdminContestsPage}/>
+                    <Route exact path={`${path}/${PAGE_PATHS.questions}`} component={AdminQuestionsPage}/>
+                    <Route exact path={`${path}/${PAGE_PATHS.tests}`} component={AdminTestsPage}/>
+                    <Route exact path={`${path}/${PAGE_PATHS.contest}`} component={AdminContestsPage}/>
                 </Switch>
             </main>
 

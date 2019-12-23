@@ -3,6 +3,7 @@ import {Button, Container, Grid, makeStyles, Paper, Table, TableCell, TableRow, 
 import {Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    getSharedContests,
     setOpenPlaygroundFullscreenDialog, updateAllContestById, updateAllContests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
@@ -80,6 +81,8 @@ export default function PlaygroundAllContestsPage() {
         if (contests.byId.length > 0) {
             setFocusedDetailId(contests.byId[0]);
             setFocusedFiles({[contests.byId[0]]: true});
+        } else {
+            dispatch(getSharedContests());
         }
     }, [contests.byId]);
 
@@ -134,13 +137,20 @@ export default function PlaygroundAllContestsPage() {
             <StartButtonWrapper onMoun={() => setEndCountDown(true)} onClick={() => handleStartContestClick(item)}/>)
     }
 
+    function handleGoToWaitingRoomClick(id) {
+        history.push(`${PAGE_PATHS.waiting}?contestId=${id}`);
+    }
+
     function renderFiles(id) {
         const {name, ownerName, startAt} = contests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{ownerName}</TableCell>
-            <TableCell align="left">{startAt}</TableCell>
+            <TableCell align="left">{isoToLocalDateString(startAt)}</TableCell>
+            <TableCell align="left"><Button
+                color='primary'
+                onClick={() => handleGoToWaitingRoomClick(id)}>Vào phòng chờ</Button></TableCell>
         </React.Fragment>)
     }
 
@@ -148,6 +158,7 @@ export default function PlaygroundAllContestsPage() {
         return (<React.Fragment>
             <TableCell align="left"><FolderIcon/></TableCell>
             <TableCell align="left">{folder}</TableCell>
+            <TableCell align="left"> </TableCell>
             <TableCell align="left"> </TableCell>
             <TableCell align="left"> </TableCell>
         </React.Fragment>)
@@ -158,7 +169,7 @@ export default function PlaygroundAllContestsPage() {
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left">Tên cuộc thi</TableCell>
             <TableCell component="th" scope="row" align="left">Người chia sẻ</TableCell>
-            <TableCell component="th" scope="row" align="left">Ngày tạo</TableCell>
+            <TableCell component="th" scope="row" align="left">Ngày thi</TableCell>
         </React.Fragment>)
     }
 
@@ -170,48 +181,48 @@ export default function PlaygroundAllContestsPage() {
         dispatch(updateAllContestById(id, file));
     }
 
-    function renderDetail() {
-        if (focusedDetailId === -1) {
-            return null;
-        }
-        const {name, description, startAt, createdAt, isPublic, duration, ownerName} = contests.byHash[focusedDetailId];
-        return (<Paper className={classes.paper}>
-            <Typography gutterBottom variant="h6" component="h2" color="primary">Chi tiết</Typography>
-            <Table size="small">
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
-                    <TableCell className={classes.detailCell}>{name}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Mô tả</TableCell>
-                    <TableCell className={classes.detailCell}>{description}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Trạng thái</TableCell>
-                    <TableCell className={classes.detailCell}>{isPublic ? 'công khai' : 'riêng tư'}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Người tạo</TableCell>
-                    <TableCell className={classes.detailCell}>{ownerName}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Thời gian bắt đầu</TableCell>
-                    <TableCell
-                        className={classes.detailCell}>{isoToLocalDateString(startAt)}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                    <TableCell className={classes.detailCell}>{msToTime(duration)}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                    <TableCell className={classes.detailCell}>{isoToLocalDateString(createdAt)}</TableCell>
-                </TableRow>
-            </Table>
-            {renderStartContestButton()}
-        </Paper>)
-    }
-
+    // function renderDetail() {
+    //     if (focusedDetailId === -1) {
+    //         return null;
+    //     }
+    //     const {name, description, startAt, createdAt, isPublic, duration, ownerName} = contests.byHash[focusedDetailId];
+    //     return (<Paper className={classes.paper}>
+    //         <Typography gutterBottom variant="h6" component="h2" color="primary">Chi tiết</Typography>
+    //         <Table size="small">
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
+    //                 <TableCell className={classes.detailCell}>{name}</TableCell>
+    //             </TableRow>
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Mô tả</TableCell>
+    //                 <TableCell className={classes.detailCell}>{description}</TableCell>
+    //             </TableRow>
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Trạng thái</TableCell>
+    //                 <TableCell className={classes.detailCell}>{isPublic ? 'công khai' : 'riêng tư'}</TableCell>
+    //             </TableRow>
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Người tạo</TableCell>
+    //                 <TableCell className={classes.detailCell}>{ownerName}</TableCell>
+    //             </TableRow>
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Thời gian bắt đầu</TableCell>
+    //                 <TableCell
+    //                     className={classes.detailCell}>{isoToLocalDateString(startAt)}</TableCell>
+    //             </TableRow>
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
+    //                 <TableCell className={classes.detailCell}>{msToTime(duration)}</TableCell>
+    //             </TableRow>
+    //             <TableRow>
+    //                 <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
+    //                 <TableCell className={classes.detailCell}>{isoToLocalDateString(createdAt)}</TableCell>
+    //             </TableRow>
+    //         </Table>
+    //         {renderStartContestButton()}
+    //     </Paper>)
+    // }
+    //
 
     return (<div className={classes.root}>
         <Container maxWidth="lg" className={classes.container}>
@@ -232,9 +243,9 @@ export default function PlaygroundAllContestsPage() {
                                         onFileClick={handleFileClick}/>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
-                    {renderDetail()}
-                </Grid>
+                {/*<Grid item xs={12} md={6} lg={4}>*/}
+                {/*    {renderDetail()}*/}
+                {/*</Grid>*/}
             </Grid>
         </Container>
     </div>)

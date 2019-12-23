@@ -78,13 +78,17 @@ export const postTest = (test, onSuccess) => action(POST_TEST, {test, onSuccess}
 
 export const postContest = (contest) => action(POST_CONTEST, contest);
 export const putContest = (contest) => action(PUT_CONTEST, contest);
-export const postQuestion = (question) => action(POST_QUESTION, question);
-export const putQuestion = (question) => action(PUT_QUESTION, question);
+export const postQuestion = (question, onSuccess, onError) => action(POST_QUESTION, {question, onSuccess, onError});
+export const putQuestion = (question, onSuccess, onError) => action(PUT_QUESTION, {question, onSuccess, onError});
 export const putTest = (test, onSuccess) => action(PUT_TEST, {test, onSuccess});
 
 export const deleteOwnContest = (contestId) => action(DELETE_OWN_CONTEST, contestId);
 export const deleteOwnTest = (testId) => action(DELETE_OWN_TEST, testId);
-export const deleteOwnQuestion = (questionId) => action(DELETE_OWN_QUESTION, questionId);
+export const deleteOwnQuestion = (questionId, onSuccess, onError) => action(DELETE_OWN_QUESTION, {
+    questionId,
+    onSuccess,
+    onError
+});
 
 export const updateRemovedOwnContestById = (contestId) => action(UPDATE_REMOVED_CONTEST_BY_ID, contestId);
 export const updateRemovedOwnTestById = (testId) => action(UPDATE_REMOVED_TEST_BY_ID, testId);

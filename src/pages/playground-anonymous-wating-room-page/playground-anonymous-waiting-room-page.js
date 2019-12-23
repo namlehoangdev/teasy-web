@@ -11,11 +11,11 @@ import {
     TableCell,
     TableBody,
     TableRow,
-    Typography, FormControl, InputAdornment, IconButton
+    Typography, FormControl, InputAdornment, IconButton, LinearProgress
 } from "@material-ui/core";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
-import {isoToLocalDateString, msToTime} from "../../utils";
+import {disabledStyleWrapper, isoToLocalDateString, msToTime} from "../../utils";
 import moment from "moment";
 import Countdown from "react-countdown-now";
 import {CountdownRenderer} from "../../components";
@@ -85,6 +85,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
+    const {isShowMiniLoading, isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const [displayName, setDisplayName] = useState('');
     const [errorNameText, setErrorNameText] = useState('');
     const [errorPasswordText, setErrorPasswordText] = useState('');
@@ -94,7 +95,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
 
     function onGetContestSuccess() {
         dispatch(setOpenPlaygroundFullscreenDialog(true));
-        history.push({
+        history.replace({
             pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`,
             state: {contestId: id, isAnonymous: true, displayName: displayName}
         });
@@ -152,90 +153,95 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
             thi</Button>)
     }
 
+    const [hours, minutes] = msToTime(duration);
     return (
         <Grid container component="main" className={classes.root}>
-            <Paper className={classes.paper}>
-                <Typography gutterBottom variant="h6" component="h2" color="primary">
-                    Chi tiết
-                </Typography>
-                <Table size="small">
-                    <TableBody>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
-                            <TableCell className={classes.detailCell}>{name}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Mô tả</TableCell>
-                            <TableCell className={classes.detailCell}>{description}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Trạng thái</TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {isPublic ? "công khai" : "riêng tư"}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Người tạo</TableCell>
-                            <TableCell className={classes.detailCell}>{ownerName}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>
-                                Thời gian bắt đầu
-                            </TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {isoToLocalDateString(startAt)}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {msToTime(duration)}
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                            <TableCell className={classes.detailCell}>
-                                {isoToLocalDateString(createdAt)}
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-                <Box mt={3}>
-                    <TextField value={displayName} onChange={handleDisplayNameChange}
-                               fullWidth
-                               helperText={errorNameText}
-                               label="Tên dự thi" variant="outlined"
-                               error={errorNameText !== ''}/>
-                </Box>
+            <Grid item component={Paper}
+                  style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
+                {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
+                <div className={classes.paper}>
+                    <Typography gutterBottom variant="h6" component="h2" color="primary">
+                        Chi tiết
+                    </Typography>
+                    <Table size="small">
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
+                                <TableCell className={classes.detailCell}>{name}</TableCell>
+                            </TableRow>
+                            {description && <TableRow>
+                                <TableCell className={classes.detailCell}>Mô tả</TableCell>
+                                <TableCell className={classes.detailCell}>{description}</TableCell>
+                            </TableRow>}
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Trạng thái</TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {isPublic ? "công khai" : "riêng tư"}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Người tạo</TableCell>
+                                <TableCell className={classes.detailCell}>{ownerName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>
+                                    Thời gian bắt đầu
+                                </TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {isoToLocalDateString(startAt)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {hours}:{minutes}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
+                                <TableCell className={classes.detailCell}>
+                                    {isoToLocalDateString(createdAt)}
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                    <Box mt={3}>
+                        <TextField value={displayName} onChange={handleDisplayNameChange}
+                                   fullWidth
+                                   helperText={errorNameText}
+                                   label="Tên dự thi" variant="outlined"
+                                   error={errorNameText !== ''}/>
+                    </Box>
 
 
-                <Box mt={3}>
-                    {isSecured && (<FormControl className={classes.passwordContainer}>
-                        <InputLabel
-                            style={(errorPasswordText !== '') ? {color: 'red'} : {}}
-                            htmlFor="standard-adornment-password">{errorPasswordText === '' ? 'Mật khẩu' : errorPasswordText}</InputLabel>
-                        <Input id="standard-adornment-password"
-                               type={showPassword ? 'text' : 'password'}
-                               error={errorPasswordText !== ''}
-                               value={password}
-                               onChange={handlePasswordChange}
-                               endAdornment={
-                                   <InputAdornment position="end">
-                                       <IconButton
-                                           aria-label="toggle password visibility"
-                                           onClick={() => setShowPassword(!showPassword)}
-                                           onMouseDown={(event) => event.preventDefault()}>
-                                           {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-                                       </IconButton>
-                                   </InputAdornment>
-                               }
-                        />
-                    </FormControl>)}
-                </Box>
-                <Box mt={3}>
-                    {renderStartContestButton()}
-                </Box>
-            </Paper>
+                    <Box mt={3}>
+                        {isSecured && (<FormControl className={classes.passwordContainer}>
+                            <InputLabel
+                                style={(errorPasswordText !== '') ? {color: 'red'} : {}}
+                                htmlFor="standard-adornment-password">{errorPasswordText === '' ? 'Mật khẩu' : errorPasswordText}</InputLabel>
+                            <Input id="standard-adornment-password"
+                                   type={showPassword ? 'text' : 'password'}
+                                   error={errorPasswordText !== ''}
+                                   value={password}
+                                   onChange={handlePasswordChange}
+                                   endAdornment={
+                                       <InputAdornment position="end">
+                                           <IconButton
+                                               aria-label="toggle password visibility"
+                                               onClick={() => setShowPassword(!showPassword)}
+                                               onMouseDown={(event) => event.preventDefault()}>
+                                               {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                                           </IconButton>
+                                       </InputAdornment>
+                                   }
+                            />
+                        </FormControl>)}
+                    </Box>
+                    <Box mt={3}>
+                        {renderStartContestButton()}
+                    </Box>
+                </div>
+            </Grid>
         </Grid>
     );
 }

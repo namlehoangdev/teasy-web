@@ -30,6 +30,8 @@ import produce from 'immer';
 import {EditorState} from "draft-js";
 import {disabledStyleWrapper} from "../../utils";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ChooseTestDialog from "../create-contest-page/choose-tests-dialog";
+import ChooseQuestionDialog from "./choose-questions-dialog";
 
 
 const useStyles = makeStyles(theme => ({
@@ -107,6 +109,10 @@ export default function CreateTestPage() {
         setAddNewAnchorEl(event.currentTarget);
     }
 
+    function handleAddQuestionFromBankClick(event) {
+        setAddNewAnchorEl(event.currentTarget);
+    }
+
     function handleTestNameChange(event) {
         dispatch(updateEditingTest({name: event.target.value}));
     }
@@ -144,6 +150,11 @@ export default function CreateTestPage() {
     const addNewPopperId = openAddNewPopper ? 'transitions-popper' : undefined;
 
     return (<div>
+        {/*<ChooseQuestionDialog open={openChooseQuestionDialog}*/}
+        {/*                      questions={questions}*/}
+        {/*                      onSelectedTestsChange={handleSelectedTests}*/}
+        {/*                      handleClose={handleCloseChooseTestDialog}*/}
+        {/*                      selectedQuestionIds={selectedQuestionIds}/>*/}
         <AppBar className={classes.appBar}>
             <Toolbar>
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -154,6 +165,7 @@ export default function CreateTestPage() {
                 {!isSaved && <Button color="inherit" onClick={handleSave}>{TEXT.save}</Button>}
             </Toolbar>
         </AppBar>
+
         <Grid container className={classes.contentContainer}
               style={disabledStyleWrapper(isSaved, {}, {opacity: isShowCircleLoading ? 0 : 1})}>
             <Grid item xs={12} sm={12} md={12}>
@@ -172,6 +184,9 @@ export default function CreateTestPage() {
                 <Button className={classes.addNewButton}
                         variant='outlined'
                         color='primary' onClick={handleAddNewQuestionButtonClick}>Thêm câu hỏi</Button>
+                <Button className={classes.addNewButton}
+                        variant='outlined'
+                        color='primary' onClick={handleAddQuestionFromBankClick}>Thêm câu hỏi từ kho</Button>
             </Grid>
         </Grid>
         <Popper id={addNewPopperId} open={openAddNewPopper} anchorEl={addNewAnchorEl} placement='top-end' transition

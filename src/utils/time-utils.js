@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 function isoToLocalDateString(stringDate) {
-    return moment.utc(stringDate).local().format('HH:MM:SS DD/MM/YYYY');
+    return moment.utc(stringDate).local().format('llll');
 }
 
 function msToTime(duration) {

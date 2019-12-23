@@ -22,6 +22,7 @@ import {
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import RichEditor from "../../components/rich-editor/rich-editor";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -54,6 +55,7 @@ export default function AdminQuestionsPage() {
     const {questions} = useSelector(state => state.adminReducer) || [];
     const [isOpenRemoveDialog, setOpenRemoveDialog] = React.useState(false);
     const [actionItemId, setActionItemId] = useState(null);
+    const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
@@ -64,7 +66,14 @@ export default function AdminQuestionsPage() {
     }
 
     function handleRemoveQuestionClick() {
-        dispatch(deleteOwnQuestion(actionItemId));
+        dispatch(deleteOwnQuestion(actionItemId,
+            () => {
+                enqueueSnackbar('Đã xóa câu hỏi', {variant: 'success'});
+                setOpenRemoveDialog(false);
+            }, () => {
+                enqueueSnackbar('Có lỗi xảy ra, không thể xóa câu hỏi', {variant: 'error'});
+                setOpenRemoveDialog(false);
+            }));
     }
 
 

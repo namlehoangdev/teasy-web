@@ -4,6 +4,7 @@ import {Switch, Route, Router} from 'react-router-dom';
 import {ConnectedRouter} from "connected-react-router";
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
+import {SnackbarProvider, useSnackbar} from 'notistack';
 
 import {Provider, useDispatch} from 'react-redux';
 import {
@@ -38,16 +39,15 @@ function App() {
 
     return <MuiThemeProvider theme={isDark ? themes.dark : themes.default}>
         <ConnectedRouter history={history}>
+            <Switch>
+                <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
+                <Route path={PAGE_PATHS.anonymousWaiting} component={PlaygroundAnonymousWaitingRoomPage}/>
+                <Route path={PAGE_PATHS.waiting} component={PlaygroundWaitingRoomPage}/>
+                <Route path={PAGE_PATHS.admin} component={AdminHomePage}/>
+                <Route path={PAGE_PATHS.playground} component={PlaygroundHomePage}/>
+                <Route path="*" component={NotFoundPage}/>
+            </Switch>
             <UnauthorizedDialog open={isOpenUnauthorizedDialog} handleClose={handleLogout}/>
-
-            <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
-            <Route path={PAGE_PATHS.anonymousWaiting} component={PlaygroundAnonymousWaitingRoomPage}/>
-            <Route path={PAGE_PATHS.waiting} component={PlaygroundWaitingRoomPage}/>
-
-            <Route path={PAGE_PATHS.admin} component={AdminHomePage}/>
-            <Route path={PAGE_PATHS.playground} component={PlaygroundHomePage}/>
-
-            {/*<Route path="*" component={NotFoundPage}/>*/}
         </ConnectedRouter>
     </MuiThemeProvider>
 }
@@ -56,7 +56,9 @@ ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <App/>
+                <SnackbarProvider>
+                    <App/>
+                </SnackbarProvider>
             </MuiPickersUtilsProvider>
         </PersistGate>
     </Provider>,
