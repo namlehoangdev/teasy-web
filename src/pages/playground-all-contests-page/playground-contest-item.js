@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
       marginRight:'auto',
       display: 'flex',
       alignItems:'center',
-      justifyContent:'center'
+      justifyContent:'center',
+      marginBottom: theme.spacing(3)
     },
     title: {
         marginLeft: theme.spacing(2),
@@ -68,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     },
 
     card: {
-      maxWidth: theme.spacing(60),
+      maxWidth: theme.spacing(80),
     },
     media: {
         maxHeight: theme.spacing(20),
@@ -175,9 +176,12 @@ export default function PlaygroundContestItem(props) {
                       <Typography variant="body1" color="textSecondary" component="p">
                           Thể loại {CONTEST_TYPE_TEXT[type]}
                       </Typography>}
-                      {!isNullOrEmpty(description) && <Typography variant="body2" color="textSecondary" component="p">
+                      {!isNullOrEmpty(description) ? <Typography variant="body2" color="textSecondary" component="p">
                           {description.length > 20 ? description.substring(0, 20) + "..." : description}
-                      </Typography>}
+                      </Typography> : <Typography variant="body2" color="textSecondary" component="p">
+                          ...
+                      </Typography>
+                      }
                       <Typography variant="body2" color="textSecondary" component="p">
                             Tạo bởi {ownerName}
                       </Typography>

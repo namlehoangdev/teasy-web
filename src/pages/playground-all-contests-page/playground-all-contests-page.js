@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {
     makeStyles,
     Button,
-
+    fade,
     Paper,
     Typography,
-    Grid,
-    Container, CircularProgress,
+    Grid,Link,
+    Container, CircularProgress,InputBase,Divider
 } from "@material-ui/core";
 import clsx from "clsx";
 import {Folder as FolderIcon, MoreVert as MoreVertIcon} from "@material-ui/icons";
@@ -27,6 +27,8 @@ import {CONTEST_TYPE_CODE, CONTEST_TYPE_TEXT, PAGE_PATHS} from "../../consts";
 import Calculator from 'components/calculator/component/App';
 import Collapse from "@material-ui/core/Collapse";
 import PlaygroundContestItem from './playground-contest-item';
+import Slider from "react-slick";
+import {Search as SearchIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -37,6 +39,8 @@ const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
+        display:'flex',
+        flexDirection:'column'
     },
     paper: {
         padding: theme.spacing(2),
@@ -67,6 +71,57 @@ const useStyles = makeStyles(theme => ({
     labelCountDown: {
         ...theme.typography.body1
     },
+    hotContest:{
+      display:'flex',
+      flexDirection:"row"
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 7),
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: 200,
+        },
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing(2),
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(3),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        width: theme.spacing(7),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    searchContainer:{
+      display:'flex',
+      alignSelf:'center',
+      marginTop: theme.spacing(2)
+    },
+    circle:{
+      alignSelf:'center',
+    },
+    cateContainer:{
+      display:'flex',
+      flexDirection:'column'
+    }
 }));
 
 function StartButtonWrapper(props) {
@@ -88,6 +143,7 @@ export default function PlaygroundAllContestsPage() {
     const [focusedDetailId, setFocusedDetailId] = useState(-1);
     const [focusedFiles, setFocusedFiles] = useState({});
     const history = useHistory();
+    const [searchValue, setSearchValue] = useState('');
 
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -114,14 +170,64 @@ export default function PlaygroundAllContestsPage() {
         return (<PlaygroundContestItem {...params} onItemClick={handleItemClick}/>)
     }
 
+    function renderCateContest(item) {
+    return (<Link>{item}</Link>)
+    }
+
+    
+    const settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };
+
+    function handleSearchInputChange(event) {
+        setSearchValue(event.target.value);
+    }
+
     return (<div className={classes.root}>
         <Container maxWidth="lg" className={classes.container}>
+               <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
+                          Tất cả cuộc thi từ cộng đồng
+                </Typography>   
+             <div className={classes.searchContainer}>
+               <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                    <SearchIcon/>
+                </div>
+                <InputBase
+                    placeholder="Tìm kiếm cuộc thi…"
+                    classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                    }}
+                    inputProps={{'aria-label': 'search'}}
+                    value={searchValue}
+                    onChange={handleSearchInputChange}
+                />
+            </div>
+             </div>
+            <Divider variant="middle" />
             <Grid container spacing={3}>
                 <Grid item xs={12} md={7} lg={8} alignItems='center' justify='center'
-                      style={{display: 'flex', flexDirection: 'row'}}>
+                      style={{display: 'flex', flexDirection: 'row', marginLeft:'auto', marginRight:'auto', marginTop: 10}}>
                     {isShowCircleLoading && <CircularProgress/>}
                 </Grid>
-                {contests.byId.map(renderContest)}
+                <Grid item xs={10} >
+                    {contests.byId.map(renderContest)}
+                </Grid>
+
+                <Grid item xs={2} >
+                    <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
+                          Thể loại
+                     </Typography> 
+                    <div className={classes.cateContainer}>
+                      {['Hot nhất','Toán', 'Lý', 'Hoá', 'Văn', 'Anh'].map((item) => renderCateContest(item))}
+                    </div>
+                </Grid>
+                
             </Grid>
         </Container>
     </div>)
