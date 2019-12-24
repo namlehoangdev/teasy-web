@@ -67,6 +67,11 @@ const useStyles = makeStyles(theme => ({
     bottom: {
         marginTop: theme.spacing(3),
         display: 'flex'
+    },
+    center: {
+        display: 'flex',
+        alignItems:'center',
+        flexDirection:'column'
     }
 }));
 
@@ -144,7 +149,7 @@ export default function PlaygroundWaitingRoomPage() {
 
 
     function renderCountDown(props) {
-        return <CountdownRenderer {...props} />;
+        return <CountdownRenderer  {...props} />;
     }
 
     function renderStartContestButton() {
@@ -152,7 +157,12 @@ export default function PlaygroundWaitingRoomPage() {
 
         console.log("diff: ", diff);
         if (diff > 0) {
-            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
+            return (<div className={classes.center}>
+              <Typography gutterBottom variant="h6" component="h2" color="secondary">
+                        Diễn ra sau:
+                    </Typography>
+              <Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>
+              </div>);
         }
 
         return (<Button fullWidth variant="contained" color="primary" onClick={handleStartContestClick}>Tham gia
@@ -199,17 +209,17 @@ export default function PlaygroundWaitingRoomPage() {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
+                                <TableCell className={classes.detailCell}>Thời lượng</TableCell>
                                 <TableCell className={classes.detailCell}>
-                                    {hours}:{minutes}
+                                    {hours * 60 + minutes + " phút"}
                                 </TableCell>
                             </TableRow>
-                            <TableRow>
+                            {/* <TableRow>
                                 <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
                                 <TableCell className={classes.detailCell}>
                                     {isoToLocalDateString(createdAt)}
                                 </TableCell>
-                            </TableRow>
+                            </TableRow> */}
                         </TableBody>
                     </Table>
 
