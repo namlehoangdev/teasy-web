@@ -9,9 +9,10 @@ import {
     TableBody,
     TableHead,
     TableRow,
-    CircularProgress
+    CircularProgress, TableCell
 } from "@material-ui/core";
-import {NavigateNext as NavigateNextIcon} from "@material-ui/icons";
+import {Folder as FolderIcon, NavigateNext as NavigateNextIcon} from "@material-ui/icons";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,8 +66,11 @@ function isFileInPath(directory, currentPath) {
 export default function WorkingTableV2(props) {
     //const dragFolderIcon = document.createElement('i');
     const dragGhost = document.createElement('div');
-    const {filesByHash, selectedFilesHash, filesById, renderFiles, renderFolders, renderHeaders, dragDisplayProperty, setFileById, draggable} = props;
-    const {onFileClick, onFolderClick, isLoading} = props;
+    const {
+        filesByHash, selectedFilesHash, filesById, dragDisplayProperty, setFileById, draggable,
+        onFileClick, onFolderClick, isLoading, numberOfColumns = 4, numberOfSkeletonRows = 15,
+        renderFiles, renderFolders, renderHeaders, renderLoadingSkeleton,
+    } = props;
     const [dragItem, setCurrentDrag] = useState(null);
     const [currentDragOver, setCurrentDragOver] = useState(null);
     const [currentPath, setCurrentPath] = useState([]);
@@ -222,6 +226,22 @@ export default function WorkingTableV2(props) {
         )
     }
 
+    function _renderLoadingSkeleton() {
+        if (renderLoadingSkeleton) {
+            return renderLoadingSkeleton();
+        }
+        const skeletonRows = Array.from(new Array(numberOfSkeletonRows), (val, index) => index);
+        console.log(skeletonRows);
+        const skeletonColumns = Array.from(new Array(numberOfColumns), (val, index) => index);
+        return skeletonRows.map((item, index) =>
+            (<TableRow key={`skeleton-row${index}`}>
+                {skeletonColumns.map((column, i) =>
+                    (<TableCell key={`skeleton-column${i}`} align="left">
+                        <Skeleton variant="rect" width='100%' height={20}/>
+                    </TableCell>))}
+            </TableRow>));
+    }
+
     function renderBody() {
         if (!filesById || (filesById.length === 0 && currentFolders.length === 0)) {
             return (!isLoading && <TableRow className={classes.loadingTable}>Không có gì để hiển thị</TableRow>)
@@ -246,9 +266,9 @@ export default function WorkingTableV2(props) {
                     {renderHeaders && renderHeaders()}
                 </TableRow>
             </TableHead>
-            {isLoading && <div className={classes.loadingTable}><CircularProgress/></div>}
+            {/*{isLoading && <div className={classes.loadingTable}><CircularProgress/></div>}*/}
             <TableBody>
-                {renderBody()}
+                {isLoading ? _renderLoadingSkeleton() : renderBody()}
             </TableBody>
         </Table>
     </div>)

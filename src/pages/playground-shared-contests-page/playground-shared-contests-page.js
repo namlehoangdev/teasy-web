@@ -225,28 +225,21 @@ export default function PlaygroundAllContestsPage() {
     //
 
     return (<div className={classes.root}>
-        <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={7} lg={8}>
-                    <Paper className={classes.paper}>
-                        <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Được chia sẻ với tôi</Typography>
-                        <WorkingTableV2 isLoading={isShowCircleLoading}
-                                        filesByHash={contests.byHash}
-                                        filesById={sharedContestIds}
-                                        dragDisplayProperty="content"
-                                        setFiles={handleFilesChange}
-                                        setFileById={handleFileByIdChange}
-                                        renderFiles={renderFiles}
-                                        renderFolders={renderFolders}
-                                        renderHeaders={renderHeaders}
-                                        onFileClick={handleFileClick}/>
-                    </Paper>
-                </Grid>
-                {/*<Grid item xs={12} md={6} lg={4}>*/}
-                {/*    {renderDetail()}*/}
-                {/*</Grid>*/}
-            </Grid>
-        </Container>
+        <Paper className={classes.paper}>
+            <Typography gutterBottom variant="h6"
+                        component="h2" color="primary">Được chia sẻ với tôi</Typography>
+            <WorkingTableV2 isLoading={isShowCircleLoading}
+                            numberOfColumns={4}
+                            filesByHash={contests.byHash}
+                            filesById={sharedContestIds}
+                            dragDisplayProperty="content"
+                            setFiles={handleFilesChange}
+                            setFileById={handleFileByIdChange}
+                            renderFiles={renderFiles}
+                            renderFolders={renderFolders}
+                            renderHeaders={renderHeaders}
+                            onFileClick={handleFileClick}/>
+        </Paper>
+
     </div>)
 };

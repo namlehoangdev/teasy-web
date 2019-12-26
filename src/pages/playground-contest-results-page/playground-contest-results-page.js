@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: theme.spacing(4),
     },
     paper: {
+        flex: 1,
         padding: theme.spacing(2),
         display: 'flex',
         overflow: 'auto',
@@ -100,24 +101,21 @@ export default function AdminTestsPage() {
 
 
     return (<div className={classes.root}>
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                    <Paper className={classes.paper}>
-                        <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Danh sách kết quả thi</Typography>
-                        <WorkingTableV2 filesByHash={results.byHash}
-                                        filesById={results.byId}
-                                        isShowLoading={isShowCircleLoading}
-                                        dragDisplayProperty="content"
-                                        setFiles={handleFilesChange}
-                                        setFileById={handleFileByIdChange}
-                                        renderFiles={renderFiles}
-                                        renderFolders={renderFolders}
-                                        renderHeaders={renderHeaders}/>
-                    </Paper>
-                </Grid>
-            </Container>
+            <Paper className={classes.paper}>
+                <Typography gutterBottom variant="h6"
+                            component="h2" color="primary">Danh sách kết quả thi</Typography>
+                <WorkingTableV2 filesByHash={results.byHash}
+                                numberOfColumns={4}
+                                filesById={results.byId}
+                                isShowLoading={isShowCircleLoading}
+                                dragDisplayProperty="content"
+                                setFiles={handleFilesChange}
+                                setFileById={handleFileByIdChange}
+                                renderFiles={renderFiles}
+                                renderFolders={renderFolders}
+                                renderHeaders={renderHeaders}/>
+            </Paper>
         </div>
-    )
+    );
 }
 

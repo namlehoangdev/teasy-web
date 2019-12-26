@@ -164,6 +164,7 @@ export default function AdminContestPage() {
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý cuộc thi</Typography>
                 <WorkingTableV2 filesByHash={contests.byHash}
+                                numberOfColumns={5}
                                 isLoading={isShowCircleLoading}
                                 filesById={contests.byId}
                                 dragDisplayProperty="content"

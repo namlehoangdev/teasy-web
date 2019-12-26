@@ -158,6 +158,7 @@ export default function AdminTestsPage() {
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý đề thi</Typography>
                 <WorkingTableV2 filesByHash={tests.byHash}
+                                numberOfColumns={5}
                                 filesById={tests.byId}
                                 isLoading={isShowCircleLoading}
                                 dragDisplayProperty="content"

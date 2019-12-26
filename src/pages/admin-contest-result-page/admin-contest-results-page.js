@@ -25,6 +25,7 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: theme.spacing(4),
     },
     paper: {
+        flex: 1,
         padding: theme.spacing(2),
         display: 'flex',
         overflow: 'auto',
@@ -43,15 +44,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function AdminContestResultsPage() {
     const {contests = {}} = useSelector(state => state.adminReducer);
-    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const {state: locationState} = useLocation();
     const {contestId} = locationState;
     const contest = contests.byHash[contestId];
     const {name: contestName, results = {}} = contest;
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
-
         console.log('get contest results by id: ', contestId);
         dispatch(getContestResultsById(contestId));
     }, []);
@@ -94,23 +94,20 @@ export default function AdminContestResultsPage() {
 
 
     return (<div className={classes.root}>
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                    <Paper className={classes.paper}>
-                        <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Danh sách kết quả thi của {contestName}</Typography>
-                        <WorkingTableV2 filesByHash={results.byHash}
-                                        filesById={results.byId}
-                                        isShowLoading={isShowCircleLoading}
-                                        dragDisplayProperty="content"
-                                        setFiles={handleFilesChange}
-                                        setFileById={handleFileByIdChange}
-                                        renderFiles={renderFiles}
-                                        renderFolders={renderFolders}
-                                        renderHeaders={renderHeaders}/>
-                    </Paper>
-                </Grid>
-            </Container>
+            <Paper className={classes.paper}>
+                <Typography gutterBottom variant="h6"
+                            component="h2" color="primary">Danh sách kết quả thi của {contestName}</Typography>
+                <WorkingTableV2 filesByHash={results.byHash}
+                                numberOfColumns={3}
+                                filesById={results.byId}
+                                isShowLoading={isShowCircleLoading}
+                                dragDisplayProperty="content"
+                                setFiles={handleFilesChange}
+                                setFileById={handleFileByIdChange}
+                                renderFiles={renderFiles}
+                                renderFolders={renderFolders}
+                                renderHeaders={renderHeaders}/>
+            </Paper>
         </div>
     )
 }

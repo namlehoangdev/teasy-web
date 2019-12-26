@@ -151,6 +151,7 @@ export default function AdminQuestionsPage() {
             <Typography gutterBottom variant="h6"
                         component="h2" color="primary">Quản lý đề thi</Typography>
             <WorkingTableV2 filesByHash={questions.byHash}
+                            numberOfColumns={5}
                             filesById={questions.byId}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
