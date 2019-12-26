@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles, fade} from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import {
     Button,
@@ -133,6 +134,7 @@ export default function ChooseTestDialog(props) {
         return tests.byId.filter(id => tests.byHash[id].name.includes(searchValue)).map(renderTests);
     }
 
+    let testsLength = _.get(tests, 'byId', []).length;
     return (<Dialog
         open={open}
         onClose={handleCloseDialog}
@@ -160,8 +162,8 @@ export default function ChooseTestDialog(props) {
                     <TableRow>
                         <TableCell padding="checkbox">
                             <Checkbox
-                                indeterminate={selectedTestIds.length > 0 && selectedTestIds.length < tests.length}
-                                checked={selectedTestIds.length === tests.length}
+                                indeterminate={selectedTestIds.length > 0 && selectedTestIds.length < testsLength}
+                                checked={selectedTestIds.length === testsLength}
                                 onChange={handleSelectAll}
                                 inputProps={{'aria-label': 'select all desserts'}}
                             />

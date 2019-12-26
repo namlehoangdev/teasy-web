@@ -166,6 +166,7 @@ export default function CreateContestPage() {
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
+    const [alertText, setAlertText] = useState('');
     const {users} = useSelector(state => state.userReducer) || [];
     const [_duration, setDuration] = useState(new Date());
     const [showPassword, setShowPassword] = useState(false);
@@ -296,13 +297,14 @@ export default function CreateContestPage() {
 
     function handleSaveCompetition() {
         if (!name || name.length === 0) {
-            alert('Tên không hợp lệ');
+            setAlertText('Vui lòng điền tên cuộc thi');
             return;
         }
         if (!testIds || testIds.length <= 0) {
-            alert('Vui lòng chọn ít nhất 1 đề thi');
+            setAlertText('Vui lòng chọn ít nhất 1 đề thi');
             return;
         }
+        setAlertText('');
         setIsOpenSubmittedDialog(true);
         if (id) {
             dispatch(putContest(editingContest));
@@ -613,6 +615,20 @@ export default function CreateContestPage() {
                     </Grid>
                 </Paper>
             </main>
+
+            <Dialog open={alertText !== ''} aria-labelledby="form-dialog-title">
+                <DialogTitle id="alertDialog">Thông tin không hợp lệ</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {alertText}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setAlertText('')} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Dialog open={isOpenSubmittedDialog}
                     aria-labelledby="form-dialog-title">
                 {

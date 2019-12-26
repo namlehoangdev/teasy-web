@@ -20,7 +20,7 @@ import {
     UPDATE_OWN_CONTEST_RESULT_BY_ID,
     GET_ANONYMOUS_CONTEST_METADATA_BY_CODE,
     GET_ANONYMOUS_CONTEST_BY_ID,
-    POST_ANONYMOUS_CONTEST_RESULT, GET_MARKED_ANONYMOUS_CONTEST_RESULT, GET_CONTEST_METADATA
+    POST_ANONYMOUS_CONTEST_RESULT, GET_MARKED_ANONYMOUS_CONTEST_RESULT, GET_CONTEST_METADATA, CLEAR_COMPETING_CONTEST
 } from './action-types';
 
 export const setOpenPlaygroundFullscreenDialog = (value) => action(SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG, {value});
@@ -78,4 +78,6 @@ export const getOwnContestResults = () => action(GET_OWN_CONTEST_RESULTS);
 export const updateOwnContestResults = (results) => action(UPDATE_OWN_CONTEST_RESULTS, {results});
 
 export const updateOwnContestResultById = (id, result) => action(UPDATE_OWN_CONTEST_RESULT_BY_ID, {id, result});
+
+export const clearCompetingContest = () => action(CLEAR_COMPETING_CONTEST);
 

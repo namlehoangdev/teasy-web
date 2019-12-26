@@ -26,10 +26,12 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
     },
     container: {
+        flex: 1,
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
     paper: {
+        flex: 1,
         padding: theme.spacing(2),
         display: 'flex',
         overflow: 'auto',
@@ -158,23 +160,20 @@ export default function AdminContestPage() {
     }
 
     return (<div className={classes.root}>
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                    <Paper className={classes.paper}>
-                        <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Quản lý cuộc thi</Typography>
-                        <WorkingTableV2 filesByHash={contests.byHash}
-                                        isLoading={isShowCircleLoading}
-                                        filesById={contests.byId}
-                                        dragDisplayProperty="content"
-                                        setFiles={handleFilesChange}
-                                        setFileById={handleFileByIdChange}
-                                        renderFiles={renderFiles}
-                                        renderFolders={renderFolders}
-                                        renderHeaders={renderHeaders}/>
-                    </Paper>
-                </Grid>
-            </Container>
+            <Paper className={classes.paper}>
+                <Typography gutterBottom variant="h6"
+                            component="h2" color="primary">Quản lý cuộc thi</Typography>
+                <WorkingTableV2 filesByHash={contests.byHash}
+                                isLoading={isShowCircleLoading}
+                                filesById={contests.byId}
+                                dragDisplayProperty="content"
+                                setFiles={handleFilesChange}
+                                setFileById={handleFileByIdChange}
+                                renderFiles={renderFiles}
+                                renderFolders={renderFolders}
+                                renderHeaders={renderHeaders}/>
+            </Paper>
+
 
             <Dialog
                 open={isOpenRemoveDialog}

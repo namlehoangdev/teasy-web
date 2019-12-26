@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
     Grid,
     makeStyles,
@@ -12,6 +12,7 @@ import {
     Chip,
     Box,
     ButtonGroup,
+    RootRef,
     Button,
     Divider,
     Dialog,
@@ -28,10 +29,12 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
+import scrollToComponent from 'react-scroll-to-component';
 import {useDispatch, useSelector} from "react-redux";
 import {
+    clearCompetingContest,
     getAnonymousContestById,
-    getContestById, postAnonymousContestResult,
+    getContestById, logout, postAnonymousContestResult,
     postContest,
     postContestResult, setOpenAdminFullscreenDialog,
     updateCompetingContest,
@@ -200,6 +203,7 @@ export default function PlaygroundCompetePage() {
     const [firstDuration, setfirstDuration] = React.useState(0);
     const [alarm, setAlarm] = React.useState(0);
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    let questionRefs = useRef(new Map).current;
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -208,13 +212,22 @@ export default function PlaygroundCompetePage() {
     useMemo(() => {
         console.log('vao day');
         if (checkLength(testIds) && testByHash) {
-            console.log('vao day 2', testByHash);
-            const {name, questions} = testByHash[testIds[0]] || {};
+            // console.log('vao day 2', testByHash);
+            // console.log('testIds', testIds);
+            const {name, questions} = testByHash[Object.keys(testByHash)[0]] || {};
             name && setTestName(name);
             questions && setQuestionsById(questions);
+            console.log('questions: ', questions);
             setDurationCompetition(competingContest.duration)
         }
     }, [testIds]);
+
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearCompetingContest());
+        }
+    }, []);
 
     useEffect(() => {
         if (durationCompetition > 0) {
@@ -303,7 +316,7 @@ export default function PlaygroundCompetePage() {
     }
 
     function renderQuestions() {
-        return questionsById.map((questionId, index) => {
+        return questionsById && questionsById.map((questionId, index) => {
             const {answers: answersById, content, type} = questionByHash[questionId];
             const isResponseFullAnswer = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
             let extraProps = {};
@@ -316,14 +329,19 @@ export default function PlaygroundCompetePage() {
             } else if (extraProps.questionState === QUESTION_STATE.WRONG) {
                 chipStyle = {backgroundColor: snackColors.error};
             }
-            return (<Box key={questionId} className={classes.question}
+
+            return (
+                <div key={questionId}
+                     ref={inst => inst === null ? questionRefs.delete(questionId) : questionRefs.set(questionId, inst)}>
+                    <Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
-                <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
-                <Typography variant="subtitle2" noWrap align='center'>
-                    <RichEditor editorState={content} readOnly={true}/>
-                </Typography>
-                {renderQuestionByType(questionId, extraProps)}
-            </Box>)
+                        <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
+                        <Typography variant="subtitle2" noWrap align='center'>
+                            <RichEditor editorState={content} readOnly={true}/>
+                        </Typography>
+                        {renderQuestionByType(questionId, extraProps)}
+                    </Box>
+                </div>)
         });
     }
 
@@ -358,8 +376,14 @@ export default function PlaygroundCompetePage() {
         }
     }
 
-    function renderStartContestButton() {
+    function handleNavigateToQuestion(id) {
+        console.log('handleNavigateToQuestion', id);
+        console.log('ref: ', questionRefs);
+        console.log('ref ele: ', questionRefs[id]);
+        scrollToComponent(questionRefs.get(id), {offset: -90, align: 'top', duration: 10})
+    }
 
+    function renderStartContestButton() {
         if (durationCompetition > 0) {
             return (<Countdown onTick={handleOnTick} date={firstDuration} renderer={renderCountDown}/>);
         }
@@ -398,7 +422,9 @@ export default function PlaygroundCompetePage() {
                             {questionsById.map((item, index) => {
                                 const color = (results && results.byHash[item]) ? 'primary' : 'default';
                                 return (
-                                    <Button size='small' key={index.toString()} color={color}><b>{index}</b></Button>)
+                                    <Button
+                                        onClick={() => handleNavigateToQuestion(item)}
+                                        size='small' key={index.toString()} color={color}><b>{index}</b></Button>)
                             })}
                         </Grid>
                     </ExpansionPanelDetails>

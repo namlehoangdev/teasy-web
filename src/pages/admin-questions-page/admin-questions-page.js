@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: theme.spacing(4),
     },
     paper: {
+        flex: 1,
         padding: theme.spacing(2),
         display: 'flex',
         overflow: 'auto',
@@ -145,22 +146,19 @@ export default function AdminQuestionsPage() {
 
 
     return (<div className={classes.root}>
-        <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <Paper className={classes.paper}>
-                    <Typography gutterBottom variant="h6"
-                                component="h2" color="primary">Quản lý đề thi</Typography>
-                    <WorkingTableV2 filesByHash={questions.byHash}
-                                    filesById={questions.byId}
-                                    dragDisplayProperty="content"
-                                    setFiles={handleFilesChange}
-                                    setFileById={handleFileByIdChange}
-                                    renderFiles={renderFiles}
-                                    renderFolders={renderFolders}
-                                    renderHeaders={renderHeaders}/>
-                </Paper>
-            </Grid>
-        </Container>
+
+        <Paper className={classes.paper}>
+            <Typography gutterBottom variant="h6"
+                        component="h2" color="primary">Quản lý đề thi</Typography>
+            <WorkingTableV2 filesByHash={questions.byHash}
+                            filesById={questions.byId}
+                            dragDisplayProperty="content"
+                            setFiles={handleFilesChange}
+                            setFileById={handleFileByIdChange}
+                            renderFiles={renderFiles}
+                            renderFolders={renderFolders}
+                            renderHeaders={renderHeaders}/>
+        </Paper>
 
         <Dialog
             open={isOpenRemoveDialog}

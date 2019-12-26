@@ -1,4 +1,5 @@
 import {
+    CLEAR_COMPETING_CONTEST,
     SET_OPEN_PLAYGROUND_FULLSCREEN_DIALOG,
     UPDATE_ALL_CONTEST_BY_ID,
     UPDATE_ALL_CONTESTS,
@@ -74,6 +75,10 @@ export default function playgroundReducer(state = initialState, action) {
             case UPDATE_COMPETING_CONTEST: {
                 console.log('payload: ', payload);
                 draft.competingContest = {...draft.competingContest, ...payload};
+                return;
+            }
+            case CLEAR_COMPETING_CONTEST: {
+                draft.competingContest = initialState.competingContest;
                 return;
             }
             case UPDATE_OWN_CONTEST_RESULT_BY_ID: {

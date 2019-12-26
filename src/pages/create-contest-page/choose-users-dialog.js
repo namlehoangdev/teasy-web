@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles, fade} from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import {
     Button,
@@ -133,6 +134,8 @@ export default function ChooseUserDialog(props) {
         return users.byId.filter(id => users.byHash[id].name.includes(searchValue)).map(renderUsers);
     }
 
+    let usersLength = _.get(users, 'byId', []).length;
+
     return (<Dialog
         open={open}
         onClose={handleCloseDialog}
@@ -160,8 +163,8 @@ export default function ChooseUserDialog(props) {
                     <TableRow>
                         <TableCell padding="checkbox">
                             <Checkbox
-                                indeterminate={selectedUserIds.length > 0 && selectedUserIds.length < users.length}
-                                checked={selectedUserIds.length === users.length}
+                                indeterminate={selectedUserIds.length > 0 && selectedUserIds.length < usersLength}
+                                checked={selectedUserIds.length === usersLength}
                                 onChange={handleSelectAll}
                                 inputProps={{'aria-label': 'select all desserts'}}
                             />

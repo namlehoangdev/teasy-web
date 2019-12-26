@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: theme.spacing(4),
     },
     paper: {
+        flex: 1,
         padding: theme.spacing(2),
         display: 'flex',
         overflow: 'auto',
@@ -106,11 +107,12 @@ export default function AdminTestsPage() {
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {name, hasFullAnswers} = tests.byHash[id];
+        const {name, hasFullAnswers, questions} = tests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{hasFullAnswers ? 'Có' : 'Không'}</TableCell>
+            <TableCell align="left">{questions.byId.length}</TableCell>
             <TableCell align="left">
                 <IconButton onClick={() => handleEditTestIconClick(id)}>
                     <EditIcon/>
@@ -137,6 +139,7 @@ export default function AdminTestsPage() {
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left"><b>Nội dung</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Đủ đáp án</b></TableCell>
+            <TableCell component="th" scope="row" align="left"><b>Số lượng câu hỏi</b></TableCell>
             <TableCell component="th" scope="row" align="left"> </TableCell>
         </React.Fragment>)
     }
@@ -151,23 +154,20 @@ export default function AdminTestsPage() {
 
 
     return (<div className={classes.root}>
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                    <Paper className={classes.paper}>
-                        <Typography gutterBottom variant="h6"
-                                    component="h2" color="primary">Quản lý đề thi</Typography>
-                        <WorkingTableV2 filesByHash={tests.byHash}
-                                        filesById={tests.byId}
-                                        isLoading={isShowCircleLoading}
-                                        dragDisplayProperty="content"
-                                        setFiles={handleFilesChange}
-                                        setFileById={handleFileByIdChange}
-                                        renderFiles={renderFiles}
-                                        renderFolders={renderFolders}
-                                        renderHeaders={renderHeaders}/>
-                    </Paper>
-                </Grid>
-            </Container>
+            <Paper className={classes.paper}>
+                <Typography gutterBottom variant="h6"
+                            component="h2" color="primary">Quản lý đề thi</Typography>
+                <WorkingTableV2 filesByHash={tests.byHash}
+                                filesById={tests.byId}
+                                isLoading={isShowCircleLoading}
+                                dragDisplayProperty="content"
+                                setFiles={handleFilesChange}
+                                setFileById={handleFileByIdChange}
+                                renderFiles={renderFiles}
+                                renderFolders={renderFolders}
+                                renderHeaders={renderHeaders}/>
+            </Paper>
+
 
             <Dialog
                 open={isOpenRemoveDialog}
