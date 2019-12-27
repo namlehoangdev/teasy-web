@@ -70,8 +70,8 @@ const useStyles = makeStyles(theme => ({
     },
     center: {
         display: 'flex',
-        alignItems:'center',
-        flexDirection:'column'
+        alignItems: 'center',
+        flexDirection: 'column'
     }
 }));
 
@@ -118,7 +118,7 @@ export default function PlaygroundWaitingRoomPage() {
     }, [token]);
 
     function onGetContestSuccess() {
-        dispatch(setOpenPlaygroundFullscreenDialog(true));
+        //dispatch(setOpenPlaygroundFullscreenDialog(true));
 
         history.replace({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId}});
     }
@@ -158,11 +158,11 @@ export default function PlaygroundWaitingRoomPage() {
         console.log("diff: ", diff);
         if (diff > 0) {
             return (<div className={classes.center}>
-              <Typography gutterBottom variant="h6" component="h2" color="secondary">
-                        Diễn ra sau:
-                    </Typography>
-              <Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>
-              </div>);
+                <Typography gutterBottom variant="h6" component="h2" color="secondary">
+                    Diễn ra sau:
+                </Typography>
+                <Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>
+            </div>);
         }
 
         return (<Button fullWidth variant="contained" color="primary" onClick={handleStartContestClick}>Tham gia

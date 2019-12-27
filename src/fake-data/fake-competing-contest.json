@@ -1,71 +1,523 @@
 {
-  "id": "5ddeeb25439d7d1054b28a41",
-  "name": "CUỘC THI SỐ 3",
-  "ownerId": "5dac1ba09417302c68989934",
+  "id": "5e03b643b51bbe28ec4811ae",
+  "name": "CUỘC THI N 1",
+  "ownerId": "5dff0a72e8f9be27707fdd24",
   "ownerName": "Nam Le",
-  "testIds": [
-    "5dc7d080eb416750783ad105"
-  ],
-  "test": {
-    "id": "5dc7d080eb416750783ad105",
-    "name": "Kiểm tra đồng khối môn Toán",
-    "ownerId": "5dac1ba09417302c68989934",
-    "ownerName": "Nam Le",
-    "questions": [
-      {
-        "id": "8b76bebc-81bf-4467-bbca-02f4818af5b30",
-        "type": 0,
-        "point": 0,
-        "content": "{\"blocks\":[{\"key\":\"9q0in\",\"text\":\"10-5=?\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
-        "answers": [
-          {
-            "id": "b90c9c6d-5200-41e0-a76e-7f65d72670750",
-            "content": "5",
-            "isTrue": false
-          },
-          {
-            "id": "3a9abbd6-da02-46c0-8189-4b13b1ebcb531",
-            "content": "2",
-            "isTrue": false
-          }
-        ]
-      },
-      {
-        "id": "6aa90152-88e3-41c1-9142-442b7cb222f21",
-        "type": 0,
-        "point": 0,
-        "content": "{\"blocks\":[{\"key\":\"cm8tb\",\"text\":\"số Pi bằng bao nhiêu?\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
-        "answers": [
-          {
-            "id": "7b22e459-a517-4fd9-ba44-839790f72fa50",
-            "content": "3.9",
-            "isTrue": false
-          },
-          {
-            "id": "11097813-18e1-48cf-835a-47e796f230b31",
-            "content": "3.14",
-            "isTrue": false
-          },
-          {
-            "id": "65d29ecd-9656-4198-806f-5e4473d045dd2",
-            "content": "5",
-            "isTrue": false
-          }
-        ]
-      }
-    ],
-    "type": 0,
-    "hasFullAnswers": false
-  },
+  "backgroundUrl": "https://firebasestorage.googleapis.com/v0/b/teasy-1571463510829.appspot.com/o/Competition%2F5dff0a72e8f9be27707fdd24%2Fda62da85-3b8b-4ff1-9a4a-014d35a5c215?alt=media&token=268df607-f92e-42d2-b0af-f7e5fab668f3",
   "startAt": "0001-01-01T00:00:00Z",
   "endAt": "0001-01-01T00:00:00Z",
-  "createdAt": "2019-11-27T21:31:17.081Z",
+  "createdAt": "2019-12-25T19:19:31.874Z",
   "duration": 5400000,
   "useSEB": false,
-  "permittedUsers": [],
-  "isPublic": true,
-  "description": "test",
+  "permittedUsers": [
+    "5dff09c5e8f9be27707fdd23",
+    "5dff0a72e8f9be27707fdd24"
+  ],
+  "isPublic": false,
+  "description": "Mô tả",
   "password": "",
   "isSecured": false,
-  "code": 4
+  "code": 10,
+  "hasFullAnswers": false,
+  "category": -1,
+  "joinedPerson": 2,
+  "testIds": [
+    "5e03b19db51bbe28ec4811ac",
+    "5e03b451b51bbe28ec4811ad"
+  ],
+  "test": {
+    "5e03b19db51bbe28ec4811ac": {
+      "id": "5e03b19db51bbe28ec4811ac",
+      "name": "Đề thi mới",
+      "ownerId": "5dff0a72e8f9be27707fdd24",
+      "ownerName": "Nam Le",
+      "questions": [
+        "6ff90cab71e9098709dc9349",
+        "c48d53ce7dce44aa8fa49b08",
+        "88fa0cae32703457430e4325"
+      ],
+      "directory": [],
+      "type": 0,
+      "hasFullAnswers": false
+    }
+  },
+  "answers": {
+    "ec60c10d-2387-4615-a5ce-55bc8bf9f2a70": {
+      "id": "ec60c10d-2387-4615-a5ce-55bc8bf9f2a70",
+      "content": "4",
+      "isTrue": false
+    },
+    "a518bb66-a612-40fd-b1ad-afa86eae32bb1": {
+      "id": "a518bb66-a612-40fd-b1ad-afa86eae32bb1",
+      "content": "5",
+      "isTrue": false
+    },
+    "612ad21a-830e-4e36-9d70-955582c37f272": {
+      "id": "612ad21a-830e-4e36-9d70-955582c37f272",
+      "content": "6",
+      "isTrue": false
+    },
+    "742d4470-78e0-4dba-a33f-81030d64d5810": {
+      "id": "742d4470-78e0-4dba-a33f-81030d64d5810",
+      "content": "Việt Nam",
+      "isTrue": false
+    },
+    "db46a036-d80d-4bd3-b7fb-c626c0a80b201": {
+      "id": "db46a036-d80d-4bd3-b7fb-c626c0a80b201",
+      "content": "Trung Quốc",
+      "isTrue": false
+    }
+  },
+  "questions": {
+    "6ff90cab71e9098709dc9349": {
+      "id": "6ff90cab71e9098709dc9349",
+      "type": 0,
+      "point": 1,
+      "content": {
+        "_immutable": {
+          "allowUndo": true,
+          "currentContent": {
+            "entityMap": {},
+            "blockMap": {
+              "e8bfc": {
+                "key": "e8bfc",
+                "type": "unstyled",
+                "text": "1+1=???",
+                "characterList": [
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  },
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  },
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  },
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  },
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  },
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  },
+                  {
+                    "style": [
+                      "BOLD"
+                    ],
+                    "entity": null
+                  }
+                ],
+                "depth": 0,
+                "data": {}
+              }
+            },
+            "selectionBefore": {
+              "anchorKey": "e8bfc",
+              "anchorOffset": 0,
+              "focusKey": "e8bfc",
+              "focusOffset": 0,
+              "isBackward": false,
+              "hasFocus": false
+            },
+            "selectionAfter": {
+              "anchorKey": "e8bfc",
+              "anchorOffset": 0,
+              "focusKey": "e8bfc",
+              "focusOffset": 0,
+              "isBackward": false,
+              "hasFocus": false
+            }
+          },
+          "decorator": null,
+          "directionMap": {
+            "e8bfc": "LTR"
+          },
+          "forceSelection": false,
+          "inCompositionMode": false,
+          "inlineStyleOverride": null,
+          "lastChangeType": null,
+          "nativelyRenderedContent": null,
+          "redoStack": [],
+          "selection": {
+            "anchorKey": "e8bfc",
+            "anchorOffset": 0,
+            "focusKey": "e8bfc",
+            "focusOffset": 0,
+            "isBackward": false,
+            "hasFocus": false
+          },
+          "treeMap": {
+            "e8bfc": [
+              {
+                "start": 0,
+                "end": 7,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 7
+                  }
+                ]
+              }
+            ]
+          },
+          "undoStack": []
+        }
+      },
+      "answers": [
+        "ec60c10d-2387-4615-a5ce-55bc8bf9f2a70",
+        "a518bb66-a612-40fd-b1ad-afa86eae32bb1",
+        "612ad21a-830e-4e36-9d70-955582c37f272"
+      ],
+      "ownerId": "5dff0a72e8f9be27707fdd24",
+      "level": 1
+    },
+    "c48d53ce7dce44aa8fa49b08": {
+      "id": "c48d53ce7dce44aa8fa49b08",
+      "type": 2,
+      "point": 1,
+      "content": {
+        "_immutable": {
+          "allowUndo": true,
+          "currentContent": {
+            "entityMap": {
+              "0": "1"
+            },
+            "blockMap": {
+              "7sh34": {
+                "key": "7sh34",
+                "type": "unstyled",
+                "text": "Trái gì ____",
+                "characterList": [
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  }
+                ],
+                "depth": 0,
+                "data": {}
+              },
+              "3le6g": {
+                "key": "3le6g",
+                "type": "atomic",
+                "text": " ",
+                "characterList": [
+                  {
+                    "style": [],
+                    "entity": "1"
+                  }
+                ],
+                "depth": 0,
+                "data": {}
+              },
+              "67ec": {
+                "key": "67ec",
+                "type": "unstyled",
+                "text": "",
+                "characterList": [],
+                "depth": 0,
+                "data": {}
+              }
+            },
+            "selectionBefore": {
+              "anchorKey": "7sh34",
+              "anchorOffset": 0,
+              "focusKey": "7sh34",
+              "focusOffset": 0,
+              "isBackward": false,
+              "hasFocus": false
+            },
+            "selectionAfter": {
+              "anchorKey": "7sh34",
+              "anchorOffset": 0,
+              "focusKey": "7sh34",
+              "focusOffset": 0,
+              "isBackward": false,
+              "hasFocus": false
+            }
+          },
+          "decorator": null,
+          "directionMap": {
+            "7sh34": "LTR",
+            "3le6g": "LTR",
+            "67ec": "LTR"
+          },
+          "forceSelection": false,
+          "inCompositionMode": false,
+          "inlineStyleOverride": null,
+          "lastChangeType": null,
+          "nativelyRenderedContent": null,
+          "redoStack": [],
+          "selection": {
+            "anchorKey": "7sh34",
+            "anchorOffset": 0,
+            "focusKey": "7sh34",
+            "focusOffset": 0,
+            "isBackward": false,
+            "hasFocus": false
+          },
+          "treeMap": {
+            "7sh34": [
+              {
+                "start": 0,
+                "end": 12,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 12
+                  }
+                ]
+              }
+            ],
+            "3le6g": [
+              {
+                "start": 0,
+                "end": 1,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 1
+                  }
+                ]
+              }
+            ],
+            "67ec": [
+              {
+                "start": 0,
+                "end": 0,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "undoStack": []
+        }
+      },
+      "ownerId": "5dff0a72e8f9be27707fdd24",
+      "level": 1
+    },
+    "88fa0cae32703457430e4325": {
+      "id": "88fa0cae32703457430e4325",
+      "type": 0,
+      "point": 1,
+      "content": {
+        "_immutable": {
+          "allowUndo": true,
+          "currentContent": {
+            "entityMap": {
+              "0": "2"
+            },
+            "blockMap": {
+              "2mh04": {
+                "key": "2mh04",
+                "type": "unstyled",
+                "text": "VN= ?",
+                "characterList": [
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  },
+                  {
+                    "style": [],
+                    "entity": null
+                  }
+                ],
+                "depth": 0,
+                "data": {}
+              },
+              "8q7h9": {
+                "key": "8q7h9",
+                "type": "atomic",
+                "text": " ",
+                "characterList": [
+                  {
+                    "style": [],
+                    "entity": "2"
+                  }
+                ],
+                "depth": 0,
+                "data": {}
+              },
+              "anql7": {
+                "key": "anql7",
+                "type": "unstyled",
+                "text": "",
+                "characterList": [],
+                "depth": 0,
+                "data": {}
+              }
+            },
+            "selectionBefore": {
+              "anchorKey": "2mh04",
+              "anchorOffset": 0,
+              "focusKey": "2mh04",
+              "focusOffset": 0,
+              "isBackward": false,
+              "hasFocus": false
+            },
+            "selectionAfter": {
+              "anchorKey": "2mh04",
+              "anchorOffset": 0,
+              "focusKey": "2mh04",
+              "focusOffset": 0,
+              "isBackward": false,
+              "hasFocus": false
+            }
+          },
+          "decorator": null,
+          "directionMap": {
+            "2mh04": "LTR",
+            "8q7h9": "LTR",
+            "anql7": "LTR"
+          },
+          "forceSelection": false,
+          "inCompositionMode": false,
+          "inlineStyleOverride": null,
+          "lastChangeType": null,
+          "nativelyRenderedContent": null,
+          "redoStack": [],
+          "selection": {
+            "anchorKey": "2mh04",
+            "anchorOffset": 0,
+            "focusKey": "2mh04",
+            "focusOffset": 0,
+            "isBackward": false,
+            "hasFocus": false
+          },
+          "treeMap": {
+            "2mh04": [
+              {
+                "start": 0,
+                "end": 5,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ]
+              }
+            ],
+            "8q7h9": [
+              {
+                "start": 0,
+                "end": 1,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 1
+                  }
+                ]
+              }
+            ],
+            "anql7": [
+              {
+                "start": 0,
+                "end": 0,
+                "decoratorKey": null,
+                "leaves": [
+                  {
+                    "start": 0,
+                    "end": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "undoStack": []
+        }
+      },
+      "answers": [
+        "742d4470-78e0-4dba-a33f-81030d64d5810",
+        "db46a036-d80d-4bd3-b7fb-c626c0a80b201"
+      ],
+      "ownerId": "5dff0a72e8f9be27707fdd24",
+      "level": 1
+    }
+  },
+  "state": "DOING"
 }

@@ -11,8 +11,6 @@ import {
     IconButton,
     Chip,
     Box,
-    ButtonGroup,
-    RootRef,
     Button,
     Divider,
     Dialog,
@@ -32,26 +30,19 @@ import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/i
 import scrollToComponent from 'react-scroll-to-component';
 import {useDispatch, useSelector} from "react-redux";
 import {
-    clearCompetingContest,
-    getAnonymousContestById,
-    getContestById, logout, postAnonymousContestResult,
-    postContest,
+    clearCompetingContest, postAnonymousContestResult,
     postContestResult, setOpenAdminFullscreenDialog,
-    updateCompetingContest,
     updateCompetingResult
 } from "../../actions";
 import {useHistory, useLocation} from 'react-router';
-//import {Editor} from 'draft-js';
-import Editor from 'draft-js-plugins-editor'
+
 import {disabledStyleWrapper, msToTime} from "../../utils";
 import QuizQuestion from "./quiz-question";
-import produce from "immer";
-import {addToNormalizedList, DefaultNormalizer, denormalizer} from "../../utils/byid-utils";
+import {denormalizer} from "../../utils/byid-utils";
 import Calculator from '../../components/calculator/component/App';
 import {snackColors} from "../../consts/color";
 import {COMPETING_CONTEST_STATE, QUESTION_TYPE_CODES, TEXT, QUESTION_STATE} from "../../consts";
 import GradientIcon from '@material-ui/icons/Gradient';
-import moment from 'moment';
 import Countdown from 'react-countdown-now';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -60,8 +51,6 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import RichEditor from 'components/rich-editor/rich-editor';
 import {CountdownRenderer} from "../../components";
 import CloseIcon from '@material-ui/icons/Close';
-import EditingQuiz from "../../components/question-dialog/editing-quiz";
-import EditingFillBlank from "../../components/question-dialog/editing-fill-blank";
 import FillBlankQuestion from "./fill-blank-question";
 
 const drawerWidth = 240;
@@ -78,24 +67,28 @@ const useStyles = makeStyles(theme => ({
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
-        marginRight: drawerWidth,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
+        marginRight: drawerWidth,
     },
-    menuButton: {
-        marginRight: theme.spacing(2),
+    title: {
+        flexGrow: 1,
     },
     hide: {
         display: 'none',
     },
     drawer: {
+        alignSelf: 'flex-end',
         width: drawerWidth,
         flexShrink: 0,
     },
     drawerPaper: {
         width: drawerWidth,
+    },
+    paper: {
+        padding: theme.spacing(3)
     },
     drawerHeader: {
         display: 'flex',
@@ -107,22 +100,24 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
+        transition: theme.transitions.create(['margin,width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
+        width: '90vw',
         marginRight: -drawerWidth,
-        paddingTop: theme.spacing(10)
+        paddingTop: theme.spacing(10),
+        alignSelf: 'center',
+        marginLeft: '2vw'
     },
     contentShift: {
-        transition: theme.transitions.create('margin', {
+        transition: theme.transitions.create(['margin,width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
+        width: `calc(90vw - ${drawerWidth}px)`,
+
         marginRight: 0,
-    },
-    paper: {
-        padding: theme.spacing(3)
     },
     question: {
         marginTop: theme.spacing(3)
@@ -163,8 +158,8 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    divider:{
-      marginTop:theme.spacing(3)
+    divider: {
+        marginTop: theme.spacing(3)
     }
 }));
 
@@ -176,6 +171,8 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
+
+const scrollToRef = (ref) => window.scrollTo(0, ref.offsetTop);
 
 export default function PlaygroundCompetePage() {
     const classes = useStyles();
@@ -198,15 +195,15 @@ export default function PlaygroundCompetePage() {
     const [questionsById, setQuestionsById] = useState([]);
     const [testName, setTestName] = useState('');
     const [isOpenResultDialog, setIsOpenResultDialog] = useState(false);
-    const [endCountDown, setEndCountDown] = useState(true);
     const [expanded, setExpanded] = React.useState('panel1');
     const [durationCompetition, setDurationCompetition] = React.useState(0);
-    const {contestId, isAnonymous, displayName, password} = locationState;
+    const {contestId, isAnonymous, displayName} = locationState;
     const history = useHistory();
     const [firstDuration, setfirstDuration] = React.useState(0);
     const [alarm, setAlarm] = React.useState(0);
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
-    let questionRefs = useRef(new Map).current;
+    let questionRefs = useRef(new Map);
+    const questionContainerRef = useRef(null);
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -326,22 +323,22 @@ export default function PlaygroundCompetePage() {
             if (isResponseFullAnswer) {
                 extraProps = generateQuestionState(questionId, answersById, type);
             }
-            let chipStyle = {marginTop:10};
+            let chipStyle = {marginTop: 10};
             if (extraProps.questionState === QUESTION_STATE.RIGHT) {
-                chipStyle = {backgroundColor: snackColors.success, marginTop:10};
+                chipStyle = {backgroundColor: snackColors.success, marginTop: 10};
             } else if (extraProps.questionState === QUESTION_STATE.WRONG) {
-                chipStyle = {backgroundColor: snackColors.error, marginTop:10};
+                chipStyle = {backgroundColor: snackColors.error, marginTop: 10};
             }
 
             return (
                 <div key={questionId}
-                     ref={inst => inst === null ? questionRefs.delete(questionId) : questionRefs.set(questionId, inst)}>
+                     ref={inst => inst === null ? questionRefs.current.delete(questionId) : questionRefs.current.set(questionId, inst)}>
                     <Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                         <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
                         <RichEditor editorState={content} readOnly={true}/>
                         {renderQuestionByType(questionId, extraProps)}
-                        <Divider className={classes.divider} variant="middle" />
+                        <Divider className={classes.divider} variant="middle"/>
                     </Box>
                 </div>)
         });
@@ -381,8 +378,12 @@ export default function PlaygroundCompetePage() {
     function handleNavigateToQuestion(id) {
         console.log('handleNavigateToQuestion', id);
         console.log('ref: ', questionRefs);
-        console.log('ref ele: ', questionRefs[id]);
-        scrollToComponent(questionRefs.get(id), {offset: -90, align: 'top', duration: 10})
+        console.log('ref ele: ', questionRefs.current.get(id));
+        scrollToComponent(questionRefs.current.get(id), {offset: -90, align: 'top', duration: 10})
+        //scrollToRef(questionRefs.current.get(id))
+        //questionContainerRef.current.getScrollableNode().children[0].scrollTop = questionRefs.current.get(id).offsetTop;
+        //window.scrollTo(0, questionContainerRef.current.offsetTop);
+        //console.log('questionContainerRef: ', questionContainerRef);
     }
 
     function renderStartContestButton() {
@@ -423,10 +424,10 @@ export default function PlaygroundCompetePage() {
                         <Grid container wrap>
                             {questionsById.map((item, index) => {
                                 const color = (results && results.byHash[item]) ? 'primary' : 'default';
-                                return (
+                                return (df
                                     <Button
                                         onClick={() => handleNavigateToQuestion(item)}
-                                        size='small' key={index.toString()} color={color}><b>{index}</b></Button>)
+                                        size='small' key={index.toString()} color={color}><b>{index + 1}</b></Button>)
                             })}
                         </Grid>
                     </ExpansionPanelDetails>
@@ -483,7 +484,9 @@ export default function PlaygroundCompetePage() {
             <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
                 <Toolbar>
                     <Typography variant="h6" noWrap>{contestName}</Typography>
-                    <Button color="secondary" variant="contained" onClick={handleSubmit}>Nộp bài</Button>
+                    <Button color="secondary" variant="contained" edge="end"
+                            style={{marginLeft: 'auto'}}
+                            onClick={handleSubmit}>Nộp bài</Button>
                     <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)}
                                 edge="end" className={clsx(classes.menuButton, openDrawer && classes.hide)}>
                         <MenuIcon/>
@@ -492,7 +495,7 @@ export default function PlaygroundCompetePage() {
             </AppBar>
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <Box spacing={3}>
-                    <Paper className={classes.paper}>
+                    <Paper ref={questionContainerRef} className={classes.paper} elevation={3}>
                         <Typography variant="h5" noWrap align='center'>{contestName}</Typography>
                         <Typography variant="h5" noWrap align='center'>{testName}</Typography>
                         <Typography variant="h6" noWrap align='center'>{description}</Typography>

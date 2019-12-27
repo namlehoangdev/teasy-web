@@ -308,14 +308,13 @@ export default function PlaygroundHomePage() {
     function renderCompeteDialog() {
         return (<Dialog fullScreen open={isOpenPlaygroundFullscreenDialog} TransitionComponent={Transition}
                         onClose={() => dispatch(setOpenPlaygroundFullscreenDialog(false))}>
-            <PlaygroundCompetePage/>
         </Dialog>)
     }
 
     return (
         <div className={classes.root}>
             <Switch>
-                <Route exact path={`${path}/${PAGE_PATHS.compete}`} render={renderCompeteDialog}/>/>
+                <Route exact path={`${path}/${PAGE_PATHS.compete}`} component={PlaygroundCompetePage}/>
                 <Route render={renderMainPlayground}/>
             </Switch>
         </div>
