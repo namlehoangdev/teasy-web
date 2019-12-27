@@ -3,7 +3,7 @@
   border: 1px solid #ddd;
   font-family: 'Georgia', serif;
   font-size: 14px;
-  padding: 15px;
+  padding: 0px;
   min-width: -webkit-fill-available;
 }
 
@@ -11,7 +11,7 @@
   border-top: 0px solid #ddd;
   cursor: text;
   font-size: 16px;
-  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .RichEditor-editor .public-DraftEditorPlaceholder-root,
@@ -21,7 +21,7 @@
 }
 
 .RichEditor-editor .public-DraftEditor-content {
-  min-height: 100px;
+  min-height: 50px;
 }
 
 .RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
@@ -41,7 +41,8 @@
   background-color: rgba(0, 0, 0, 0.05);
   font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
   font-size: 16px;
-  padding: 20px;
+  padding: 10px;
+  max-width: 500px;
 }
 
 .RichEditor-controls {
@@ -75,7 +76,7 @@
 }
 
 .editor :global(.public-DraftEditor-content) {
-  min-height: 140px;
+  min-height: 50px;
 }
 
 .options {

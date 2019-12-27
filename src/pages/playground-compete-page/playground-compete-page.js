@@ -162,6 +162,9 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    divider:{
+      marginTop:theme.spacing(3)
     }
 }));
 
@@ -323,11 +326,11 @@ export default function PlaygroundCompetePage() {
             if (isResponseFullAnswer) {
                 extraProps = generateQuestionState(questionId, answersById, type);
             }
-            let chipStyle = {};
+            let chipStyle = {marginTop:10};
             if (extraProps.questionState === QUESTION_STATE.RIGHT) {
-                chipStyle = {backgroundColor: snackColors.success};
+                chipStyle = {backgroundColor: snackColors.success, marginTop:10};
             } else if (extraProps.questionState === QUESTION_STATE.WRONG) {
-                chipStyle = {backgroundColor: snackColors.error};
+                chipStyle = {backgroundColor: snackColors.error, marginTop:10};
             }
 
             return (
@@ -336,10 +339,9 @@ export default function PlaygroundCompetePage() {
                     <Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                         <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
-                        <Typography variant="subtitle2" noWrap align='center'>
-                            <RichEditor editorState={content} readOnly={true}/>
-                        </Typography>
+                        <RichEditor editorState={content} readOnly={true}/>
                         {renderQuestionByType(questionId, extraProps)}
+                        <Divider className={classes.divider} variant="middle" />
                     </Box>
                 </div>)
         });
