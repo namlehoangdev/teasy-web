@@ -424,7 +424,7 @@ export default function PlaygroundCompetePage() {
                         <Grid container wrap>
                             {questionsById.map((item, index) => {
                                 const color = (results && results.byHash[item]) ? 'primary' : 'default';
-                                return (df
+                                return (
                                     <Button
                                         onClick={() => handleNavigateToQuestion(item)}
                                         size='small' key={index.toString()} color={color}><b>{index + 1}</b></Button>)

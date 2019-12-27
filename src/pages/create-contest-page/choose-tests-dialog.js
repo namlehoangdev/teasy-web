@@ -130,7 +130,7 @@ export default function ChooseTestDialog(props) {
 
     function renderTableBody() {
         if (searchValue.length === 0) {
-            return (tests.byId.map(renderTests))
+            return ([...tests.byId].reverse().map(renderTests))
         }
         return tests.byId.filter(id => trimSign(tests.byHash[id].name.toLowerCase()).includes(searchValue.toLowerCase())).map(renderTests);
     }

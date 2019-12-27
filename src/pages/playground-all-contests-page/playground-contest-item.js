@@ -138,9 +138,14 @@ export default function PlaygroundContestItem(props) {
                 />
                 <CardContent className={classes.contentContainer}>
                     <div>
-                      <Typography variant="body2" color="textSecondary" component="p">
+                      {moment(startAt).year() === 1 ? <Typography variant="body2" color="primary" component="p">
+                          Đang mở
+                      </Typography> : ((moment(startAt).diff(moment.utc(), "ms") + duration) < 0 ? <Typography variant="body2" color="textSecondary" component="p">
+                          Đã kết thúc
+                      </Typography> : <Typography variant="body2" color="secondary" component="p">
                           {moment(startAt).locale('vi').format('llll').toUpperCase()}
-                      </Typography>
+                      </Typography>)
+                      }
                       <Typography variant="h5" component="h5">
                           {name && name}
                       </Typography>                                 

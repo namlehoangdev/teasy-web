@@ -20,7 +20,7 @@ import {
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import moment from 'moment';
-import {isNullOrEmpty, isoToLocalDateString, msToTime} from "../../utils";
+import {isNullOrEmpty, isoToLocalDateString, msToTime, trimSign} from "../../utils";
 import Countdown from 'react-countdown-now';
 import {useHistory} from "react-router";
 import {CONTEST_TYPE_CODE, CONTEST_TYPE_TEXT, PAGE_PATHS} from "../../consts";
@@ -161,8 +161,8 @@ export default function PlaygroundAllContestsPage() {
     }, [contests.byId]);
 
     function handleItemClick(id) {
-        console.log('history: ', history);
-        history.push(`${PAGE_PATHS.waiting}?contestId=${id}`);
+        // console.log('history: ', history);
+        // history.push(`${PAGE_PATHS.waiting}?contestId=${id}`);
         //history.push({pathname: `${PAGE_PATHS.playground} /${PAGE_PATHS.compete}`, state: {contestId: id}});
     }
 
@@ -194,18 +194,18 @@ export default function PlaygroundAllContestsPage() {
     }
 
     function sortContests(a,b){
-      if(setSelectedCate === 'Mới nhất')
-        return -moment(contests.byHash[a].createdAt).diff(contests.byHash[b].createdAt, "ms")
+      if(selectedCate === 'Mới nhất')
+        return moment(contests.byHash[b].createdAt).diff(moment(contests.byHash[a].createdAt), "ms")
       else if(selectedCate === 'Hot nhất')
         return contests.byHash[b].joinedPerson - contests.byHash[a].joinedPerson
       else if(selectedCate === 'Sắp diễn ra')
-        return -moment(contests.byHash[a].startAt).diff(contests.byHash[b].startAt, "ms")
+        return moment(contests.byHash[b].startAt).diff(contests.byHash[a].startAt, "ms")
     }
 
     return (<div className={classes.root}>
         <Container maxWidth="lg" className={classes.container}>
                <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
-                          Tất cả cuộc thi từ cộng đồng
+                          Cuộc thi từ cộng đồng
                 </Typography>   
              <div className={classes.searchContainer}>
                <div className={classes.search}>
@@ -231,12 +231,12 @@ export default function PlaygroundAllContestsPage() {
                     {isShowCircleLoading && <CircularProgress/>}
                 </Grid>
                 <Grid item xs={10} >
-                    {[...contests.byId].sort((a,b) => sortContests(a,b)).map(renderContest)}
+                    {[...contests.byId].filter(id => trimSign(contests.byHash[id].name.toLowerCase()).includes(searchValue.toLowerCase())).sort((a,b) => sortContests(a,b)).map(renderContest)}
                 </Grid>
 
                 <Grid item xs={2} >
                     <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
-                          Bộ lọc
+                          Sắp xếp
                      </Typography> 
                     <div className={classes.cateContainer}>
                       {['Mới nhất', 'Hot nhất','Sắp diễn ra'].map((item) => renderCateContest(item))}

@@ -130,7 +130,7 @@ export default function ChooseUserDialog(props) {
 
     function renderTableBody() {
         if (searchValue.length === 0) {
-            return (users.byId.map(renderUsers))
+            return ([...users.byId].reverse().map(renderUsers))
         }
         return users.byId.filter(id => trimSign(users.byHash[id].name.toLowerCase()).includes(searchValue.toLowerCase())).map(renderUsers);
     }
