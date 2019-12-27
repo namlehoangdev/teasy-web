@@ -200,14 +200,18 @@ export default function PlaygroundWaitingRoomPage() {
                                 <TableCell className={classes.detailCell}>Người tạo</TableCell>
                                 <TableCell className={classes.detailCell}>{ownerName}</TableCell>
                             </TableRow>
-                            <TableRow>
-                                <TableCell className={classes.detailCell}>
-                                    Thời gian bắt đầu
-                                </TableCell>
-                                <TableCell className={classes.detailCell}>
-                                    {isoToLocalDateString(startAt)}
-                                </TableCell>
-                            </TableRow>
+                            {moment(startAt).year() !== 1 &&
+                              <TableRow>
+                                  <TableCell className={classes.detailCell}>
+                                      Thời gian bắt đầu
+                                  </TableCell>
+                                  
+                                  <TableCell className={classes.detailCell}>
+                                      {isoToLocalDateString(startAt)}
+                                  </TableCell>
+                              </TableRow>
+                            }
+                            
                             <TableRow>
                                 <TableCell className={classes.detailCell}>Thời lượng</TableCell>
                                 <TableCell className={classes.detailCell}>
