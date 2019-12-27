@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import {Table, TableHead} from "@material-ui/core";
 import {Search as SearchIcon} from '@material-ui/icons';
+import { trimSign } from 'utils';
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -131,7 +132,7 @@ export default function ChooseTestDialog(props) {
         if (searchValue.length === 0) {
             return (tests.byId.map(renderTests))
         }
-        return tests.byId.filter(id => tests.byHash[id].name.includes(searchValue)).map(renderTests);
+        return tests.byId.filter(id => trimSign(tests.byHash[id].name.toLowerCase()).includes(searchValue.toLowerCase())).map(renderTests);
     }
 
     let testsLength = _.get(tests, 'byId', []).length;
@@ -168,7 +169,6 @@ export default function ChooseTestDialog(props) {
                                 inputProps={{'aria-label': 'select all desserts'}}
                             />
                         </TableCell>
-                        <TableCell component="th" align="left"> </TableCell>
                         <TableCell component="th" align="left">Tên đề thi</TableCell>
                         <TableCell component="th" align="left">Đầy đủ đáp án</TableCell>
                     </TableRow>

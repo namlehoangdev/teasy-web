@@ -71,7 +71,7 @@ export default function EditingQuestionDialog() {
             <DialogActions>
                 <Button onClick={handleCloseDialog} color="primary">{TEXT.dismiss}</Button>
                 <Button onClick={handleSubmit} variant="contained"
-                        color="primary">{id ? TEXT.create : TEXT.edit}</Button>
+                        color="primary">{id ? TEXT.edit : TEXT.create}</Button>
             </DialogActions>
         </Dialog>
     );

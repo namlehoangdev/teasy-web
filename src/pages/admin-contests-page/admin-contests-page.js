@@ -18,6 +18,7 @@ import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {isoToLocalDateString} from "../../utils";
 import {PAGE_PATHS} from "../../consts/page-paths-conts";
 import {useHistory, useRouteMatch} from "react-router-dom";
+import moment from "moment"
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -143,8 +144,8 @@ export default function AdminContestPage() {
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
-            <TableCell align="left">{description}</TableCell>
-            <TableCell align="left">{isoToLocalDateString(startAt)}</TableCell>
+            <TableCell align="left">{description || '.....'}</TableCell>
+            <TableCell align="left">{moment(startAt).year()=== 1 ? 'không' : isoToLocalDateString(startAt)}</TableCell>
             <TableCell align="left">
                 <IconButton onClick={() => handleEditContestIconClick(id)}>
                     <EditIcon/>
@@ -166,7 +167,7 @@ export default function AdminContestPage() {
                 <WorkingTableV2 filesByHash={contests.byHash}
                                 numberOfColumns={5}
                                 isLoading={isShowCircleLoading}
-                                filesById={contests.byId}
+                                filesById={[...contests.byId].reverse()}
                                 dragDisplayProperty="content"
                                 setFiles={handleFilesChange}
                                 setFileById={handleFileByIdChange}

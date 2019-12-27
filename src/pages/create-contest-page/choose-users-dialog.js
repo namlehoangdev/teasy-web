@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import {Table, TableHead} from "@material-ui/core";
 import {Search as SearchIcon} from '@material-ui/icons';
+import { trimSign } from 'utils';
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing(3),
             width: 'auto',
-        },
+        }
     },
     searchIcon: {
         width: theme.spacing(7),
@@ -131,7 +132,7 @@ export default function ChooseUserDialog(props) {
         if (searchValue.length === 0) {
             return (users.byId.map(renderUsers))
         }
-        return users.byId.filter(id => users.byHash[id].name.includes(searchValue)).map(renderUsers);
+        return users.byId.filter(id => trimSign(users.byHash[id].name.toLowerCase()).includes(searchValue.toLowerCase())).map(renderUsers);
     }
 
     let usersLength = _.get(users, 'byId', []).length;
@@ -169,9 +170,8 @@ export default function ChooseUserDialog(props) {
                                 inputProps={{'aria-label': 'select all desserts'}}
                             />
                         </TableCell>
-                        <TableCell component="th" align="left"> </TableCell>
-                        <TableCell component="th" align="left">Tên thí sinh</TableCell>
-                        <TableCell component="th" align="left">Email</TableCell>
+                        <TableCell classes={{color:'red'}} variant='head' component="p" align="left">Tên thí sinh</TableCell>
+                        <TableCell variant='head' component="p" align="left">Email</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody style={{minHeight: '500px'}}>

@@ -69,10 +69,10 @@ const useStyles = makeStyles(theme => ({
     },
 
     card: {
-      maxWidth: theme.spacing(80),
+      width: theme.spacing(80),
     },
     media: {
-        maxHeight: theme.spacing(20),
+      maxHeight: theme.spacing(20),
     },
     expand: {
         transform: 'rotate(0deg)',
@@ -102,6 +102,13 @@ const useStyles = makeStyles(theme => ({
     contentContainer:{
       display:'flex',
       flexDirection:'row',
+    },
+    createdBy:{
+      position:'absolute',
+      paddingBottom: theme.spacing(1),
+    },
+    des:{
+      paddingBottom: theme.spacing(2),
     }
 
 }));
@@ -115,41 +122,6 @@ export default function PlaygroundContestItem(props) {
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
-
-    function renderDetail(props) {
-        return (<Table size="small">
-            <TableRow>
-                <TableCell className={classes.detailCell}>Tên cuộc thi</TableCell>
-                <TableCell className={classes.detailCell}>{name}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.detailCell}>Mô tả</TableCell>
-                <TableCell className={classes.detailCell}>{description}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.detailCell}>Trạng thái</TableCell>
-                <TableCell className={classes.detailCell}>{isPublic ? 'công khai' : 'riêng tư'}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.detailCell}>Người tạo</TableCell>
-                <TableCell className={classes.detailCell}>{ownerName}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.detailCell}>Thời gian bắt đầu</TableCell>
-                <TableCell
-                    className={classes.detailCell}>{isoToLocalDateString(startAt)}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                <TableCell className={classes.detailCell}>{msToTime(duration)}</TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                <TableCell className={classes.detailCell}>{isoToLocalDateString(createdAt)}</TableCell>
-            </TableRow>
-        </Table>)
-    }
 
     function handleItemClick() {
         onItemClick && onItemClick(id);
@@ -176,13 +148,12 @@ export default function PlaygroundContestItem(props) {
                       <Typography variant="body1" color="textSecondary" component="p">
                           Thể loại {CONTEST_TYPE_TEXT[type]}
                       </Typography>}
-                      {!isNullOrEmpty(description) ? <Typography variant="body2" color="textSecondary" component="p">
+                      {!isNullOrEmpty(description) ? <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
                           {description.length > 20 ? description.substring(0, 20) + "..." : description}
-                      </Typography> : <Typography variant="body2" color="textSecondary" component="p">
-                          ...
+                      </Typography> : <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
                       </Typography>
                       }
-                      <Typography variant="body2" color="textSecondary" component="p">
+                      <Typography className={classes.createdBy} variant="body2" color="textSecondary" component="p">
                             Tạo bởi {ownerName}
                       </Typography>
                     </div>

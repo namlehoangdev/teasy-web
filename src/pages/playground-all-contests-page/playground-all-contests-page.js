@@ -30,6 +30,7 @@ import PlaygroundContestItem from './playground-contest-item';
 import Slider from "react-slick";
 import {Search as SearchIcon} from '@material-ui/icons';
 
+
 const useStyles = makeStyles(theme => ({
     root: {},
     title: {
@@ -144,6 +145,7 @@ export default function PlaygroundAllContestsPage() {
     const [focusedFiles, setFocusedFiles] = useState({});
     const history = useHistory();
     const [searchValue, setSearchValue] = useState('');
+    const [selectedCate, setSelectedCate] = useState('Mới nhất');
 
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -170,8 +172,12 @@ export default function PlaygroundAllContestsPage() {
         return (<PlaygroundContestItem {...params} onItemClick={handleItemClick}/>)
     }
 
+    function handleCateClicked(item){
+      setSelectedCate(item);
+    }
+
     function renderCateContest(item) {
-    return (<Link>{item}</Link>)
+    return (<Link underline={(item===selectedCate) ? 'always' : 'hover'} onClick={()=>{handleCateClicked(item)}}>{item}</Link>)
     }
 
     
@@ -185,6 +191,15 @@ export default function PlaygroundAllContestsPage() {
 
     function handleSearchInputChange(event) {
         setSearchValue(event.target.value);
+    }
+
+    function sortContests(a,b){
+      if(setSelectedCate === 'Mới nhất')
+        return -moment(contests.byHash[a].createdAt).diff(contests.byHash[b].createdAt, "ms")
+      else if(selectedCate === 'Hot nhất')
+        return contests.byHash[b].joinedPerson - contests.byHash[a].joinedPerson
+      else if(selectedCate === 'Sắp diễn ra')
+        return -moment(contests.byHash[a].startAt).diff(contests.byHash[b].startAt, "ms")
     }
 
     return (<div className={classes.root}>
@@ -216,15 +231,15 @@ export default function PlaygroundAllContestsPage() {
                     {isShowCircleLoading && <CircularProgress/>}
                 </Grid>
                 <Grid item xs={10} >
-                    {contests.byId.map(renderContest)}
+                    {[...contests.byId].sort((a,b) => sortContests(a,b)).map(renderContest)}
                 </Grid>
 
                 <Grid item xs={2} >
                     <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
-                          Thể loại
+                          Bộ lọc
                      </Typography> 
                     <div className={classes.cateContainer}>
-                      {['Hot nhất','Toán', 'Lý', 'Hoá', 'Văn', 'Anh'].map((item) => renderCateContest(item))}
+                      {['Mới nhất', 'Hot nhất','Sắp diễn ra'].map((item) => renderCateContest(item))}
                     </div>
                 </Grid>
                 
