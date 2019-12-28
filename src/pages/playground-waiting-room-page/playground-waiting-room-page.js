@@ -175,7 +175,7 @@ export default function PlaygroundWaitingRoomPage() {
             thi</Button>
         }
         else return <Button fullWidth variant="contained" disabled>Cuộc thi đã kết thúc</Button>
-      
+
     }
 
     const [hours, minutes] = msToTime(duration);
@@ -214,13 +214,13 @@ export default function PlaygroundWaitingRoomPage() {
                                   <TableCell className={classes.detailCell}>
                                       Thời gian bắt đầu
                                   </TableCell>
-                                  
+
                                   <TableCell className={classes.detailCell}>
                                       {isoToLocalDateString(startAt)}
                                   </TableCell>
                               </TableRow>
                             }
-                            
+
                             <TableRow>
                                 <TableCell className={classes.detailCell}>Thời lượng</TableCell>
                                 <TableCell className={classes.detailCell}>
