@@ -11,17 +11,30 @@
   border-top: 0px solid #ddd;
   cursor: text;
   font-size: 16px;
-  margin-bottom: 15px;
+  //margin-bottom: 15px;
 }
 
 .RichEditor-editor .public-DraftEditorPlaceholder-root,
 .RichEditor-editor .public-DraftEditor-content {
-  margin: 0 -15px -15px;
-  padding: 15px;
+  //margin: 50 -15px -15px;
+  padding-top: 15px;
+  padding-left: 15px;
 }
 
 .RichEditor-editor .public-DraftEditor-content {
-  min-height: 50px;
+  max-width: 700px;
+}
+
+.MJXc-display {
+  //background-color: green;
+  display: inline-block !important;
+  //text-align: center;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mjx-chtml{
+  display: inline-block;
 }
 
 .RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {

@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     description: {...theme.typography.h6, marginBottom: theme.spacing(2)},
     contentContainer: {padding: theme.spacing(2)},
     paper: {padding: theme.spacing(2)},
-    addNewButton: {alignSelf: "flex-end"}
+    addNewButton: {alignSelf: "flex-end", marginRight:theme.spacing(1), marginTop:theme.spacing(2)}
 }));
 
 export default function CreateTestPage() {
@@ -131,7 +131,7 @@ export default function CreateTestPage() {
     function renderCreatingQuestions(questionId) {
         return (
             <Grid item xs={12} sm={12} md={12}>
-                <Paper key={questionId} className={classes.paper}>
+                <Paper elevation={3} key={questionId} className={classes.paper}>
                     <EditingQuestionContent
                         data={questions.byHash[questionId]}
                         onRemove={handleRemoveQuestion}
@@ -256,7 +256,7 @@ export default function CreateTestPage() {
             >
                 <Grid item xs={12} sm={12} md={12}>
                     <Input
-                        placeholder="Điền đề thi"
+                        placeholder="Nhập tên đề thi"
                         fullWidth
                         className={classes.testTitle}
                         onChange={handleTestNameChange}
