@@ -1,18 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import './admin-contest-results-page.scss'
 import {
+    AppBar, Box, Button,
     Container,
-    Grid,
+    Grid, IconButton,
     makeStyles,
     Paper,
-    TableCell,
+    TableCell, Toolbar,
     Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {getContestResultsById, updateOwnContestResultById, updateOwnContestResults} from "../../actions";
+import {
+    getContestResultsById,
+    setOpenAdminFullscreenDialog,
+    updateOwnContestResultById,
+    updateOwnContestResults
+} from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {isoToLocalDateString} from "../../utils";
-import {useLocation} from "react-router";
+import {useHistory, useLocation} from "react-router";
+import {Close as CloseIcon} from "@material-ui/icons";
+import {TEXT} from "../../consts";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -51,6 +59,7 @@ export default function AdminContestResultsPage() {
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const dispatch = useDispatch();
     const classes = useStyles();
+    const history = useHistory();
     useEffect(() => {
         console.log('get contest results by id: ', contestId);
         dispatch(getContestResultsById(contestId));
@@ -73,7 +82,8 @@ export default function AdminContestResultsPage() {
         return (<React.Fragment>
             <TableCell align="left">{`${displayName} ${anonymousLabel}`}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
-            {totalQuestion === 0 ?<TableCell align="center"><b>{'Không có'}</b></TableCell>:<TableCell align="center"><b>{rightAnswers}/{totalQuestion}</b></TableCell>}
+            {totalQuestion === 0 ? <TableCell align="center"><b>{'Không có'}</b></TableCell> :
+                <TableCell align="center"><b>{rightAnswers}/{totalQuestion}</b></TableCell>}
         </React.Fragment>)
     }
 
@@ -92,22 +102,42 @@ export default function AdminContestResultsPage() {
         </React.Fragment>)
     }
 
+    function handleClose() {
+        history.goBack();
+        dispatch(setOpenAdminFullscreenDialog(false));
+    }
+
 
     return (<div className={classes.root}>
-            <Paper elevation={3} className={classes.paper}>
-                <Typography gutterBottom variant="h6"
-                            component="h2" color="primary">Danh sách kết quả thi của {contestName}</Typography>
-                <WorkingTableV2 filesByHash={results.byHash}
-                                numberOfColumns={3}
-                                filesById={results.byId}
-                                isShowLoading={isShowCircleLoading}
-                                dragDisplayProperty="content"
-                                setFiles={handleFilesChange}
-                                setFileById={handleFileByIdChange}
-                                renderFiles={renderFiles}
-                                renderFolders={renderFolders}
-                                renderHeaders={renderHeaders}/>
-            </Paper>
+            <AppBar className={classes.appBar}>
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleClose}
+                        aria-label="close"
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>Chi tiết kết quả</Typography>
+                </Toolbar>
+            </AppBar>
+            <Box m={3} mt={10}>
+                <Paper elevation={3} className={classes.paper}>
+                    <Typography gutterBottom variant="h6"
+                                component="h2" color="primary">Danh sách kết quả thi của {contestName}</Typography>
+                    <WorkingTableV2 filesByHash={results.byHash}
+                                    numberOfColumns={3}
+                                    filesById={results.byId}
+                                    isShowLoading={isShowCircleLoading}
+                                    dragDisplayProperty="content"
+                                    setFiles={handleFilesChange}
+                                    setFileById={handleFileByIdChange}
+                                    renderFiles={renderFiles}
+                                    renderFolders={renderFolders}
+                                    renderHeaders={renderHeaders}/>
+                </Paper>
+            </Box>
         </div>
     )
 }

@@ -6,7 +6,7 @@ import {
     ListItem, List, ListItemIcon, ListItemText, Fab, Popover, Dialog, Slide
 } from '@material-ui/core';
 import {TEXT} from "../../consts/text-consts";
-import {Route, Switch} from "react-router";
+import {Route, Switch, useLocation} from "react-router";
 import {
     AdminContestsPage, AdminQuestionsPage, AdminTestsPage,
     CreateContestPage, CreateQuestionPage, CreateTestPage,
@@ -108,6 +108,7 @@ export default function AdminHomePage() {
     const history = useHistory();
     const dispatch = useDispatch();
     const {path} = useRouteMatch();
+    const location = useLocation();
     const {isOpenAdminFullscreenDialog} = useSelector(state => state.adminReducer);
     const [currentFullscreenPath, setCurrentFullscreenPath] = useState('');
     const [openDrawer, setOpenDrawer] = useState(true);
@@ -139,11 +140,13 @@ export default function AdminHomePage() {
         // setCurrentFullscreenPath(PAGE_PATHS.createContest);
         // history.push(`${path}/${PAGE_PATHS.createContest}`);
         //dispatch(openCreateTest());
+        console.log('did mount admin home : ', location, path);
+        if (location.pathname === '/admin') {
+            setSelectedIndex(0);
+            setAppBarTitle(listNavItemMap[0].name);
+            history.push(`${path}/${PAGE_PATHS.allContests}`);
+        }
 
-        const item = listNavItemMap[0];
-        setSelectedIndex(item.key);
-        setAppBarTitle(item.name);
-        history.push(`${path}/${item.path}`);
     }, []);
 
 

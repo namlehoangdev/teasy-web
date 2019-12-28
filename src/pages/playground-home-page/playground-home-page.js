@@ -133,10 +133,11 @@ export default function PlaygroundHomePage() {
     const history = useHistory();
     const dispatch = useDispatch();
     const {path} = useRouteMatch();
+    const location = useLocation();
     const {isOpenPlaygroundFullscreenDialog} = useSelector(state => state.playgroundReducer);
     const [openDrawer, setOpenDrawer] = useState(true);
     const [appBarTitle, setAppBarTitle] = useState('');
-    const location = useLocation()
+
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {language} = useSelector(state => state.settingReducer);
     //const [open, setOpen] = useState(false);
