@@ -13,7 +13,6 @@ export default function CopyRoomCodeButton({code}) {
             onCopy={() => setIsCopied(true)}
         >
             <Button
-                variant="outlined"
                 onMouseLeave={() => setIsCopied(false)}
                 onClick={() => setIsCopied(true)}
                 onMouseOut={() => setIsCopied(false)}

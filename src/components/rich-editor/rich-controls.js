@@ -8,6 +8,7 @@ import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 import FormatBoldIcon from '@material-ui/icons/FormatBold';
 import FormatItalicIcon from '@material-ui/icons/FormatItalic';
+import Button from "@material-ui/core/Button";
 
 function StyleButton(props) {
     const {onToggle, style, active, label = '', icon} = props;
@@ -19,8 +20,9 @@ function StyleButton(props) {
 
     let className = 'RichEditor-styleButton';
     if (active) className += ' RichEditor-activeButton';
-    return ( icon ? <span className={className} onMouseDown={handleOnToggle}>{icon}</span> : 
-    <span className={className} onMouseDown={handleOnToggle}>{label}</span>);
+    return (icon ?
+        <Button><span className={className} onMouseDown={handleOnToggle}>{icon}</span></Button> :
+        <Button><span className={className} onMouseDown={handleOnToggle}>{label}</span></Button>);
 }
 
 StyleButton.propTypes = {
@@ -32,9 +34,9 @@ StyleButton.propTypes = {
 };
 
 const INLINE_STYLES = [
-    {label: 'In đậm', style: 'BOLD', icon:<FormatBoldIcon/>},
-    {label: 'Nghiêng', style: 'ITALIC', icon:<FormatItalicIcon/>},
-    {label: 'Gạch dưới', style: 'UNDERLINE', icon:<FormatUnderlinedIcon/>},
+    {label: 'In đậm', style: 'BOLD', icon: <FormatBoldIcon/>},
+    {label: 'Nghiêng', style: 'ITALIC', icon: <FormatItalicIcon/>},
+    {label: 'Gạch dưới', style: 'UNDERLINE', icon: <FormatUnderlinedIcon/>},
     // {label: 'Code', style: 'CODE'},
 ];
 
@@ -55,7 +57,7 @@ export const InlineStyleControls = (props) => {
                     label={type.label}
                     onToggle={handleToggle}
                     style={type.style}
-                    icon = {type.icon}
+                    icon={type.icon}
                 />
             )}
         </div>
@@ -95,7 +97,7 @@ export const BlockStyleControls = (props) => {
                     label={type.label}
                     onToggle={handleToggle}
                     style={type.style}
-                    icon = {type.icon}
+                    icon={type.icon}
                 />
             )}
         </div>

@@ -82,3 +82,12 @@ export const CONTEST_TYPE_TEXT = {
     [CONTEST_TYPE_CODE.IT]: 'IT',
     [CONTEST_TYPE_CODE.ELSE]: 'Khác'
 };
+
+
+export const QUESTION_LEVEL = {
+    EASY: 0,
+    NORMAL: 1,
+    HARD: 2,
+    VERY_HARD: 3
+};
+

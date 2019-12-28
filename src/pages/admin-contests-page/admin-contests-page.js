@@ -60,6 +60,7 @@ export default function AdminContestPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
+        dispatch(setOpenAdminFullscreenDialog(false));
         dispatch(getOwnContests());
     }, []);
 
