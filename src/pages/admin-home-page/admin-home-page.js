@@ -145,10 +145,10 @@ export default function AdminHomePage() {
         // history.push(`${path}/${PAGE_PATHS.createContest}`);
         //dispatch(openCreateTest());
  
-        setSelectedIndex(0);
-        setAppBarTitle(listNavItemMap[0].name);
-        history.push(`${path}/${PAGE_PATHS.allContests}`);
-
+        const item = listNavItemMap[0];
+        setSelectedIndex(item.key);
+        setAppBarTitle(item.name);
+        history.push(`${path}/${item.path}`);
 
     }, []);
 
