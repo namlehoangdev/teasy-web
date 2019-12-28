@@ -25,6 +25,7 @@ import {updatePartitionOfContestById} from "../actions";
 import {updateOwnQuestionById} from "../actions";
 import {addNewOwnQuestion} from "../actions";
 import {updateRemovedOwnQuestionById} from "../actions";
+import {updateEditingContest} from "../actions";
 
 const answerSchema = {
     answers: {
@@ -184,6 +185,7 @@ export function* postContestSaga({payload}) {
         const response = yield call(APIs.postContestAPI, payload);
         console.log('postContestSaga succeed: ', response);
         if (response && response.data) {
+            yield put(updateEditingContest({code: response.data.code}));
             yield put(addNewOwnContest(response.data));
         }
     } catch (error) {

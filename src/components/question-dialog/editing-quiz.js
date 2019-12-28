@@ -63,6 +63,12 @@ export default function EditingQuiz(props) {
     useEffect(() => {
         if (!answers || !answers.byId) {
             onChange({answers: new DefaultNormalizer()});
+        } else {
+            answers.byId.forEach((id) => {
+                if (answers.byHash[id].isTrue) {
+                    setAnswerRadioValue(id);
+                }
+            });
         }
     }, []);
 
@@ -145,7 +151,7 @@ export default function EditingQuiz(props) {
         onChange({
             answers: produce(answers, draftState => {
                 draftState.byId.map(id => {
-                    draftState.byHash[id].isTrue = id == answersId;
+                    draftState.byHash[id].isTrue = id === answersId;
                 })
 
             })
