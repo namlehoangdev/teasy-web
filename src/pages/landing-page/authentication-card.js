@@ -18,12 +18,14 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: '#445EA9',
             color: theme.palette.common.white,
             width: '100%',
+            height:'112%'
         },
         google: {
             ...theme.typography.button,
             ...theme.shape,
             width: '100%',
-            justifyContent: 'center'
+            justifyContent: 'center',
+
         },
         paper: {
             backgroundColor: theme.palette.background,
