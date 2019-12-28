@@ -129,7 +129,7 @@ export default function PlaygroundContestItem(props) {
 
     return (
         <Grid className={classes.root} item xs={12} md={7} lg={8}>
-            <Card className={classes.card} onClick={handleItemClick}>
+            <Card className={classes.card}>
                 {isLoading ? <Skeleton variant="rect" className={classes.media} height={120} /> : <CardMedia
                     component='img'
                     className={classes.media}
@@ -168,9 +168,11 @@ export default function PlaygroundContestItem(props) {
                     </div>
                 
                    <CardActions className={classes.actionContainer}>
-                      {isLoading ? <Skeleton variant="rect" className={classes.vaophong} width={100} height={15}/> : <Button className={classes.vaophong} size="small" color="primary" onClick={handleItemClick}>
+                      {isLoading ? <Skeleton variant="rect" className={classes.vaophong} width={100} height={15}/> : <div>
+                        {((moment(startAt).diff(moment.utc(), "ms") + duration) > 0 ||  moment(startAt).year() === 1) && <Button className={classes.vaophong} size="small" color="primary" onClick={handleItemClick}>
                           Vào phòng thi
-                      </Button>}
+                        </Button>}
+                        </div>}
                       {isLoading ? <Skeleton variant="rect" className={classes.joiner} width={70} height={10}/> : <Typography className={classes.joiner}  variant="body2" color="textSecondary" component="p">
                           {joinedPerson} {`lượt thi`}
                       </Typography>}

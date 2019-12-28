@@ -65,6 +65,11 @@ const useStyles = makeStyles(theme => ({
     bottom: {
         marginTop: theme.spacing(3),
         display: 'flex'
+    },
+    center: {
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column'
     }
 }));
 
@@ -91,7 +96,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
     const [errorPasswordText, setErrorPasswordText] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState(null);
-
+    const [isCompeleted, setIsCompeleted] = useState(false);  
 
     function onGetContestSuccess() {
         dispatch(setOpenPlaygroundFullscreenDialog(true));
@@ -144,19 +149,30 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
 
     function renderStartContestButton() {
         const diff = moment(startAt).diff(moment.utc(), "ms");
-        console.log("diff: ", diff);
+  
         if (diff > 0) {
-            return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>);
+            return (<div className={classes.center}>
+                <Typography gutterBottom variant="h6" component="h2" color="secondary">
+                    Diễn ra sau:
+                </Typography>
+                <Countdown onComplete={()=>{
+                  setIsCompeleted(true)
+                }} autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>
+            </div>);
         }
 
-        return (<Button fullWidth variant="contained" color="primary" onClick={handleStartContestClick}>Tham gia
-            thi</Button>)
+        else if ((moment(startAt).diff(moment.utc(), "ms") + duration) > 0 ||  moment(startAt).year() === 1)
+        {
+          return <Button fullWidth variant="contained" color="primary" onClick={handleStartContestClick}>Tham gia
+            thi</Button>
+        }
+        else return <Button fullWidth variant="contained" disabled>Cuộc thi đã kết thúc</Button>
     }
 
     const [hours, minutes] = msToTime(duration);
     return (
         <Grid container component="main" className={classes.root}>
-            <Grid item component={Paper}
+            <Grid elevation={3} item component={Paper}
                   style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
                 {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
                 <div className={classes.paper}>
@@ -183,26 +199,24 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
                                 <TableCell className={classes.detailCell}>Người tạo</TableCell>
                                 <TableCell className={classes.detailCell}>{ownerName}</TableCell>
                             </TableRow>
+                             {moment(startAt).year() !== 1 &&
+                              <TableRow>
+                                  <TableCell className={classes.detailCell}>
+                                      Thời gian bắt đầu
+                                  </TableCell>
+                                  
+                                  <TableCell className={classes.detailCell}>
+                                      {isoToLocalDateString(startAt)}
+                                  </TableCell>
+                              </TableRow>
+                            }
                             <TableRow>
-                                <TableCell className={classes.detailCell}>
-                                    Thời gian bắt đầu
-                                </TableCell>
-                                <TableCell className={classes.detailCell}>
-                                    {isoToLocalDateString(startAt)}
+                                <TableCell className={classes.detailCell}>Thời lượng</TableCell>
+                                 <TableCell className={classes.detailCell}>
+                                    {hours * 60 + minutes + " phút"}
                                 </TableCell>
                             </TableRow>
-                            <TableRow>
-                                <TableCell className={classes.detailCell}>Diễn ra trong</TableCell>
-                                <TableCell className={classes.detailCell}>
-                                    {hours}:{minutes}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className={classes.detailCell}>Ngày tạo</TableCell>
-                                <TableCell className={classes.detailCell}>
-                                    {isoToLocalDateString(createdAt)}
-                                </TableCell>
-                            </TableRow>
+
                         </TableBody>
                     </Table>
                     <Box mt={3}>

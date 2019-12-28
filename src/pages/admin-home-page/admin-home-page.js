@@ -110,7 +110,7 @@ export default function AdminHomePage() {
     const {path} = useRouteMatch();
     const {isOpenAdminFullscreenDialog} = useSelector(state => state.adminReducer);
     const [currentFullscreenPath, setCurrentFullscreenPath] = useState('');
-    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(true);
     const [appBarTitle, setAppBarTitle] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [createPopAnchorEl, setCreatePopAnchorEl] = useState(null);

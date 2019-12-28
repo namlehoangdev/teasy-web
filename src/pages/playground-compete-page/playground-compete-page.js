@@ -162,6 +162,12 @@ const useStyles = makeStyles(theme => ({
     },
     divider: {
         marginTop: theme.spacing(3)
+    },
+    center: {
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        marginBottom:theme.spacing(1)
     }
 }));
 
@@ -263,7 +269,7 @@ export default function PlaygroundCompetePage() {
     function handleNavigateToResultsPage() {
         console.log('navigate to results page');
         if (isAnonymous) {
-            history.replaceState(null, TEXT.appName, '/');
+            history.replace("/");
         } else {
             history.goBack();
         }
@@ -478,7 +484,7 @@ export default function PlaygroundCompetePage() {
 
     function renderSubmitResult() {
         if (state === COMPETING_CONTEST_STATE.SUBMIT) {
-            return (<div className={classes.circleProgressWrapper}><CircularProgress/></div>);
+            return (<div className={classes.center}><CircularProgress className={classes.center}/></div>);
         }
         return (
             <React.Fragment>
