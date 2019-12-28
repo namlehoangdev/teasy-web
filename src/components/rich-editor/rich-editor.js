@@ -8,7 +8,7 @@ import createMathjaxPlugin from 'draft-js-mathjax-plugin'
 import Editor, {composeDecorators} from 'draft-js-plugins-editor'
 import {disabledStyleWrapper} from 'utils';
 import createImagePlugin from 'draft-js-image-plugin';
-import ImageUpload from 'components/upload/ImageUpload';
+import ImageUpload from '../upload/ImageUpload';
 import createAlignmentPlugin from 'draft-js-alignment-plugin';
 import createResizeablePlugin from 'draft-js-resizeable-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     toolbar: {
         display: 'flex',
         flexDirection: 'row',
+        flexWrap:'wrap'
     },
     inlineToolbar: {}
 }))
@@ -97,14 +98,15 @@ export default function RichEditor(props) {
                 <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
                 <InlineStyleControls className={classes.InlineToolbar} editorState={editorState}
                                      onToggle={toggleInlineStyle}/>
+
+                <ImageUpload
+                    onUploaded={(url) => {
+                        onChange(plugins[5].addImage(editorState, url));
+                    }}
+                    category="Question"
+                    userId={userId}
+                    buttonLabel="Chèn ảnh"/>
             </div>}
-            {readOnly === false && <ImageUpload
-                onUploaded={(url) => {
-                    onChange(plugins[5].addImage(editorState, url));
-                }}
-                category="Question"
-                userId={userId}
-                buttonLabel="Chèn ảnh"/>}
             <div className={className}>
                 <Editor
                     blockStyleFn={getBlockStyle}

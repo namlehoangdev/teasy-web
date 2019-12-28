@@ -57,6 +57,7 @@ export default function AdminQuestionsPage() {
     const [isOpenRemoveDialog, setOpenRemoveDialog] = React.useState(false);
     const [actionItemId, setActionItemId] = useState(null);
     const {enqueueSnackbar} = useSnackbar()
+    const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
@@ -151,6 +152,7 @@ export default function AdminQuestionsPage() {
             <Typography gutterBottom variant="h6"
                         component="h2" color="primary">Quản lý đề thi</Typography>
             <WorkingTableV2 filesByHash={questions.byHash}
+                            isLoading={isShowCircleLoading}
                             numberOfColumns={5}
                             filesById={questions.byId}
                             dragDisplayProperty="content"

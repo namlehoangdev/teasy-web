@@ -7,3 +7,4 @@ export {default as WorkingTableV2} from './working-table/working-table-v2';
 export {default as UnauthorizedDialog} from './unauthorized-dialog/unauthorized-dialog'
 export {default as PasswordInput} from './password-input';
 export {default as CountdownRenderer} from './count-down-renderer';
+export {default as CopyRoomCodeButton} from './copy-room-code-button';

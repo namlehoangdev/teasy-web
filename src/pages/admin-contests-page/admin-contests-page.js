@@ -19,6 +19,7 @@ import {isoToLocalDateString} from "../../utils";
 import {PAGE_PATHS} from "../../consts/page-paths-conts";
 import {useHistory, useRouteMatch} from "react-router-dom";
 import moment from "moment"
+import {CopyRoomCodeButton} from "../../components";
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -59,6 +60,7 @@ export default function AdminContestPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
+        dispatch(setOpenAdminFullscreenDialog(false));
         dispatch(getOwnContests());
     }, []);
 
@@ -93,6 +95,7 @@ export default function AdminContestPage() {
             <TableCell component="th" scope="row" align="left"><b>Tên cuộc thi</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Mô tả</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Ngày bắt đầu</b></TableCell>
+            <TableCell component="th" scope="row" align="left"><b>Mã vào thi nhanh</b></TableCell>
             <TableCell component="th" scope="row" align="left"> </TableCell>
             <TableCell component="th" scope="row" align="left"> </TableCell>
         </React.Fragment>)
@@ -140,12 +143,13 @@ export default function AdminContestPage() {
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {name, description, startAt} = contests.byHash[id];
+        const {name, description, startAt, code} = contests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{description || '.....'}</TableCell>
-            <TableCell align="left">{moment(startAt).year()=== 1 ? 'không' : isoToLocalDateString(startAt)}</TableCell>
+            <TableCell align="left">{moment(startAt).year() === 1 ? 'không' : isoToLocalDateString(startAt)}</TableCell>
+            <TableCell align="left"><CopyRoomCodeButton code={code}/></TableCell>
             <TableCell align="left">
                 <IconButton onClick={() => handleEditContestIconClick(id)}>
                     <EditIcon/>
