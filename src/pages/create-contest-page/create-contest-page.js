@@ -14,6 +14,7 @@ import {
     TextField,
     Grid,
     Chip,
+    Tooltip,
     Avatar,
     InputAdornment,
     FormControlLabel,
@@ -26,7 +27,8 @@ import {
     Close as CloseIcon,
     Visibility as VisibilityIcon,
     VisibilityOff as VisibilityOffIcon,
-    AddCircleOutline as AddCircleOutlineIcon
+    AddCircleOutline as AddCircleOutlineIcon,
+    FileCopy as FileCopyIcon
 } from "@material-ui/icons";
 import {CONTEST_TYPE_CODE, CONTEST_TYPE_TEXT, CONTEST_TYPE_TEXT_ARR, TEXT} from "../../consts";
 import {useHistory} from "react-router";
@@ -52,6 +54,7 @@ import ElevationScroll from "../../components/elevation-scroll";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
+import {CopyRoomCodeButton} from '../../components';
 //TODO: change to permitted Users from array to map
 
 const useStyles = makeStyles(theme => ({
@@ -162,7 +165,7 @@ const useStyles = makeStyles(theme => ({
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
-    const {id, isPublic, type, permittedUsers, testIds, isSecured, password, name, description, startAt, duration, backgroundUrl} = editingContest;
+    const {id, isPublic, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
@@ -172,6 +175,7 @@ export default function CreateContestPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [backgroundUrlState, setBackgroundUrlState] = useState('');
     const [isOpenSubmittedDialog, setIsOpenSubmittedDialog] = useState(false);
+
 
     const {profile} = useSelector(state => state.authReducer);
     const userId = profile.id;
@@ -369,6 +373,7 @@ export default function CreateContestPage() {
 
     function handleBack() {
         history.goBack();
+        dispatch(setOpenAdminFullscreenDialog(false));
     }
 
     return (<div>
@@ -636,23 +641,34 @@ export default function CreateContestPage() {
                         (<React.Fragment>
                             <DialogTitle id="form-dialog-title">Vui lòng chờ</DialogTitle>
                             <DialogContent>
-                                <span style={{display: 'flex', flexDirection: 'row'}}><CircularProgress/>
-                                <DialogContentText>Đang {id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi</DialogContentText>
+                                <span style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}><CircularProgress/>
+                                <DialogContentText>   Đang {id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi</DialogContentText>
                                 </span>
                             </DialogContent>
                         </React.Fragment>)
                         :
-                        (
-                            <React.Fragment>
-                                <DialogTitle id="form-dialog-title">{id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi thành
-                                    công</DialogTitle>
-                                <DialogActions>
-                                    <Button
-                                        onClick={handleBack} color="primary">
-                                        Quay lại
-                                    </Button>
-                                </DialogActions>
-                            </React.Fragment>)}
+                        (<React.Fragment>
+                            <DialogTitle id="form-dialog-title">{id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi thành
+                                công</DialogTitle>
+                            {isPublic &&
+                            <DialogContent>
+                                <span style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                  <Typography style={{marginRight: 5}} variant={"h6"}>
+                                    Mã thi nhanh{" "}
+                                  </Typography>
+                                <CopyRoomCodeButton code={code}/>
+                                </span>
+                                <Typography variant={'p'}>(Mã thi nhanh giúp vào phòng thi nhanh trong khi đăng nhập
+                                    )</Typography>
+                            </DialogContent>}
+                            <DialogActions>
+                                <Button onClick={handleBack} color="primary">Quay lại</Button>
+                            </DialogActions>
+                        </React.Fragment>)}
             </Dialog>
         </div>
     )
