@@ -287,10 +287,12 @@ export default function PlaygroundHomePage() {
                 <List>
                     {listNavItemMap.map(renderNavButton)}
                 </List>
-                <Fab size='small' variant="extended" aria-label="like" className={classes.goback}>
+                <Button className={classes.goback} onClick={() => {
+                    history.replace('/');
+                }}>
                     <ArrowBackIcon className={classes.extendedIcon}/>
                     Quay lại
-                </Fab>
+                </Button>
             </Drawer>
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <div className={classes.drawerHeader}/>

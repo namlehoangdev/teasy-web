@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import {
     makeStyles, useTheme, CssBaseline, Typography,
     AppBar, Toolbar, IconButton, Drawer, Divider,
-    ListItem, List, ListItemIcon, ListItemText, Fab, Popover, Dialog, Slide
+    ListItem, List, ListItemIcon, ListItemText, Fab, Popover, Dialog, Slide, Button
 } from '@material-ui/core';
 import {TEXT} from "../../consts/text-consts";
 import {Route, Switch, useLocation} from "react-router";
@@ -34,6 +34,7 @@ import {disabledStyleWrapper} from "../../utils";
 import EditingQuestionDialog from "../../components/question-dialog/editing-question-dialog";
 import {whenMapDispatchToPropsIsObject} from "react-redux/lib/connect/mapDispatchToProps";
 import AdminContestResultsPage from "../admin-contest-result-page/admin-contest-results-page";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const drawerWidth = 240;
 
@@ -81,7 +82,10 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 0,
     },
     fab: {margin: theme.spacing(1)},
-    extendedIcon: {marginRight: theme.spacing(1)}
+    extendedIcon: {marginRight: theme.spacing(1)},
+    goback: {
+        marginTop: 'auto'
+    },
 }));
 
 const listCreateButtonMap = [
@@ -243,6 +247,12 @@ export default function AdminHomePage() {
                     </div>
                     {listNavItemMap.map(renderNavButton)}
                 </List>
+                <Button className={classes.goback} onClick={() => {
+                    history.replace('/');
+                }}>
+                    <ArrowBackIcon className={classes.extendedIcon}/>
+                    Quay lại
+                </Button>
             </Drawer>
             <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
                 <div className={classes.drawerHeader}/>
