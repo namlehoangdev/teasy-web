@@ -144,12 +144,11 @@ export default function AdminHomePage() {
         // setCurrentFullscreenPath(PAGE_PATHS.createContest);
         // history.push(`${path}/${PAGE_PATHS.createContest}`);
         //dispatch(openCreateTest());
-        console.log('did mount admin home : ', location, path);
-        if (location.pathname === '/admin') {
-            setSelectedIndex(0);
-            setAppBarTitle(listNavItemMap[0].name);
-            history.push(`${path}/${PAGE_PATHS.allContests}`);
-        }
+ 
+        setSelectedIndex(0);
+        setAppBarTitle(listNavItemMap[0].name);
+        history.push(`${path}/${PAGE_PATHS.allContests}`);
+
 
     }, []);
 
