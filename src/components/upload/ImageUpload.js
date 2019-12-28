@@ -24,7 +24,7 @@ import uuidv4 from 'uuid/v4';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
+        width: '40%',
         '& > * + *': {
             marginTop: theme.spacing(2),
         },

@@ -22,9 +22,9 @@ export const THIRD_PARTY_TOKEN_PREFIX = {
 export const QUESTION_TYPE_CODES = {
     quiz: 0,
     fillBlank: 2,
-    matching: 3,
-    essay: 4,
-    quizMulti: 5
+    //matching: 3,
+    //essay: 4,
+    //quizMulti: 5
 };
 
 export const TEST_TYPE_CODES = {
@@ -39,10 +39,10 @@ export const TEST_TYPE_TEXT = {
 
 export const QUESTION_TYPE_TEXT = {
     [QUESTION_TYPE_CODES.quiz]: 'Trắc nghiệm',
-    [QUESTION_TYPE_CODES.fillBlank]: 'Điền vào chỗ trống',
-    [QUESTION_TYPE_CODES.matching]: 'Ghép nối',
-    [QUESTION_TYPE_CODES.essay]: 'Tự luận',
-    [QUESTION_TYPE_CODES.quizMulti]: 'Trắc nghiệm nhiều đáp án',
+    [QUESTION_TYPE_CODES.fillBlank]: 'Điền chỗ trống',
+    //[QUESTION_TYPE_CODES.matching]: 'Ghép nối',
+    //[QUESTION_TYPE_CODES.essay]: 'Tự luận',
+    //[QUESTION_TYPE_CODES.quizMulti]: 'Trắc nghiệm nhiều đáp án',
 };
 
 
@@ -84,10 +84,18 @@ export const CONTEST_TYPE_TEXT = {
 };
 
 
-export const QUESTION_LEVEL = {
+export const QUESTION_LEVEL_CODE = {
     EASY: 0,
     NORMAL: 1,
     HARD: 2,
     VERY_HARD: 3
 };
+
+export const QUESTION_LEVEL_TEXT = {
+    [QUESTION_LEVEL_CODE.EASY]: 'Dễ',
+    [QUESTION_LEVEL_CODE.NORMAL]: 'Trung bình',
+    [QUESTION_LEVEL_CODE.HARD]: 'Khó',
+    [QUESTION_LEVEL_CODE.VERY_HARD]: 'Rất khó',
+};
+
 

@@ -19,24 +19,39 @@ import {
     removeFromNormalizedList
 } from "../../utils/byid-utils";
 import PropTypes from 'prop-types';
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles(theme => ({
     formControl: {
         display: 'flex',
-        flex: 1
+        flex: 1,
+        marginTop: theme.spacing(3)
     },
     textFieldContainer: {
         display: 'flex',
         flexDirection: 'row',
-        margin: theme.spacing(1)
+        marginVertical: theme.spacing(1)
     },
     radioGroup: {
         width: '100%'
     },
     radio: {
         marginTop: -theme.spacing(1)
-    }
-
+    },
+    inputBase: {
+        borderBottom: '1px solid ' + theme.palette.background.paper,
+        marginBottom: theme.spacing(1),
+        "&:hover": {
+            borderBottomColor: theme.palette.grey[400]
+        },
+        "&:focus": {
+            backgroundColor: 'green',
+        },
+        "&:focus-within": {
+            borderBottomColor: theme.palette.primary.main
+        },
+        "&:active": {}
+    },
 }));
 
 
@@ -82,31 +97,44 @@ export default function EditingQuiz(props) {
             console.log('draft state: ', draftState);
             if (!draftState.answers) {
                 const newAnswers = new DefaultNormalizer();
-                addToNormalizedList(newAnswers, {id: currentSmallestId - 1, content: ''});
+                addToNormalizedList(newAnswers, {
+                    id: currentSmallestId - 1,
+                    content: `Đáp án ${answers.byId.length + 1}`
+                });
                 draftState.answers = newAnswers;
             } else {
-                addToNormalizedList(draftState.answers, {id: currentSmallestId - 1, content: ''});
+                addToNormalizedList(draftState.answers, {
+                    id: currentSmallestId - 1,
+                    content: `Đáp án ${answers.byId.length + 1}`
+                });
             }
         }));
     }
 
-    function renderAnswers(answerId) {
+    function handleOnAnswerBlur(answerId, index) {
         const {content} = answers.byHash[answerId];
-        const answerInputProps = {
-            endAdornment:
-                (<InputAdornment position="end">
-                    <IconButton edge="end"
-                                onClick={() => handleRemoveAnswerClick(answerId)}><CloseIcon/></IconButton>
-                </InputAdornment>)
-        };
+        if (!content || content.length === 0) {
+            console.log('get default text');
+            onChange({
+                answers: produce(answers, draftState => {
+                    draftState.byHash[answerId].content = `Đáp án ${index + 1}`
+                })
+            });
+        }
+    }
 
+    function renderAnswers(answerId, index) {
+        const {content} = answers.byHash[answerId];
         return (<Grid item key={answerId} className={classes.textFieldContainer}>
             <FormControlLabel value={answerId.toString()} control={<Radio className={classes.radio}/>} label=''/>
-            <TextField multiline value={content}
+            <InputBase multiline value={content}
+                       className={classes.inputBase}
                        fullWidth
                        variant="outlined"
-                       onChange={(event) => handleAnswerContentChange(event, answerId)}
-                       InputProps={answerInputProps}/>
+                       onBlur={() => handleOnAnswerBlur(answerId, index)}
+                       onChange={(event) => handleAnswerContentChange(event, answerId, index)}/>
+            <IconButton edge="end"
+                        onClick={() => handleRemoveAnswerClick(answerId)}><CloseIcon/></IconButton>
         </Grid>)
     }
 
@@ -131,7 +159,9 @@ export default function EditingQuiz(props) {
                     onChange={handleRadioChange}>
             {answers && answers.byId && answers.byId.map(renderAnswers)}
         </RadioGroup>
-        <Button onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
+        <div>
+            <Button color={"primary"} onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
+        </div>
     </FormControl>);
 }
 

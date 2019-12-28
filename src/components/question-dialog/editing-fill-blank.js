@@ -11,7 +11,7 @@ import {
     IconButton, Grid, Typography
 } from "@material-ui/core";
 import {TEXT} from "../../consts/text-consts";
-import {Close as CloseIcon} from "@material-ui/icons";
+import {Close as CloseIcon, ModeComment as ModeCommentIcon} from "@material-ui/icons";
 import produce from "immer";
 import {
     addToNormalizedList,
@@ -19,14 +19,39 @@ import {
     removeFromNormalizedList
 } from "../../utils/byid-utils";
 import PropTypes from 'prop-types';
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles(theme => ({
     formControl: {
         display: 'flex',
         flex: 1
     },
+    textFieldContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginVertical: theme.spacing(1)
+    },
     textField: {
-        margin: theme.spacing(1)
+        marginVertical: theme.spacing(1)
+    },
+    hintTitle: {
+        marginTop: theme.spacing(3)
+    },
+    inputBase: {
+        marginLeft: theme.spacing(3),
+        borderBottom: '1px solid ' + theme.palette.background.paper,
+        marginBottom: theme.spacing(1),
+        "&:hover": {
+            borderBottomColor: theme.palette.grey[400]
+        },
+        "&:focus": {
+            backgroundColor: 'green',
+        },
+        "&:focus-within": {
+            borderBottomColor: theme.palette.primary.main
+        },
+        "&:active": {}
     },
 }));
 
@@ -64,6 +89,18 @@ export default function EditingFillBlank(props) {
         });
     }
 
+    function handleOnAnswerBlur(answerId, index) {
+        const {content} = answers.byHash[answerId];
+        if (!content || content.length === 0) {
+            console.log('get default text');
+            onChange({
+                answers: produce(answers, draftState => {
+                    draftState.byHash[answerId].content = `Đáp án ${index + 1}`
+                })
+            });
+        }
+    }
+
 
     function handleAddMoreAnswerClick() {
         const currentSmallestId = answers.byId.reduce((minKey, curKey) =>
@@ -73,37 +110,48 @@ export default function EditingFillBlank(props) {
             console.log('draft state: ', draftState);
             if (!draftState.answers) {
                 const newAnswers = new DefaultNormalizer();
-                addToNormalizedList(newAnswers, {id: currentSmallestId - 1, content: '', isTrue: true});
+                addToNormalizedList(newAnswers, {
+                    id: currentSmallestId - 1,
+                    content: `Đáp án ${answers.byId.length + 1}`,
+                    isTrue: true
+                });
                 draftState.answers = newAnswers;
             } else {
-                addToNormalizedList(draftState.answers, {id: currentSmallestId - 1, content: '', isTrue: true});
+                addToNormalizedList(draftState.answers, {
+                    id: currentSmallestId - 1,
+                    content: `Đáp án ${answers.byId.length + 1}`,
+                    isTrue: true
+                });
             }
         }));
     }
 
-    function renderAnswers(answerId) {
+    function renderAnswers(answerId, index) {
         const {content} = answers.byHash[answerId];
-        const answerInputProps = {
-            endAdornment:
-                (<InputAdornment position="end">
-                    <IconButton edge="end"
-                                onClick={() => handleRemoveAnswerClick(answerId)}><CloseIcon/></IconButton>
-                </InputAdornment>)
-        };
 
-        return (<TextField multiline value={content}
-                           className={classes.textField}
-                           fullWidth
-                           variant="outlined"
-                           onChange={(event) => handleAnswerContentChange(event, answerId)}
-                           InputProps={answerInputProps}/>)
+
+        return (<Grid item key={answerId} className={classes.textFieldContainer}>
+            <ModeCommentIcon color={'disabled'}/>
+            <InputBase multiline value={content}
+                       className={classes.inputBase}
+                       fullWidth
+                       variant="outlined"
+                       onBlur={() => handleOnAnswerBlur(answerId, index)}
+                       onChange={(event) => handleAnswerContentChange(event, answerId)}
+            />
+            <IconButton edge="end"
+                        onClick={() => handleRemoveAnswerClick(answerId)}><CloseIcon/></IconButton>
+        </Grid>)
+
     }
 
 
     return (<FormControl className={classes.formControl}>
-        <Typography variant="h6" className={classes.title}>Các đáp án đúng (vui lòng kiểm tra khoảng trắng)</Typography>
+        <Typography variant="p" className={classes.hintTitle}>Các đáp án (nếu có) </Typography>
         {answers && answers.byId && answers.byId.map(renderAnswers)}
-        <Button onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
+        <div>
+            <Button color={"primary"} onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>
+        </div>
     </FormControl>);
 }
 

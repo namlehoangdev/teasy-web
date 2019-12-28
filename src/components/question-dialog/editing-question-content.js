@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 
 import PropTypes from 'prop-types';
-import {QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
+import {QUESTION_LEVEL_CODE, QUESTION_LEVEL_TEXT, QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
 import RichEditor from "../rich-editor/rich-editor";
 import {EditorState} from 'draft-js';
 import EditingQuiz from "./editing-quiz";
@@ -21,16 +21,17 @@ import {useDispatch} from "react-redux";
 import EditingFillBlank from "./editing-fill-blank";
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {display: 'flex'},
     selectTypeBox: {width: '100%'},
-    header: {flex: 1, justifyContent: 'space-between', alignItems: 'center'}
+    header: {flex: 1, justifyContent: 'space-between', alignItems: 'center'},
+    typeContainer: {marginBottom: theme.spacing(3)}
 }));
 
 export default function EditingQuestionContent(props) {
     const {data, onChange, onRemove, hideRemove = false} = props;
     const classes = useStyles();
-    const {type: questionTypeCode = '', content, id} = data;
+    const {type: questionTypeCode = '', content, id, level} = data;
 
     const dispatch = useDispatch();
 
@@ -46,6 +47,10 @@ export default function EditingQuestionContent(props) {
         onChange({type: event.target.value});
     }
 
+    function handleQuestionLevelChange(event) {
+        console.log('event.target.value', event);
+        onChange({level: event.target.value});
+    }
 
     if (!content) {
         onChange({content: EditorState.createEmpty()});
@@ -84,9 +89,15 @@ export default function EditingQuestionContent(props) {
             <MenuItem key={questionTypeCode} value={questionTypeCode}>{QUESTION_TYPE_TEXT[questionTypeCode]}</MenuItem>)
     }
 
+    function renderQuestionLevelMenu(code) {
+        return (
+            <MenuItem key={code} value={code}>{QUESTION_LEVEL_TEXT[code]}</MenuItem>)
+    }
+
     return (<div>
         <Grid container direction="row" className={classes.header}>
-            <Grid item>
+            <Grid item xl={5} sm={12} md={7} xs={12} s={12} className={classes.typeContainer}>
+                <span style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <FormControl className={classes.selectTypeBox}>
                     <Select value={(questionTypeCode === 0 || questionTypeCode > 0) ? questionTypeCode : -1}
                             onChange={handleChangeQuestionType}
@@ -96,11 +107,26 @@ export default function EditingQuestionContent(props) {
                                 name: 'question-type-selector', id: 'question-type-selector',
                             }}>
                         <MenuItem value={-1} disabled key={'placeholder'}>
-                            Chon {`${TEXT.type} ${TEXT.question}`}
+                            Chon {TEXT.type}
                         </MenuItem>
                         {Object.values(QUESTION_TYPE_CODES).map(renderQuestionTypeMenu)}
                     </Select>
                 </FormControl>
+                <FormControl className={classes.selectTypeBox} style={{marginLeft: 20}}>
+                    <Select value={(level === 0 || level > 0) ? level : -1}
+                            onChange={handleQuestionLevelChange}
+                            displayEmpty
+                            disableUnderline
+                            inputProps={{
+                                name: 'question-level-selector', id: 'question-level-selector',
+                            }}>
+                        <MenuItem value={-1} disabled key={'placeholder'}>
+                            Chon {`${TEXT.level} ${TEXT.question}`}
+                        </MenuItem>
+                        {Object.values(QUESTION_LEVEL_CODE).map(renderQuestionLevelMenu)}
+                    </Select>
+                </FormControl>
+                </span>
             </Grid>
             <Grid item>
                 {!hideRemove &&
