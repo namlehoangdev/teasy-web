@@ -101,6 +101,8 @@ export default function PlaygroundWaitingRoomPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState(null);
 
+    const [isCompeleted, setIsCompeleted] = useState(false);
+
 
     useEffect(() => {
         console.log('did mount playground waiting room page: ', history);
@@ -155,18 +157,25 @@ export default function PlaygroundWaitingRoomPage() {
     function renderStartContestButton() {
         const diff = moment(startAt).diff(moment.utc(), "ms");
 
-        console.log("diff: ", diff);
+        //console.log("diff: ", diff);
         if (diff > 0) {
             return (<div className={classes.center}>
                 <Typography gutterBottom variant="h6" component="h2" color="secondary">
                     Diễn ra sau:
                 </Typography>
-                <Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>
+                <Countdown onComplete={()=>{
+                  setIsCompeleted(true)
+                }} autoStart={true} date={Date.now() + diff} renderer={renderCountDown}/>
             </div>);
         }
 
-        return (<Button fullWidth variant="contained" color="primary" onClick={handleStartContestClick}>Tham gia
-            thi</Button>)
+        else if ((moment(startAt).diff(moment.utc(), "ms") + duration) > 0 ||  moment(startAt).year() === 1)
+        {
+          return <Button fullWidth variant="contained" color="primary" onClick={handleStartContestClick}>Tham gia
+            thi</Button>
+        }
+        else return <Button fullWidth variant="contained" disabled>Cuộc thi đã kết thúc</Button>
+      
     }
 
     const [hours, minutes] = msToTime(duration);

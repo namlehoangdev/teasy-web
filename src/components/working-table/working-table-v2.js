@@ -254,10 +254,10 @@ export default function WorkingTableV2(props) {
 
     return (<div onDragOver={preProcessDragOver} className={classes.tableWrapper}>
         <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small"/>}>
-            <Button draggable={draggable}
+            {/* <Button draggable={draggable}
                     key={`breadcrumb'${-1}`}
                     onDrop={() => handleDropInBreadcrumbs(null, -1)}
-                    onClick={() => setCurrentPath([])}>Home</Button>
+                    onClick={() => setCurrentPath([])}>Home</Button> */}
             {currentPath.map(renderBreadcrumb)}
         </Breadcrumbs>
         <Table className={classes.table} aria-labelledby="tableTitle" aria-label="enhanced table" size='medium'>

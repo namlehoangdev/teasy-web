@@ -68,12 +68,12 @@ export default function AdminContestResultsPage() {
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {displayName, ownerId, createdAt, rightAnswerIds, totalQuestion} = results.byHash[id];
+        const {displayName, ownerId, createdAt, rightAnswers, totalQuestion} = results.byHash[id];
         const anonymousLabel = ownerId ? '' : `\n(ẩn danh)`;
         return (<React.Fragment>
             <TableCell align="left">{`${displayName} ${anonymousLabel}`}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
-            <TableCell align="center"><b>{rightAnswerIds.length}/{totalQuestion}</b></TableCell>
+            {totalQuestion === 0 ?<TableCell align="center"><b>{'Không có'}</b></TableCell>:<TableCell align="center"><b>{rightAnswers}/{totalQuestion}</b></TableCell>}
         </React.Fragment>)
     }
 

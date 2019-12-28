@@ -148,7 +148,7 @@ export default function PlaygroundAllContestsPage() {
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{ownerName}</TableCell>
             <TableCell align="left">{moment(startAt).year() === 1 ? "Không có" : isoToLocalDateString(startAt)}</TableCell>
-            {(moment(startAt).diff(moment.utc(), "ms") + duration) > 0 ||  moment(startAt).year() === 1? <TableCell align="center">
+            {(moment(startAt).diff(moment.utc(), "ms") + duration) > 0 ||  moment(startAt).year() === 1 ? <TableCell align="center">
               <Button
                 color='primary'
                 onClick={() => handleGoToWaitingRoomClick(id)}>Vào phòng chờ
