@@ -1,6 +1,6 @@
 const APP_NAME = 'TEASY';
 const APP_SHORT_DESCRIPTION = 'Nền tảng tạo cuộc thi online';
-const APP_DESCRIPTION = 'Tổ chức, quản lý các cuộc thi trực tuyến. Tham gia dự thi dễ dàng, nhanh chóng';
+const APP_DESCRIPTION = 'Tổ chức cuộc thi dễ dàng';
 const OR = 'hoặc';
 const ROOM_CODE = 'Nhập mã thi nhanh..';
 const I_AGREE = 'Tôi đồng ý';
@@ -29,16 +29,17 @@ const ADD_MORE_ANSWER = 'Thêm câu trả lời';
 const ALL_CONTESTS = 'Tất cả cuộc thi';
 const MY_SHARED_CONTESTS = 'Được chia sẻ với tôi';
 const CONTESTS_HISTORY = 'Kết quả thi';
-const EASY_TEST_CREATE = 'Tạo cuộc thi dễ dàng';
-const EASY_CONTEST_CREATE = 'Tạo đề thi đa dạng';
+const EASY_TEST_CREATE = 'Tạo đề thi đa dạng';
+const EASY_CONTEST_CREATE = 'Tạo cuộc thi dễ dàng';
 const EASY_QUESTION_CREATE = 'Quản lý ngân hàng câu hỏi';
 const EASY_COMPETITION_COMPETE= 'Tham gia thi dễ dàng';
-const EASY_PUBLIC_COMPETE = 'Đề thi đạng từ cộng đồng';
+const EASY_PUBLIC_COMPETE = 'Đề thi đa dạng từ cộng đồng';
 const EASY_MANAGE_RUSULT = 'Quản lý kết quả thi hiệu quả';
 const CREATE_CONTEST = 'Tạo cuộc thi';
 const JOIN_CONTEST = 'Tham gia thi';
 const HI= 'Xin chào';
 const CHOOSE_ROLE = 'Hãy lựa chọn vai trò của bạn ';
+const APP_DESCRIPTION_2 = 'Tham gia cuộc thi nhanh chóng';
 
 export default {
   appName: APP_NAME,
@@ -81,6 +82,7 @@ export default {
   createContest: CREATE_CONTEST,
   joinContest: JOIN_CONTEST,
   hi: HI,
-  chooseRole:CHOOSE_ROLE
+  chooseRole:CHOOSE_ROLE,
+  appDescription2:APP_DESCRIPTION_2
 };
 

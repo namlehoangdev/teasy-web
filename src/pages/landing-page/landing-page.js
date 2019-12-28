@@ -66,7 +66,9 @@ const useStyles = makeStyles(theme => ({
   paper: {
     marginRight: 'auto',
     marginLeft: 'auto',
-    position: 'relative'
+    position: 'relative',
+    //display:'flex',
+    alignItems:'center',
   },
   logo: {
     margin: theme.spacing(2),
@@ -92,7 +94,7 @@ const useStyles = makeStyles(theme => ({
   iconTheme: {},
   setting: {
     width: '100%',
-    height: theme.spacing(5)
+    height: theme.spacing(2)
   }
 }))
   ;
@@ -102,7 +104,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://fb.com/phanmemtienichsinhvien"> {language.appName} </Link>{' '}
+      <Link color="inherit" href="https://facebook.com/phanmemchatluong"> {language.appName} </Link>{' '}
       {new Date().getFullYear()} {'.'}
     </Typography>
   );
@@ -254,15 +256,15 @@ function LandingPage() {
       <Typography component="h1" variant="h1" align="center" color="textPrimary" className={classes.logo}>
         {language.appName}
       </Typography>
-      <Grid item xs={12} sm={8} md={5} elevation={6} className={token ? classes.descriptionAnim : classes.description}>
+      <Grid item xs={12} sm={8} md={5} className={token ? classes.descriptionAnim : classes.description}>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          {token ? language.hi + ", " + profile.name : language.appDescription}
+          {token ? language.hi + ", " + profile.name : language.appDescription2}
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          {token && language.chooseRole}
+          {token ? language.chooseRole : language.appDescription}
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} className={classes.paper}>
+      <Grid item xs={12} sm={12} md={6} className={classes.paper}>
         {isShowMiniLoading && <LinearProgress />}
         <Slider ref={sliderRef} {...settings} style={disabledStyleWrapper(isShowMiniLoading)}>
           <AuthenticationCard onFacebookCallback={handleFacebookCallback}
@@ -275,8 +277,8 @@ function LandingPage() {
         {slideIndex === 1 && <Button
           onClick={handleGoBack}
           color="primary" className={classes.backBtn}>{language.goBack}</Button>}
+          <Box align='center' mt={-2}> <Copyright /> </Box>
       </Grid>
-      <Box align='center' mt={5}> <Copyright /> </Box>
     </Grid>
   )
 }

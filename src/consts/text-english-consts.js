@@ -1,6 +1,6 @@
 const APP_NAME = 'TEASY';
 const APP_SHORT_DESCRIPTION = 'Online test system';
-const APP_DESCRIPTION = 'Create your test quickly. Do your test easily';
+const APP_DESCRIPTION = 'Create your test easily';
 const OR = 'or';
 const ROOM_CODE = 'Enter quick code..';
 const I_AGREE = 'I agree';
@@ -36,6 +36,7 @@ const CREATE_CONTEST = 'Create Contest';
 const JOIN_CONTEST = 'Do tests';
 const HI= 'Hi';
 const CHOOSE_ROLE = 'Please choose your role ';
+const APP_DESCRIPTION_2 = 'Do your tests quickly';
 
 export default {
   appName: APP_NAME,
@@ -75,6 +76,7 @@ export default {
   createContest: CREATE_CONTEST,
   joinContest: JOIN_CONTEST,
   hi: HI,
-  chooseRole:CHOOSE_ROLE
+  chooseRole:CHOOSE_ROLE,
+  appDescription2:APP_DESCRIPTION_2
 };
 

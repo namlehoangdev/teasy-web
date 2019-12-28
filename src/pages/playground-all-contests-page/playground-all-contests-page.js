@@ -114,7 +114,9 @@ const useStyles = makeStyles(theme => ({
     searchContainer:{
       display:'flex',
       alignSelf:'center',
-      marginTop: theme.spacing(2)
+      marginTop: -theme.spacing(1),
+      marginBottom: theme.spacing(2),
+
     },
     circle:{
       alignSelf:'center',
@@ -204,9 +206,9 @@ export default function PlaygroundAllContestsPage() {
 
     return (<div className={classes.root}>
         <Container maxWidth="lg" className={classes.container}>
-               <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
+               {/* <Typography style={{marginTop: -50}} gutterBottom className={classes.searchContainer} variant="h5" component="h5">
                           Cuộc thi từ cộng đồng
-                </Typography>   
+                </Typography>    */}
              <div className={classes.searchContainer}>
                <div className={classes.search}>
                 <div className={classes.searchIcon}>
