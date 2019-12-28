@@ -222,7 +222,7 @@ export default function PlaygroundAllContestsPage() {
                     value={searchValue}
                     onChange={handleSearchInputChange}
                 />
-            </div>
+               </div>
              </div>
             <Divider variant="middle" />
             <Grid container spacing={3}>
@@ -231,7 +231,7 @@ export default function PlaygroundAllContestsPage() {
                     {isShowCircleLoading && <CircularProgress/>}
                 </Grid>
                 <Grid item xs={10} >
-                    {[...contests.byId].filter(id => trimSign(contests.byHash[id].name.toLowerCase()).includes(searchValue.toLowerCase())).sort((a,b) => sortContests(a,b)).map(renderContest)}
+                    {[...contests.byId].filter(id => trimSign(contests.byHash[id].name.toLowerCase()).includes(trimSign(searchValue.toLowerCase()))).sort((a,b) => sortContests(a,b)).map(renderContest)}
                 </Grid>
 
                 <Grid item xs={2} >

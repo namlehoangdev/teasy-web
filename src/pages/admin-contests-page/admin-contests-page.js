@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
     Container, Grid, makeStyles, Paper, TableCell, Typography, IconButton, Popover, Button,
-    List, ListItem, ListItemText, Dialog, DialogActions, DialogContentText, DialogContent, DialogTitle
+    List, ListItem, ListItemText, Dialog, DialogActions, DialogContentText, DialogContent, DialogTitle,fade, InputBase
 } from "@material-ui/core";
 import {
     Folder as FolderIcon, MoreVert as MoreVertIcon, Edit as EditIcon, Delete as DeleteIcon, ShowChart as ShowChartIcon
@@ -15,11 +15,12 @@ import {
     updateOwnContests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
-import {isoToLocalDateString} from "../../utils";
+import {isoToLocalDateString, trimSign} from "../../utils";
 import {PAGE_PATHS} from "../../consts/page-paths-conts";
 import {useHistory, useRouteMatch} from "react-router-dom";
 import moment from "moment"
 import {CopyRoomCodeButton} from "../../components";
+import {Search as SearchIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -48,6 +49,46 @@ const useStyles = makeStyles(theme => ({
     popPaper: {
         padding: theme.spacing(1),
     },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 7),
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: 200,
+        },
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing(2),
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(3),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        width: theme.spacing(7),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    searchContainer:{
+      display:'flex',
+      alignSelf:'center',
+      marginTop: theme.spacing(2)
+    },
 }));
 
 export default function AdminContestPage() {
@@ -58,6 +99,8 @@ export default function AdminContestPage() {
     const history = useHistory();
     const {path} = useRouteMatch();
     const dispatch = useDispatch();
+
+    const [searchValue, setSearchValue] = useState('');
     const classes = useStyles();
     useEffect(() => {
         dispatch(setOpenAdminFullscreenDialog(false));
@@ -164,14 +207,35 @@ export default function AdminContestPage() {
         </React.Fragment>)
     }
 
+    function handleSearchInputChange(event) {
+        setSearchValue(event.target.value);
+    }
+
     return (<div className={classes.root}>
             <Paper elevation={3} className={classes.paper}>
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý cuộc thi</Typography>
+                    <div className={classes.searchContainer}>
+                  <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                        <SearchIcon/>
+                    </div>
+                    <InputBase
+                        placeholder="Tìm kiếm cuộc thi…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
+                        inputProps={{'aria-label': 'search'}}
+                        value={searchValue}
+                        onChange={handleSearchInputChange}
+                    />
+                  </div>
+                </div>
                 <WorkingTableV2 filesByHash={contests.byHash}
                                 numberOfColumns={5}
                                 isLoading={isShowCircleLoading}
-                                filesById={[...contests.byId].reverse()}
+                                filesById={[...contests.byId].reverse().filter(id => trimSign(contests.byHash[id].name.toLowerCase()).includes(trimSign(searchValue.toLowerCase())))}
                                 dragDisplayProperty="content"
                                 setFiles={handleFilesChange}
                                 setFileById={handleFileByIdChange}
