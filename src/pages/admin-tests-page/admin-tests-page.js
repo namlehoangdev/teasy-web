@@ -10,7 +10,7 @@ import {
     makeStyles,
     Paper,
     TableCell,
-    Typography
+    Typography,fade, InputBase
 } from "@material-ui/core";
 import {Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -24,6 +24,8 @@ import {
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {PAGE_PATHS} from "../../consts";
 import {useHistory} from "react-router";
+import {Search as SearchIcon} from '@material-ui/icons';
+import { trimSign } from 'utils';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -51,6 +53,46 @@ const useStyles = makeStyles(theme => ({
     popPaper: {
         padding: theme.spacing(1),
     },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 7),
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: 200,
+        },
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing(2),
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(3),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        width: theme.spacing(7),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    searchContainer:{
+      display:'flex',
+      alignSelf:'center',
+      marginTop: theme.spacing(2)
+    },
 }));
 
 export default function AdminTestsPage() {
@@ -61,6 +103,7 @@ export default function AdminTestsPage() {
     const [actionItemId, setActionItemId] = useState(null);
     const dispatch = useDispatch();
     const classes = useStyles();
+    const [searchValue, setSearchValue] = useState('');
     useEffect(() => {
         console.log('admin test page didmount before get: ', tests);
         dispatch(getOwnTests());
@@ -104,6 +147,9 @@ export default function AdminTestsPage() {
         setOpenRemoveDialog(true);
     }
 
+    function handleSearchInputChange(event) {
+        setSearchValue(event.target.value);
+    }
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
@@ -111,8 +157,8 @@ export default function AdminTestsPage() {
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
-            <TableCell align="left">{hasFullAnswers ? 'Có' : 'Không'}</TableCell>
-            <TableCell align="left">{questions.byId.length}</TableCell>
+            <TableCell align="center">{hasFullAnswers ? 'Có' : 'Không'}</TableCell>
+            <TableCell align="center">{questions.byId.length}</TableCell>
             <TableCell align="left">
                 <IconButton onClick={() => handleEditTestIconClick(id)}>
                     <EditIcon/>
@@ -138,8 +184,8 @@ export default function AdminTestsPage() {
         return (<React.Fragment>
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left"><b>Nội dung</b></TableCell>
-            <TableCell component="th" scope="row" align="left"><b>Đủ đáp án</b></TableCell>
-            <TableCell component="th" scope="row" align="left"><b>Số lượng câu hỏi</b></TableCell>
+            <TableCell component="th" scope="row" align="center"><b>Đủ đáp án</b></TableCell>
+            <TableCell component="th" scope="row" align="center"><b>Số lượng câu hỏi</b></TableCell>
             <TableCell component="th" scope="row" align="left"> </TableCell>
         </React.Fragment>)
     }
@@ -157,9 +203,26 @@ export default function AdminTestsPage() {
             <Paper elevation={3} className={classes.paper}>
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý đề thi</Typography>
+                             <div className={classes.searchContainer}>
+                  <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                        <SearchIcon/>
+                    </div>
+                    <InputBase
+                        placeholder="Tìm kiếm đề thi…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
+                        inputProps={{'aria-label': 'search'}}
+                        value={searchValue}
+                        onChange={handleSearchInputChange}
+                    />
+                  </div>
+                </div>
                 <WorkingTableV2 filesByHash={tests.byHash}
                                 numberOfColumns={5}
-                                filesById={tests.byId}
+                                filesById={[...tests.byId].reverse().filter(id => trimSign(tests.byHash[id].name.toLowerCase()).includes(trimSign(searchValue.toLowerCase())))}
                                 isLoading={isShowCircleLoading}
                                 dragDisplayProperty="content"
                                 setFiles={handleFilesChange}
