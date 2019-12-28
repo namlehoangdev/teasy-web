@@ -173,7 +173,7 @@ export default function PlaygroundWaitingRoomPage() {
     return (
         <Grid container component="main" className={classes.root}>
             {/*/!*{(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}*!/ */}
-            <Grid item component={Paper}
+            <Grid elevation={3} item component={Paper}
                   style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
                 {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
                 <div className={classes.paper}>

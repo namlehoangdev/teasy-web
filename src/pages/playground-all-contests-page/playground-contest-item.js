@@ -19,7 +19,7 @@ import React from "react";
 import Countdown from "react-countdown-now";
 import Button from "@material-ui/core/Button";
 import Display from '../../components/calculator/component/Display';
-
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -115,7 +115,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function PlaygroundContestItem(props) {
-    const {id, name, backgroundUrl, onItemClick, description, type = CONTEST_TYPE_CODE.ELSE, startAt, joinedPerson = 0, createdAt, isPublic, code, isSecured, duration, password, permittedUsers, ownerName, test} = props;
+    const {id, isLoading, name, backgroundUrl, onItemClick, description, type = CONTEST_TYPE_CODE.ELSE, startAt, joinedPerson = 0, createdAt, isPublic, code, isSecured, duration, password, permittedUsers, ownerName, test} = props;
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
 
@@ -130,15 +130,16 @@ export default function PlaygroundContestItem(props) {
     return (
         <Grid className={classes.root} item xs={12} md={7} lg={8}>
             <Card className={classes.card} onClick={handleItemClick}>
-                <CardMedia
+                {isLoading ? <Skeleton variant="rect" className={classes.media} height={120} /> : <CardMedia
                     component='img'
                     className={classes.media}
                     src={backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png'}
                     title="Paella dish"
-                />
+                />}
                 <CardContent className={classes.contentContainer}>
                     <div>
-                      {moment(startAt).year() === 1 ? <Typography variant="body2" color="primary" component="p">
+                      {isLoading ? <Skeleton variant="rect" width={150} height={10}/> : <div>
+                        {moment(startAt).year() === 1 ? <Typography variant="body2" color="primary" component="p">
                           Đang mở
                       </Typography> : ((moment(startAt).diff(moment.utc(), "ms") + duration) < 0 ? <Typography variant="body2" color="textSecondary" component="p">
                           Đã kết thúc
@@ -146,30 +147,33 @@ export default function PlaygroundContestItem(props) {
                           {moment(startAt).locale('vi').format('llll').toUpperCase()}
                       </Typography>)
                       }
-                      <Typography variant="h5" component="h5">
+                      </div>}
+                      { isLoading ? <Skeleton variant="rect" width={150} height={10}/> : <Typography variant="h5" component="h5">
                           {name && name}
-                      </Typography>                                 
+                      </Typography> }                                
                       {type !== CONTEST_TYPE_CODE.ELSE &&
                       <Typography variant="body1" color="textSecondary" component="p">
                           Thể loại {CONTEST_TYPE_TEXT[type]}
                       </Typography>}
-                      {!isNullOrEmpty(description) ? <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
+                      {!isLoading && <div>
+                        {!isNullOrEmpty(description) ? <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
                           {description.length > 20 ? description.substring(0, 20) + "..." : description}
                       </Typography> : <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
                       </Typography>
                       }
-                      <Typography className={classes.createdBy} variant="body2" color="textSecondary" component="p">
+                      </div>}
+                      { isLoading ? <Skeleton variant="rect" className={classes.createdBy} width={150} height={10}/> : <Typography className={classes.createdBy} variant="body2" color="textSecondary" component="p">
                             Tạo bởi {ownerName}
-                      </Typography>
+                      </Typography>}
                     </div>
                 
                    <CardActions className={classes.actionContainer}>
-                      <Button className={classes.vaophong} size="small" color="primary" onClick={handleItemClick}>
+                      {isLoading ? <Skeleton variant="rect" className={classes.vaophong} width={100} height={15}/> : <Button className={classes.vaophong} size="small" color="primary" onClick={handleItemClick}>
                           Vào phòng thi
-                      </Button>
-                      <Typography className={classes.joiner}  variant="body2" color="textSecondary" component="p">
+                      </Button>}
+                      {isLoading ? <Skeleton variant="rect" className={classes.joiner} width={70} height={10}/> : <Typography className={classes.joiner}  variant="body2" color="textSecondary" component="p">
                           {joinedPerson} {`lượt thi`}
-                      </Typography>
+                      </Typography>}
                    </CardActions>
 
                 </CardContent>         

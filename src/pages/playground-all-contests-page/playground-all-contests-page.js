@@ -169,7 +169,7 @@ export default function PlaygroundAllContestsPage() {
 
     function renderContest(id) {
         const params = contests.byHash[id];
-        return (<PlaygroundContestItem {...params} onItemClick={handleItemClick}/>)
+        return (<PlaygroundContestItem isLoading={isShowCircleLoading} {...params} onItemClick={handleItemClick}/>)
     }
 
     function handleCateClicked(item){

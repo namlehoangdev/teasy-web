@@ -161,7 +161,7 @@ export default function AdminContestPage() {
     }
 
     return (<div className={classes.root}>
-            <Paper className={classes.paper}>
+            <Paper elevation={3} className={classes.paper}>
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý cuộc thi</Typography>
                 <WorkingTableV2 filesByHash={contests.byHash}

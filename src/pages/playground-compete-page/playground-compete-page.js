@@ -52,6 +52,8 @@ import RichEditor from 'components/rich-editor/rich-editor';
 import {CountdownRenderer} from "../../components";
 import CloseIcon from '@material-ui/icons/Close';
 import FillBlankQuestion from "./fill-blank-question";
+import moment from 'moment'
+import { useSnackbar } from 'notistack';
 
 const drawerWidth = 240;
 
@@ -187,13 +189,15 @@ export default function PlaygroundCompetePage() {
         ownerId, ownerName,
         hasFullAnswers,
         state,
-        markedResults = {}
+        markedResults = {},
+        startAt
     } = competingContest;
     const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers} = markedResults;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
     const [testName, setTestName] = useState('');
+    const [difff, setDifff] = useState(0);
     const [isOpenResultDialog, setIsOpenResultDialog] = useState(false);
     const [expanded, setExpanded] = React.useState('panel1');
     const [durationCompetition, setDurationCompetition] = React.useState(0);
@@ -201,13 +205,22 @@ export default function PlaygroundCompetePage() {
     const history = useHistory();
     const [firstDuration, setfirstDuration] = React.useState(0);
     const [alarm, setAlarm] = React.useState(0);
-    const [openSnackBar, setOpenSnackBar] = React.useState(false);
     let questionRefs = useRef(new Map);
     const questionContainerRef = useRef(null);
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
     };
+
+    const action = key => (
+    <>
+        <Button color='disabled' onClick={() => { closeSnackbar(key) }}>
+            X
+        </Button>
+    </>
+);
+
 
     useMemo(() => {
         console.log('vao day');
@@ -218,7 +231,14 @@ export default function PlaygroundCompetePage() {
             name && setTestName(name);
             questions && setQuestionsById(questions);
             console.log('questions: ', questions);
-            setDurationCompetition(competingContest.duration)
+            if(moment(startAt).year() === 1){
+               setDurationCompetition(competingContest.duration)
+            }
+            else{
+              const diff = moment.utc().diff(moment(startAt), "ms");
+              setDifff(diff)
+              setDurationCompetition(competingContest.duration - diff)
+            }
         }
     }, [testIds]);
 
@@ -371,7 +391,7 @@ export default function PlaygroundCompetePage() {
 
     function handleOnTick(e) {
         if (e.total == alarm) {
-            setOpenSnackBar(true)
+                   enqueueSnackbar('Nhắc hẹn kết thúc', {variant: 'success', autoHideDuration:30000, action});
         }
     }
 
@@ -395,14 +415,14 @@ export default function PlaygroundCompetePage() {
     function handleOnReminderChange(event, newValue) {
         const newDuration = newValue * 60000;
 
-        const vo = firstDuration - durationCompetition;
+        const vo = firstDuration - durationCompetition - difff;
         setAlarm(firstDuration - (vo + newDuration))
     }
 
     function renderDrawerBlock() {
         const marks = [{value: 0, label: '0 phút'}, {
-            value: durationCompetition / 60000,
-            label: durationCompetition / 60000 + " phút"
+            value: (durationCompetition + difff) / 60000,
+            label: (durationCompetition + difff) / 60000 + " phút"
         }];
         return (<React.Fragment>
             <Box>
@@ -413,6 +433,19 @@ export default function PlaygroundCompetePage() {
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className={classes.expansionDetail}>
                         {renderStartContestButton()}
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content"
+                                           id="panel4a-header">
+                        <AccessAlarmIcon/>
+                        <Typography className={classes.heading}>Hẹn giờ</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <Slider defaultValue={90} marks={marks} valueLabelDisplay="on" getAriaValueText={valuetext}
+                                onChange={handleOnReminderChange}
+                                aria-labelledby="discrete-slider-always" step={1} min={0}
+                                max={(durationCompetition+difff) / 60000}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <ExpansionPanel>
@@ -438,19 +471,6 @@ export default function PlaygroundCompetePage() {
                         <GradientIcon/><Typography className={classes.heading}>Máy tính</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails><Calculator/></ExpansionPanelDetails>
-                </ExpansionPanel>
-                <ExpansionPanel>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content"
-                                           id="panel4a-header">
-                        <AccessAlarmIcon/>
-                        <Typography className={classes.heading}>Hẹn giờ</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Slider defaultValue={90} marks={marks} valueLabelDisplay="on" getAriaValueText={valuetext}
-                                onChange={handleOnReminderChange}
-                                aria-labelledby="discrete-slider-always" step={1} min={0}
-                                max={durationCompetition / 60000}/>
-                    </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Box>
         </React.Fragment>)
@@ -521,30 +541,6 @@ export default function PlaygroundCompetePage() {
                 <DialogTitle id="form-dialog-title">Nộp bài thi</DialogTitle>
                 {renderSubmitResult()}
             </Dialog>
-
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={openSnackBar}
-                autoHideDuration={6000}
-                ContentProps={{
-                    'aria-describedby': 'message-id',
-                }}
-                message={<span id="message-id">Note archived</span>}
-                action={[
-                    <IconButton
-                        key="close"
-                        aria-label="close"
-                        color="inherit"
-                        className={classes.close}
-                        onClick={() => setOpenSnackBar(false)}
-                    >
-                        <CloseIcon/>
-                    </IconButton>,
-                ]}
-            />
         </div>
     )
 }

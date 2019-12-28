@@ -73,12 +73,12 @@ export default function AdminTestsPage() {
 
     function renderFiles(id) {
         //const labelId = `enhanced-table-checkbox-${index}`;
-        const {competitionName, createdAt, rightAnswers, totalQuestion} = results.byHash[id];
+        const {competitionName, createdAt, rightAnswers, totalQuestion, hasFullAnswers} = results.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{competitionName}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
-            <TableCell align="left"><b>{rightAnswers}/{totalQuestion}</b></TableCell>
+           { hasFullAnswers ? <TableCell align="center"><b>{rightAnswers}/{totalQuestion}</b></TableCell> : <TableCell align="center">Không có điểm</TableCell>}
         </React.Fragment>)
     }
 
@@ -95,7 +95,7 @@ export default function AdminTestsPage() {
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left"><b>Tên cuộc thi</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Ngày nộp bài</b></TableCell>
-            <TableCell component="th" scope="row" align="left"><b>Số câu đúng</b></TableCell>
+            <TableCell component="th" scope="row" align="center"><b>Số câu đúng</b></TableCell>
         </React.Fragment>)
     }
 
@@ -106,7 +106,7 @@ export default function AdminTestsPage() {
                             component="h2" color="primary">Danh sách kết quả thi</Typography>
                 <WorkingTableV2 filesByHash={results.byHash}
                                 numberOfColumns={4}
-                                filesById={results.byId}
+                                filesById={[...results.byId].reverse()}
                                 isShowLoading={isShowCircleLoading}
                                 dragDisplayProperty="content"
                                 setFiles={handleFilesChange}

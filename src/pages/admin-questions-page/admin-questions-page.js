@@ -147,7 +147,7 @@ export default function AdminQuestionsPage() {
 
     return (<div className={classes.root}>
 
-        <Paper className={classes.paper}>
+        <Paper elevation={3} className={classes.paper}>
             <Typography gutterBottom variant="h6"
                         component="h2" color="primary">Quản lý đề thi</Typography>
             <WorkingTableV2 filesByHash={questions.byHash}

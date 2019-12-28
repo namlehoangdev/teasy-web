@@ -142,15 +142,18 @@ export default function PlaygroundAllContestsPage() {
     }
 
     function renderFiles(id) {
-        const {name, ownerName, startAt} = contests.byHash[id];
+        const {name, ownerName, startAt, duration} = contests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{ownerName}</TableCell>
-            <TableCell align="left">{isoToLocalDateString(startAt)}</TableCell>
-            <TableCell align="left"><Button
+            <TableCell align="left">{moment(startAt).year() === 1 ? "Không có" : isoToLocalDateString(startAt)}</TableCell>
+            {(moment(startAt).diff(moment.utc(), "ms") + duration) > 0 ||  moment(startAt).year() === 1? <TableCell align="center">
+              <Button
                 color='primary'
-                onClick={() => handleGoToWaitingRoomClick(id)}>Vào phòng chờ</Button></TableCell>
+                onClick={() => handleGoToWaitingRoomClick(id)}>Vào phòng chờ
+              </Button>
+            </TableCell> :  <TableCell align="center">Đã kết thúc</TableCell>}
         </React.Fragment>)
     }
 
@@ -169,7 +172,8 @@ export default function PlaygroundAllContestsPage() {
             <TableCell component="th" scope="row" align="left">.</TableCell>
             <TableCell component="th" scope="row" align="left">Tên cuộc thi</TableCell>
             <TableCell component="th" scope="row" align="left">Người chia sẻ</TableCell>
-            <TableCell component="th" scope="row" align="left">Ngày thi</TableCell>
+            <TableCell component="th" scope="row" align="left">Ngày bắt đầu</TableCell>
+            <TableCell component="th" scope="row" align="left"></TableCell>
         </React.Fragment>)
     }
 
@@ -225,13 +229,13 @@ export default function PlaygroundAllContestsPage() {
     //
 
     return (<div className={classes.root}>
-        <Paper className={classes.paper}>
+        <Paper elevation={3} className={classes.paper}>
             <Typography gutterBottom variant="h6"
                         component="h2" color="primary">Được chia sẻ với tôi</Typography>
             <WorkingTableV2 isLoading={isShowCircleLoading}
                             numberOfColumns={4}
                             filesByHash={contests.byHash}
-                            filesById={sharedContestIds}
+                            filesById={[...sharedContestIds].reverse()}
                             dragDisplayProperty="content"
                             setFiles={handleFilesChange}
                             setFileById={handleFileByIdChange}

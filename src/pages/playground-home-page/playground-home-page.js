@@ -54,7 +54,7 @@ import {setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog, logout}
 
 const drawerWidth = 240;
 
-const options = ['Edit profile', 'Sign out'];
+const options = ['Sign out'];
 
 const useStyles = makeStyles(theme => ({
     root: {display: 'flex'},
@@ -162,9 +162,9 @@ export default function PlaygroundHomePage() {
 
     const handleMenuItemClick = (event, index) => {
         setSelectedAvatarOptions(index);
-        if (index === 0) {
+        if (index === 1) {
             console.log('Doi profile');
-        } else if (index === 1) {
+        } else if (index === 0) {
             console.log('Dang xuat');
             dispatch(logout())
         }

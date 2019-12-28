@@ -73,7 +73,7 @@ export default function AdminContestResultsPage() {
         return (<React.Fragment>
             <TableCell align="left">{`${displayName} ${anonymousLabel}`}</TableCell>
             <TableCell align="left">{isoToLocalDateString(createdAt)}</TableCell>
-            <TableCell align="left"><b>{rightAnswerIds.length}/{totalQuestion}</b></TableCell>
+            <TableCell align="center"><b>{rightAnswerIds.length}/{totalQuestion}</b></TableCell>
         </React.Fragment>)
     }
 
@@ -88,13 +88,13 @@ export default function AdminContestResultsPage() {
         return (<React.Fragment>
             <TableCell component="th" scope="row" align="left"><b>Tên thí sinh</b></TableCell>
             <TableCell component="th" scope="row" align="left"><b>Ngày nộp bài</b></TableCell>
-            <TableCell component="th" scope="row" align="left"><b>Số câu đúng</b></TableCell>
+            <TableCell component="th" scope="row" align="center"><b>Số câu đúng</b></TableCell>
         </React.Fragment>)
     }
 
 
     return (<div className={classes.root}>
-            <Paper className={classes.paper}>
+            <Paper elevation={3} className={classes.paper}>
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Danh sách kết quả thi của {contestName}</Typography>
                 <WorkingTableV2 filesByHash={results.byHash}
