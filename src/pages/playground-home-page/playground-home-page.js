@@ -49,7 +49,7 @@ import {
 import {useSelector, useDispatch} from "react-redux";
 import {useRouteMatch, useHistory} from "react-router-dom";
 import {PAGE_PATHS} from "../../consts";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog, logout} from "../../actions";
 
 const drawerWidth = 240;
@@ -288,7 +288,7 @@ export default function PlaygroundHomePage() {
                     {listNavItemMap.map(renderNavButton)}
                 </List>
                 <Fab size='small' variant="extended" aria-label="like" className={classes.goback}>
-                    <ExitToAppIcon className={classes.extendedIcon}/>
+                    <ArrowBackIcon className={classes.extendedIcon}/>
                     Quay lại
                 </Fab>
             </Drawer>
