@@ -414,7 +414,7 @@ export default function PlaygroundCompetePage() {
 
     function renderStartContestButton() {
         if (durationCompetition > 0) {
-            return (<Countdown onTick={handleOnTick} date={firstDuration} renderer={renderCountDown}/>);
+            return (<Countdown onTick={handleOnTick} onComplete={handleSubmit} date={firstDuration} renderer={renderCountDown}/>);
         }
     }
 

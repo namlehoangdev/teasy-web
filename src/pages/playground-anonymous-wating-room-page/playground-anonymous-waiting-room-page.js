@@ -11,7 +11,7 @@ import {
     TableCell,
     TableBody,
     TableRow,
-    Typography, FormControl, InputAdornment, IconButton, LinearProgress
+    Typography, FormControl, InputAdornment, IconButton, LinearProgress, CardMedia
 } from "@material-ui/core";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
@@ -26,6 +26,7 @@ import {Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon} from "
 import {getAnonymousContestByIdAPI} from "../../apis/playground-apis";
 import _ from "lodash";
 import InputLabel from "@material-ui/core/InputLabel";
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,7 +38,8 @@ const useStyles = makeStyles(theme => ({
         height: "100vh"
     },
     paper: {
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+        width: theme.spacing(70),
     },
     title: {
         fontWeight: "bold"
@@ -70,7 +72,12 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column'
-    }
+    },
+    media: {
+      maxHeight: theme.spacing(20),
+      width: theme.spacing(74),
+      borderWidth: theme.spacing(1),
+    },
 }));
 
 
@@ -86,6 +93,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
         isSecured,
         duration,
         ownerName,
+        backgroundUrl
     } = competingContest;
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -175,6 +183,13 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
             <Grid elevation={3} item component={Paper}
                   style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
                 {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
+
+                 {(isShowMiniLoading || isShowCircleLoading) ? <Skeleton variant="rect" width={150} height={10}/> : <CardMedia
+                    component='img'
+                    className={classes.media}
+                    src={backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png'}
+                    title="Paella dish"
+                />}
                 <div className={classes.paper}>
                     <Typography gutterBottom variant="h6" component="h2" color="primary">
                         Chi tiết
@@ -223,7 +238,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
                         <TextField value={displayName} onChange={handleDisplayNameChange}
                                    fullWidth
                                    helperText={errorNameText}
-                                   label="Tên dự thi" variant="outlined"
+                                   label="Nhập tên để tham gia thi.." variant="outlined"
                                    error={errorNameText !== ''}/>
                     </Box>
 

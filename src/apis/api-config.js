@@ -17,7 +17,7 @@ function getUrl(config) {
 
 const axiosInstance = axios.create({
     baseURL: TEASY_URL,
-    timeout: 10000,
+    timeout: 30000,
     // validateStatus: function (status) {
     //     return status >= 200 && status < 300;
     // },

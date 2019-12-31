@@ -91,7 +91,7 @@ function ImageUpload(props) {
     const [url, setUrl] = useState('');
     const [progress, setProgress] = useState(0);
     const [off, setOff] = useState(true);
-    const [imageId, setImageId] = useState(uuidv4());
+    //const [imageId, setImageId] = useState(uuidv4());
 
     function handleChange(e) {
         setProgress(0);
@@ -110,6 +110,7 @@ function ImageUpload(props) {
     function handleUpload() {
         setOff(false)
         const image = imageFile;
+        const imageId = uuidv4();
         const uploadTask = storage.ref(`${category}/${userId}/${imageId}`).put(image);
         uploadTask.on(
             "state_changed",
