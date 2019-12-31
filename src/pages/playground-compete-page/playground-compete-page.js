@@ -492,7 +492,7 @@ export default function PlaygroundCompetePage() {
                     <DialogContentText>Nộp bài thành công</DialogContentText>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) &&
                     rightAnswerIds && testRightAnswerIds && <DialogContentText>Số câu trả lời
-                        đúng: {Object.keys(rightAnswerIds).length}/{Object.keys(testRightAnswerIds).length}
+                        đúng: {Object.keys(rightAnswerIds).length}/{questionsById.length}
                     </DialogContentText>}
                 </DialogContent>
                 <DialogActions>
