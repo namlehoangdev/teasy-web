@@ -78,7 +78,7 @@ function ChoseRoleCard() {
                 component="img"
                 alt="Contemplative Reptile"
                 className={classes.cardMedia}
-                image="https://cdn.vietnambiz.vn/thumb_w/685/2019/12/4/photo-1-15754715097782086394465-crop-15754715601931924426073.jpg"
+                image={require('./../../assets/images/competitor.jpg')}
                 title="Contemplative Reptile"
               />
               <CardContent className={classes.cardContent}>
@@ -121,7 +121,7 @@ function ChoseRoleCard() {
                 component="img"
                 alt="Contemplative Reptile"
                 className={classes.cardMedia}
-                image="https://cdn.vietnambiz.vn/thumb_w/685/2019/12/4/photo-1-15754715097782086394465-crop-15754715601931924426073.jpg"
+                image={require('./../../assets/images/creator.png')}
                 title="Contemplative Reptile"
               />
               <CardContent className={classes.cardContent}>

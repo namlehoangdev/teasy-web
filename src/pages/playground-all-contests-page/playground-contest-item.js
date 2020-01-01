@@ -106,9 +106,11 @@ const useStyles = makeStyles(theme => ({
     createdBy:{
       position:'absolute',
       paddingBottom: theme.spacing(1),
+      width: theme.spacing(50)
     },
     des:{
       paddingBottom: theme.spacing(2),
+      maxWidth:theme.spacing(50)
     }
 
 }));
@@ -157,7 +159,7 @@ export default function PlaygroundContestItem(props) {
                       </Typography>}
                       {!isLoading && <div>
                         {!isNullOrEmpty(description) ? <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
-                          {description.length > 20 ? description.substring(0, 20) + "..." : description}
+                          {description.length > 100 ? description.substring(0, 100) + "..." : description}
                       </Typography> : <Typography className={classes.des} variant="body2" color="textSecondary" component="p">
                       </Typography>
                       }

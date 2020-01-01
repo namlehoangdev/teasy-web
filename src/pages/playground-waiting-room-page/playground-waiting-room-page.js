@@ -9,7 +9,7 @@ import {
     TableCell,
     TableBody,
     TableRow,
-    Typography, LinearProgress, FormControl, InputAdornment, IconButton, RadioGroup, TextField
+    Typography, LinearProgress, FormControl, InputAdornment, IconButton, RadioGroup, TextField, CardMedia
 } from "@material-ui/core";
 import {useHistory, useLocation, useParams, useRouteMatch} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
@@ -29,6 +29,7 @@ import {PAGE_PATHS} from "../../consts";
 import Input from "@material-ui/core/Input";
 import {Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon} from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,7 +40,8 @@ const useStyles = makeStyles(theme => ({
         height: "100vh"
     },
     paper: {
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+        width: theme.spacing(70),
     },
     title: {
         fontWeight: "bold"
@@ -72,7 +74,12 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column'
-    }
+    },
+    media: {
+      maxHeight: theme.spacing(20),
+      width: theme.spacing(74),
+      borderWidth: theme.spacing(1),
+    },
 }));
 
 
@@ -87,7 +94,8 @@ export default function PlaygroundWaitingRoomPage() {
         isPublic,
         duration,
         ownerName,
-        isSecured
+        isSecured,
+        backgroundUrl
     } = competingContest;
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -185,6 +193,12 @@ export default function PlaygroundWaitingRoomPage() {
             <Grid elevation={3} item component={Paper}
                   style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
                 {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
+                 {(isShowMiniLoading || isShowCircleLoading) ? <Skeleton variant="rect" width={150} height={10}/> : <CardMedia
+                    component='img'
+                    className={classes.media}
+                    src={backgroundUrl || 'https://tech4gamers.com/wp-content/uploads/2019/05/How-To-Use-Tech-To-Overcome-Competition.png'}
+                    title="Paella dish"
+                />}
                 <div className={classes.paper}>
                     <Typography gutterBottom variant="h6" component="h2" color="primary">
                         Chi tiết
