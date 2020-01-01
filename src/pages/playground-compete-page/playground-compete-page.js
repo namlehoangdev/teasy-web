@@ -187,6 +187,7 @@ export default function PlaygroundCompetePage() {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(true);
     const {competingContest} = useSelector(state => state.playgroundReducer) || {};
+    const {profile} = useSelector(state => state.authReducer) || {};
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const {
         duration, results, description,
@@ -280,11 +281,12 @@ export default function PlaygroundCompetePage() {
         if (checkLength(testIds)) {
             console.log('testIds', testIds);
             const reqResults = denormalizer(results);
+            const {name=''}=profile;
             const params = {
                 competitionId: contestId,
                 testId: testIds[0],
                 ownerId,
-                displayName: ownerName,
+                displayName:name ,
                 results: reqResults
             };
             setIsOpenResultDialog(true);

@@ -129,7 +129,7 @@ export default function AdminContestResultsPage() {
                     <WorkingTableV2 filesByHash={results.byHash}
                                     numberOfColumns={3}
                                     filesById={results.byId}
-                                    isShowLoading={isShowCircleLoading}
+                                    isLoading={isShowCircleLoading}
                                     dragDisplayProperty="content"
                                     setFiles={handleFilesChange}
                                     setFileById={handleFileByIdChange}
