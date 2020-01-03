@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: "flex",
         justifyContent: "center",
-        flexDirection: "column",
         alignItems: "center",
-        padding: theme.spacing(2),
-        height: "100vh"
+        height: "100vh",
+        width: "100vw",
+        marginRight:'auto',
+        marginLeft:'auto',
     },
     paper: {
         padding: theme.spacing(2),
-        width: theme.spacing(70),
     },
     title: {
         fontWeight: "bold"
@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     },
     media: {
       maxHeight: theme.spacing(20),
-      width: theme.spacing(74),
+      width: '100%',
       borderWidth: theme.spacing(1),
     },
 }));
@@ -179,8 +179,8 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
 
     const [hours, minutes] = msToTime(duration);
     return (
-        <Grid container component="main" className={classes.root}>
-            <Grid elevation={3} item component={Paper}
+        <Grid lg={12} className={classes.root}>
+            <Grid xs={11} sm={9} lg={5} elevation={3} item component={Paper}
                   style={disabledStyleWrapper(isShowMiniLoading || isShowCircleLoading)}>
                 {(isShowMiniLoading || isShowCircleLoading) && <LinearProgress/>}
 
