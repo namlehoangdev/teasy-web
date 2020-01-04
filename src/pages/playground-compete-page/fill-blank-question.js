@@ -13,6 +13,10 @@ const useStyles = makeStyles(theme => ({
     radioGroup: {
         margin: 0
     },
+    root:{
+      display: 'flex',
+      flexDirection: 'row',
+    },
     answerContainer: {
         display: 'flex',
         flexDirection: 'row',
@@ -20,7 +24,17 @@ const useStyles = makeStyles(theme => ({
     },
     chipContainer: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        padding: theme.spacing(2),
+        alignItems: 'center',
+        //justifyContent: 'center',
+        maxWidth:'50vw'
+    },
+    chip: {
+        marginLeft:theme.spacing(2)
+    },
+    textField:{
+      marginTop:theme.spacing(1)
     }
 }));
 
@@ -48,7 +62,7 @@ export default function FillBlankQuestion(props) {
             Câu trả lời đúng:
             {rightAnswers && rightAnswers.map((item) => {
                 const {id, content} = item;
-                return (<Chip key={id} label={content}
+                return (<Chip className={classes.chip} key={id} label={content}
                               variant="outlined"/>)
             })}
         </div>)
@@ -56,12 +70,13 @@ export default function FillBlankQuestion(props) {
 
 
     return (
-        <React.Fragment>
-            {state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER && renderFullAnswers()}
+        <React.Fragment className={classes.root}>
             <TextField id="filled-textarea"
+                        className={classes.textField}
                        error={questionState === QUESTION_STATE.WRONG}
                        placeholder="Điền đáp án" multiline variant="filled" value={value}
                        onChange={handleAnswerChange}/>
+             {state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER && renderFullAnswers()}
         </React.Fragment>)
 }
 
