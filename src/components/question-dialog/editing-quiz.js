@@ -100,7 +100,6 @@ export default function EditingQuiz(props) {
             (parseInt(curKey) < 0 && parseInt(curKey) < minKey ? curKey : minKey), 0);
 
         onChange(produce(data, draftState => {
-            console.log('draft state: ', draftState);
             if (!draftState.answers) {
                 const newAnswers = new DefaultNormalizer();
                 addToNormalizedList(newAnswers, {
@@ -120,7 +119,6 @@ export default function EditingQuiz(props) {
     function handleOnAnswerBlur(answerId, index) {
         const {content} = answers.byHash[answerId];
         if (!content || content.length === 0) {
-            console.log('get default text');
             onChange({
                 answers: produce(answers, draftState => {
                     draftState.byHash[answerId].content = `Đáp án ${index + 1}`

@@ -19,6 +19,7 @@ import produce from "immer";
 import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
 import {useDispatch} from "react-redux";
 import EditingFillBlank from "./editing-fill-blank";
+import EditingMatching from "./editing-matching";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -77,7 +78,7 @@ export default function EditingQuestionContent(props) {
             case QUESTION_TYPE_CODES.fillBlank:
                 return <EditingFillBlank data={data} onChange={handleQuestionFormChange}/>;
             case QUESTION_TYPE_CODES.matching:
-                return <div/>;
+                return <EditingMatching data={data} onChange={handleQuestionFormChange}/>;
             case QUESTION_TYPE_CODES.quizMulti:
                 return <div/>;
         }

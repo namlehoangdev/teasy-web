@@ -53,7 +53,8 @@ import {CountdownRenderer} from "../../components";
 import CloseIcon from '@material-ui/icons/Close';
 import FillBlankQuestion from "./fill-blank-question";
 import moment from 'moment'
-import { useSnackbar } from 'notistack';
+import {useSnackbar} from 'notistack';
+import MatchingQuestion from "./matching-question";
 
 const drawerWidth = 240;
 
@@ -167,7 +168,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-        marginBottom:theme.spacing(1)
+        marginBottom: theme.spacing(1)
     }
 }));
 
@@ -221,12 +222,14 @@ export default function PlaygroundCompetePage() {
     };
 
     const action = key => (
-    <>
-        <Button color='disabled' onClick={() => { closeSnackbar(key) }}>
-            X
-        </Button>
-    </>
-);
+        <>
+            <Button color='disabled' onClick={() => {
+                closeSnackbar(key)
+            }}>
+                X
+            </Button>
+        </>
+    );
 
 
     useMemo(() => {
@@ -238,13 +241,12 @@ export default function PlaygroundCompetePage() {
             name && setTestName(name);
             questions && setQuestionsById(questions);
             console.log('questions: ', questions);
-            if(moment(startAt).year() === 1){
-               setDurationCompetition(competingContest.duration)
-            }
-            else{
-              const diff = moment.utc().diff(moment(startAt), "ms");
-              setDifff(diff)
-              setDurationCompetition(competingContest.duration - diff)
+            if (moment(startAt).year() === 1) {
+                setDurationCompetition(competingContest.duration)
+            } else {
+                const diff = moment.utc().diff(moment(startAt), "ms");
+                setDifff(diff)
+                setDurationCompetition(competingContest.duration - diff)
             }
         }
     }, [testIds]);
@@ -298,46 +300,52 @@ export default function PlaygroundCompetePage() {
         }
     }
 
-    function generateQuestionState(questionId, answersById, type) {
+    function generateExtraProps(questionId, answersById, type) {
         let questionState = QUESTION_STATE.NOT_SCORED;
         if (state !== COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) {
             return {questionState};
         }
-        if (type === QUESTION_TYPE_CODES.quiz) {
-            let trueAnswer = '';
-            if (rightAnswerIds && answersById) {
-                let count = 0;
-                answersById.every((item) => {
-                    if (rightAnswerIds[item]) {
-                        trueAnswer = item;
-                        questionState = QUESTION_STATE.RIGHT;
-                        return false;
+        switch (type) {
+            case QUESTION_TYPE_CODES.quiz: {
+                let trueAnswer = '';
+                if (rightAnswerIds && answersById) {
+                    let count = 0;
+                    answersById.every((item) => {
+                        if (rightAnswerIds[item]) {
+                            trueAnswer = item;
+                            questionState = QUESTION_STATE.RIGHT;
+                            return false;
+                        }
+                        count++;
+                        return true;
+                    });
+                    if (count === answersById.length) {
+                        questionState = QUESTION_STATE.WRONG;
                     }
-                    count++;
-                    return true;
-                });
-                if (count === answersById.length) {
-                    questionState = QUESTION_STATE.WRONG;
                 }
+                return {trueAnswer, questionState};
             }
-            return {trueAnswer, questionState};
-        }
-        if (type === QUESTION_TYPE_CODES.fillBlank) {
-            if (fillBlankRightAnswers) {
-                if (!fillBlankRightAnswers.byHash) {
-                    return {questionState};
-                }
-                const {rightAnswers = []} = fillBlankRightAnswers.byHash[questionId];
-                const content = results.byHash[questionId] && results.byHash[questionId].content;
-                if (!content) return {questionState: QUESTION_STATE.WRONG, rightAnswers};
-                for (let i = 0; i < rightAnswers.length; i++) {
-                    if (rightAnswers[i].content === content) {
-                        console.log('get here: ', {questionState: QUESTION_STATE.RIGHT, rightAnswers});
-                        return {questionState: QUESTION_STATE.RIGHT, rightAnswers};
+            case  QUESTION_TYPE_CODES.fillBlank: {
+                if (fillBlankRightAnswers) {
+                    if (!fillBlankRightAnswers.byHash) {
+                        return {questionState};
                     }
+                    const {rightAnswers = []} = fillBlankRightAnswers.byHash[questionId];
+                    const content = results.byHash[questionId] && results.byHash[questionId].content;
+                    if (!content) return {questionState: QUESTION_STATE.WRONG, rightAnswers};
+                    for (let i = 0; i < rightAnswers.length; i++) {
+                        if (rightAnswers[i].content === content) {
+                            console.log('get here: ', {questionState: QUESTION_STATE.RIGHT, rightAnswers});
+                            return {questionState: QUESTION_STATE.RIGHT, rightAnswers};
+                        }
+                    }
+                    console.log('get here: ', {questionState: QUESTION_STATE.WRONG, rightAnswers});
+                    return {questionState: QUESTION_STATE.WRONG, rightAnswers};
                 }
-                console.log('get here: ', {questionState: QUESTION_STATE.WRONG, rightAnswers});
-                return {questionState: QUESTION_STATE.WRONG, rightAnswers};
+                break;
+            }
+            case  QUESTION_TYPE_CODES.matching: {
+                break;
             }
         }
         return {questionState};
@@ -349,7 +357,7 @@ export default function PlaygroundCompetePage() {
             const isResponseFullAnswer = COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER === state;
             let extraProps = {};
             if (isResponseFullAnswer) {
-                extraProps = generateQuestionState(questionId, answersById, type);
+                extraProps = generateExtraProps(questionId, answersById, type);
             }
             let chipStyle = {marginTop: 10};
             if (extraProps.questionState === QUESTION_STATE.RIGHT) {
@@ -373,24 +381,28 @@ export default function PlaygroundCompetePage() {
     }
 
     function renderQuestionByType(questionId, extraProps) {
-        const {answers: answersById, type: questionTypeCode} = questionByHash[questionId];
+        const {answers: answersById, options1, options2, type: questionTypeCode} = questionByHash[questionId];
+        const {resultsMatching} = results && results.byHash[questionId] || {};
         switch (questionTypeCode) {
             case QUESTION_TYPE_CODES.quiz:
                 return (<QuizQuestion {...extraProps}
                                       answersById={answersById} onAnswerChange={handleAnswerChange}
                                       question={questionByHash[questionId]}/>);
-            case QUESTION_TYPE_CODES.essay:
-                return <div/>;
             case QUESTION_TYPE_CODES.fillBlank:
                 return <FillBlankQuestion {...extraProps}
                                           answersById={answersById} onAnswerChange={handleAnswerChange}
                                           question={questionByHash[questionId]}/>;
             case QUESTION_TYPE_CODES.matching:
-                return <div/>;
-            case QUESTION_TYPE_CODES.quizMulti:
-                return <div/>;
+                return <MatchingQuestion {...extraProps}
+                                         resultsMatching={resultsMatching}
+                                         onAnswerChange={handleAnswerChange}
+                                         options2={options2}
+                                         question={questionByHash[questionId]} options1={options1}
+                />;
+            // case QUESTION_TYPE_CODES.quizMulti:
+            //     return <div/>;
         }
-
+        return null;
     }
 
     function renderCountDown(props) {
@@ -399,7 +411,7 @@ export default function PlaygroundCompetePage() {
 
     function handleOnTick(e) {
         if (e.total == alarm) {
-                   enqueueSnackbar('Nhắc hẹn kết thúc', {variant: 'success', autoHideDuration:30000, action});
+            enqueueSnackbar('Nhắc hẹn kết thúc', {variant: 'success', autoHideDuration: 30000, action});
         }
     }
 
@@ -416,7 +428,8 @@ export default function PlaygroundCompetePage() {
 
     function renderStartContestButton() {
         if (durationCompetition > 0) {
-            return (<Countdown onTick={handleOnTick} onComplete={handleSubmit} date={firstDuration} renderer={renderCountDown}/>);
+            return (<Countdown onTick={handleOnTick} onComplete={handleSubmit} date={firstDuration}
+                               renderer={renderCountDown}/>);
         }
     }
 
@@ -453,7 +466,7 @@ export default function PlaygroundCompetePage() {
                         <Slider defaultValue={90} marks={marks} valueLabelDisplay="on" getAriaValueText={valuetext}
                                 onChange={handleOnReminderChange}
                                 aria-labelledby="discrete-slider-always" step={1} min={0}
-                                max={(durationCompetition+difff) / 60000}/>
+                                max={(durationCompetition + difff) / 60000}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <ExpansionPanel>
