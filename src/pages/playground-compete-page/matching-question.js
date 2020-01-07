@@ -110,7 +110,7 @@ export default function MatchingQuestion(props) {
                         <MenuItem value={DEFAULT_VALUE} disabled key={'placeholder'}>
                             {DEFAULT_VALUE}
                         </MenuItem>
-                        {Object.values(shuffle([...options2])).map(renderOptions2)}
+                        {Object.values(options2).map(renderOptions2)}
                     </Select>
                 </FormControl>
             </div>
