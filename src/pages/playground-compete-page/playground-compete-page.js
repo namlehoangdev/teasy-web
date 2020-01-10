@@ -305,23 +305,20 @@ export default function PlaygroundCompetePage() {
         if (state !== COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) {
             return {questionState};
         }
+        console.log('questionId',questionId);
+
+        questionState = testRightQuestionIds[questionId] ? QUESTION_STATE.RIGHT : QUESTION_STATE.WRONG;
         switch (type) {
             case QUESTION_TYPE_CODES.quiz: {
                 let trueAnswer = '';
                 if (rightAnswerIds && answersById) {
-                    let count = 0;
                     answersById.every((item) => {
                         if (rightAnswerIds[item]) {
                             trueAnswer = item;
-                            questionState = QUESTION_STATE.RIGHT;
                             return false;
                         }
-                        count++;
                         return true;
                     });
-                    if (count === answersById.length) {
-                        questionState = QUESTION_STATE.WRONG;
-                    }
                 }
                 return {trueAnswer, questionState};
             }
@@ -331,16 +328,7 @@ export default function PlaygroundCompetePage() {
                         return {questionState};
                     }
                     const {rightAnswers = []} = fillBlankRightAnswers.byHash[questionId];
-                    const content = results.byHash[questionId] && results.byHash[questionId].content;
-                    if (!content) return {questionState: QUESTION_STATE.WRONG, rightAnswers};
-                    for (let i = 0; i < rightAnswers.length; i++) {
-                        if (rightAnswers[i].content === content) {
-                            console.log('get here: ', {questionState: QUESTION_STATE.RIGHT, rightAnswers});
-                            return {questionState: QUESTION_STATE.RIGHT, rightAnswers};
-                        }
-                    }
-                    console.log('get here: ', {questionState: QUESTION_STATE.WRONG, rightAnswers});
-                    return {questionState: QUESTION_STATE.WRONG, rightAnswers};
+                    return {questionState, rightAnswers};
                 }
                 break;
             }
@@ -507,7 +495,7 @@ export default function PlaygroundCompetePage() {
                     <DialogContentText>Nộp bài thành công</DialogContentText>
                     {(state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) &&
                     rightAnswerIds && testRightAnswerIds && <DialogContentText>Số câu trả lời
-                        đúng: {testRightQuestionIds.length}/{questionsById.length}
+                        đúng: {Object.keys(testRightQuestionIds).length}/{questionsById.length}
                     </DialogContentText>}
                 </DialogContent>
                 <DialogActions>

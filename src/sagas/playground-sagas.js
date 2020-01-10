@@ -230,10 +230,14 @@ export function* getMarkedContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedContestResultAPI, resultId);
         console.log('getMarkedContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds} = response.data;
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
+            });
+            const newTestRightQuestionIds = {};
+            testRightQuestionIds.forEach((item) => {
+                newTestRightQuestionIds[item] = true;
             });
 
             const newRightAnswerIds = {};
@@ -250,6 +254,7 @@ export function* getMarkedContestResultSaga({payload}) {
                 markedResults: {
                     ...response.data,
                     testRightAnswerIds: newTestRightAnswerIds,
+                    testRightQuestionIds: newTestRightQuestionIds,
                     rightAnswerIds: newRightAnswerIds,
                     fillBlankRightAnswers: newFillBlankRightAnswers
                 },
@@ -271,22 +276,33 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedAnonymousContestResultAPI, resultId);
         console.log('getMarkedAnonymousContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds} = response.data;
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
+            });
+            const newTestRightQuestionIds = {};
+            testRightQuestionIds.forEach((item) => {
+                newTestRightQuestionIds[item] = true;
             });
 
             const newRightAnswerIds = {};
             rightAnswerIds.forEach((item) => {
                 newRightAnswerIds[item] = true;
             });
+            let newFillBlankRightAnswers = new DefaultNormalizer();
+            if (fillBlankRightAnswers) {
+                newFillBlankRightAnswers = normalizer(fillBlankRightAnswers, 'questionId');
+            }
+            console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
 
             yield put(updateCompetingContest({
                 markedResults: {
                     ...response.data,
                     testRightAnswerIds: newTestRightAnswerIds,
-                    rightAnswerIds: newRightAnswerIds
+                    testRightQuestionIds: newTestRightQuestionIds,
+                    rightAnswerIds: newRightAnswerIds,
+                    fillBlankRightAnswers: newFillBlankRightAnswers
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));
