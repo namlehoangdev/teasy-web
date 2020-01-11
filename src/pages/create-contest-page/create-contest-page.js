@@ -165,7 +165,7 @@ const useStyles = makeStyles(theme => ({
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
-    const {id, isPublic, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
+    const {id, isPublic, isShuffled, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
@@ -198,6 +198,7 @@ export default function CreateContestPage() {
                 duration: 1 * 3600000 + 30 * 60000,
                 startAt: null,
                 isPublic: true,
+                isShuffled: true,
                 type: CONTEST_TYPE_CODE.ELSE
             }));
             setDuration(new Date(1997, 10, 3, 1, 30));
@@ -237,6 +238,11 @@ export default function CreateContestPage() {
             setOpenChosePermittedUserDialog(true);
         }
         dispatch(updateEditingContest({isPublic: event.target.value === 'public'}));
+    }
+
+
+    function handleIsShuffledChange(event) {
+        dispatch(updateEditingContest({isShuffled: event.target.value === 'true'}));
     }
 
     function handleSecurityChange(event) {
@@ -523,6 +529,36 @@ export default function CreateContestPage() {
                                                                           className={classes.radio}/>}
                                                           label='Chia sẻ với'/>
                                         {!isPublic && renderPermittedUsers()}
+                                    </RadioGroup>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+
+                        <Grid item xs={12} sm={12} mt={3} className={classes.item}>
+                            <Grid container>
+                                <Grid item xs={3} sm={3}>
+                                    <Typography variant='body2' align='flex-end'><b>Trộn câu hỏi</b></Typography>
+                                </Grid>
+                                <Grid item xs={9} sm={9}>
+                                    <RadioGroup name="isPublic-radio" value={isShuffled ? 'true' : 'false'}
+                                                className={classes.radioGroup}
+                                                aria-label="startAtRadio"
+                                                onChange={handleIsShuffledChange}>
+                                        <FormControlLabel value={'true'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Có'/>
+                                        <FormControlLabel value={'false'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Không'/>
                                     </RadioGroup>
                                 </Grid>
                             </Grid>
