@@ -230,7 +230,7 @@ export function* getMarkedContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedContestResultAPI, resultId);
         console.log('getMarkedContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
@@ -248,6 +248,10 @@ export function* getMarkedContestResultSaga({payload}) {
             if (fillBlankRightAnswers) {
                 newFillBlankRightAnswers = normalizer(fillBlankRightAnswers, 'questionId');
             }
+            let newMatchingRightAnswers = new DefaultNormalizer();
+            if (matchingRightAnswers) {
+                newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
+            }
             console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
 
             yield put(updateCompetingContest({
@@ -256,7 +260,8 @@ export function* getMarkedContestResultSaga({payload}) {
                     testRightAnswerIds: newTestRightAnswerIds,
                     testRightQuestionIds: newTestRightQuestionIds,
                     rightAnswerIds: newRightAnswerIds,
-                    fillBlankRightAnswers: newFillBlankRightAnswers
+                    fillBlankRightAnswers: newFillBlankRightAnswers,
+                    matchingRightAnswers: newMatchingRightAnswers
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));
@@ -276,7 +281,7 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedAnonymousContestResultAPI, resultId);
         console.log('getMarkedAnonymousContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
@@ -294,6 +299,10 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
             if (fillBlankRightAnswers) {
                 newFillBlankRightAnswers = normalizer(fillBlankRightAnswers, 'questionId');
             }
+            let newMatchingRightAnswers = new DefaultNormalizer();
+            if (matchingRightAnswers) {
+                newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
+            }
             console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
 
             yield put(updateCompetingContest({
@@ -302,7 +311,8 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
                     testRightAnswerIds: newTestRightAnswerIds,
                     testRightQuestionIds: newTestRightQuestionIds,
                     rightAnswerIds: newRightAnswerIds,
-                    fillBlankRightAnswers: newFillBlankRightAnswers
+                    fillBlankRightAnswers: newFillBlankRightAnswers,
+                    matchingRightAnswers: newMatchingRightAnswers
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));

@@ -200,7 +200,7 @@ export default function PlaygroundCompetePage() {
         markedResults = {},
         startAt
     } = competingContest;
-    const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds} = markedResults;
+    const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = markedResults;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
@@ -333,6 +333,14 @@ export default function PlaygroundCompetePage() {
                 break;
             }
             case  QUESTION_TYPE_CODES.matching: {
+                if (matchingRightAnswers) {
+                    if (!matchingRightAnswers.byHash) {
+                        return {questionState};
+                    }
+                    const {options2: realOptions2 = []} = matchingRightAnswers.byHash[questionId];
+                    console.log('realOptions:',realOptions2);
+                    return {questionState, realOptions2};
+                }
                 break;
             }
         }
