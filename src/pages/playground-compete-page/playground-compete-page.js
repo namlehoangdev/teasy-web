@@ -305,7 +305,6 @@ export default function PlaygroundCompetePage() {
         if (state !== COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER) {
             return {questionState};
         }
-        console.log('questionId',questionId);
 
         questionState = testRightQuestionIds[questionId] ? QUESTION_STATE.RIGHT : QUESTION_STATE.WRONG;
         switch (type) {

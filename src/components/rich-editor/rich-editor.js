@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     toolbar: {
         display: 'flex',
         flexDirection: 'row',
-        flexWrap:'wrap'
+        flexWrap: 'wrap'
     },
     inlineToolbar: {}
 }))
@@ -50,7 +50,7 @@ export default function RichEditor(props) {
     const {id: userId} = profile || {};
 
 
-    const {editorState, onChange, readOnly} = props;
+    const {editorState, onChange, readOnly, renderMoreOptions = null} = props;
     const [plugins, setPlugins] = React.useState([mathJaxPlugin, resizeablePlugin, alignmentPlugin, focusPlugin, blockDndPlugin, imagePlugin]);
 
     function handleOnChange(editorState) {
@@ -98,7 +98,7 @@ export default function RichEditor(props) {
                 <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
                 <InlineStyleControls className={classes.InlineToolbar} editorState={editorState}
                                      onToggle={toggleInlineStyle}/>
-
+                {renderMoreOptions()}
                 <ImageUpload
                     onUploaded={(url) => {
                         onChange(plugins[5].addImage(editorState, url));
@@ -127,8 +127,9 @@ export default function RichEditor(props) {
 RichEditor.propTypes = {
     editorState: PropTypes.any,
     onChange: PropTypes.func,
-    readOnly: PropTypes.any
-}
+    readOnly: PropTypes.any,
+    renderMoreOptions: PropTypes.any,
+};
 
 // Custom overrides for "code" style.
 const styleMap = {

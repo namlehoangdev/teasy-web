@@ -89,7 +89,6 @@ export default function MatchingQuestion(props) {
         if (!realOptions2 || !realOptions2[index]) {
             return null;
         }
-        console.log('asdasdasd:', realOptions2[index], resultsMatching[index]);
         if (questionState === QUESTION_STATE.WRONG && realOptions2[index] !== resultsMatching[index]) {
             return <span style={{display:'flex',flexDirection:'row'}}>
                 <Typography variant='small' className={classes.inputBase}

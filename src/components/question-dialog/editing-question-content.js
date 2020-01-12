@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 
 import {
     InputLabel,
     Select,
     MenuItem,
-    FormControl, Grid, IconButton,
+    FormControl, Grid, IconButton, Checkbox,
 } from '@material-ui/core';
 
 import PropTypes from 'prop-types';
@@ -20,19 +20,40 @@ import {addToNormalizedList, DefaultNormalizer} from "../../utils/byid-utils";
 import {useDispatch} from "react-redux";
 import EditingFillBlank from "./editing-fill-blank";
 import EditingMatching from "./editing-matching";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputBase from "@material-ui/core/InputBase";
 
 
 const useStyles = makeStyles((theme) => ({
     root: {display: 'flex'},
     selectTypeBox: {width: '100%'},
     header: {flex: 1, justifyContent: 'space-between', alignItems: 'center'},
-    typeContainer: {marginBottom: theme.spacing(3)}
+    typeContainer: {marginBottom: theme.spacing(3)},
+    inputBase: {
+        marginTop: theme.spacing(1),
+        paddingLeft:theme.spacing(1),
+        paddingRight:theme.spacing(1),
+        borderBottom: '1px solid ' + theme.palette.background.paper,
+        marginBottom: theme.spacing(1),
+        "&:hover": {
+            borderBottomColor: theme.palette.grey[400]
+        },
+        "&:focus": {
+            backgroundColor: 'green',
+        },
+        "&:focus-within": {
+            borderBottomColor: theme.palette.primary.main
+        },
+        "&:active": {}
+    },
 }));
 
 export default function EditingQuestionContent(props) {
     const {data, onChange, onRemove, hideRemove = false} = props;
     const classes = useStyles();
-    const {type: questionTypeCode = '', content, id, level} = data;
+    const {type: questionTypeCode = '', content, id, level, explanation = null} = data;
+    const [explChecked, setExplChecked]=useState(!!explanation);
+
 
     const dispatch = useDispatch();
 
@@ -65,6 +86,17 @@ export default function EditingQuestionContent(props) {
         onChange({...newData});
     }
 
+    function handleExplanationChange(event) {
+        console.log('event.target.checked: ', event.target.checked);
+        setExplChecked(event.target.checked);
+        if (!event.target.checked) {
+            onChange({explanation: null});
+        } else {
+            onChange({explanation: ''})
+        }
+        //onChange({...newData});
+    }
+
     function handleRemoveQuestion() {
         onRemove && onRemove(id);
     }
@@ -93,6 +125,27 @@ export default function EditingQuestionContent(props) {
     function renderQuestionLevelMenu(code) {
         return (
             <MenuItem key={code} value={code}>{QUESTION_LEVEL_TEXT[code]}</MenuItem>)
+    }
+
+    function renderExplanationCheckbox() {
+        return (<FormControlLabel
+            control={
+                <Checkbox onChange={handleExplanationChange}/>
+            }
+            label="Chú thích"
+        />)
+    }
+
+    function renderExplanation() {
+        if (!explChecked)
+            return null;
+        return (<InputBase multiline value={explanation}
+                           className={classes.inputBase}
+                           fullWidth
+                           placeholder='Chú thích câu hỏi (hiển thị khi xem đáp án)'
+                           variant="outlined"
+                           onChange={(event) => onChange({explanation: event.target.value})}
+        />)
     }
 
     return (<div>
@@ -136,7 +189,10 @@ export default function EditingQuestionContent(props) {
                 </IconButton>)}
             </Grid>
         </Grid>
-        {content && <RichEditor readOnly={false} editorState={content} onChange={handleEditorChange}/>}
+        {content && <RichEditor readOnly={false}
+                                renderMoreOptions={renderExplanationCheckbox}
+                                editorState={content} onChange={handleEditorChange}/>}
+        {renderExplanation()}
         {renderQuestionFormByType()}
     </div>);
 }
