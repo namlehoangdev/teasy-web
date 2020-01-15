@@ -185,10 +185,18 @@ export function* postContestResultSaga({payload}) {
         const response = yield call(APIs.postContestResultAPI, params);
         console.log('postContestResultAPI succeed: ', response);
         if (response && response.data) {
+            const {explanations, id} = response.data;
+            let newExplanations = new DefaultNormalizer();
+            if (explanations) {
+                newExplanations = normalizer(explanations, 'questionId');
+            }
+            yield put(updateCompetingContest({explanations: newExplanations}));
             if (hasFullAnswers) {
-                yield put(getMarkedContestResult(response.data.id));
+                yield put(getMarkedContestResult(id));
             } else {
-                yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.RESPONSE_OF_NOT_FULL_ANSWER}));
+                yield put(updateCompetingContest({
+                    state: COMPETING_CONTEST_STATE.RESPONSE_OF_NOT_FULL_ANSWER,
+                }));
             }
         }
     } catch (error) {
@@ -209,8 +217,14 @@ export function* postAnonymousContestResultSaga({payload}) {
         const response = yield call(APIs.postAnonymousContestResultAPI, params);
         console.log('postAnonymousContestResultAPI succeed: ', response);
         if (response && response.data) {
+            const {explanations, id} = response.data;
+            let newExplanations = new DefaultNormalizer();
+            if (explanations) {
+                newExplanations = normalizer(explanations, 'questionId');
+            }
+            yield put(updateCompetingContest({explanations: newExplanations}));
             if (hasFullAnswers) {
-                yield put(getMarkedAnonymousContestResult(response.data.id));
+                yield put(getMarkedAnonymousContestResult(id));
             } else {
                 yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.RESPONSE_OF_NOT_FULL_ANSWER}));
             }

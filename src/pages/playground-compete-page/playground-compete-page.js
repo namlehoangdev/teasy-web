@@ -169,6 +169,9 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         flexDirection: 'column',
         marginBottom: theme.spacing(1)
+    },
+    explanation: {
+        wordWrap: 'break-word'
     }
 }));
 
@@ -198,7 +201,8 @@ export default function PlaygroundCompetePage() {
         hasFullAnswers,
         state,
         markedResults = {},
-        startAt
+        startAt,
+        explanations
     } = competingContest;
     const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = markedResults;
     const dispatch = useDispatch();
@@ -337,7 +341,7 @@ export default function PlaygroundCompetePage() {
                         return {questionState};
                     }
                     const {options2: realOptions2 = []} = matchingRightAnswers.byHash[questionId];
-                    console.log('realOptions:',realOptions2);
+                    console.log('realOptions:', realOptions2);
                     return {questionState, realOptions2};
                 }
                 break;
@@ -361,12 +365,24 @@ export default function PlaygroundCompetePage() {
                 chipStyle = {backgroundColor: snackColors.error, marginTop: 10};
             }
 
+            let explanationContent = null;
+            if ((state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER || state === COMPETING_CONTEST_STATE.RESPONSE_OF_NOT_FULL_ANSWER)
+                && explanations && explanations.byHash && explanations.byHash[questionId]) {
+                console.log('get explanations', explanations);
+                explanationContent = explanations.byHash[questionId].explanationContent;
+            }
+
             return (
                 <div key={questionId}
                      ref={inst => inst === null ? questionRefs.current.delete(questionId) : questionRefs.current.set(questionId, inst)}>
                     <Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                         <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
+                        <br/>
+                        {explanationContent &&
+                        <div className={classes.explanation}>
+                            <Typography variant='p'>{explanationContent}</Typography>
+                        </div>}
                         <RichEditor editorState={content} readOnly={true}/>
                         {renderQuestionByType(questionId, extraProps)}
                         <Divider className={classes.divider} variant="middle"/>
