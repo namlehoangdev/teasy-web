@@ -26,6 +26,8 @@ import {updateOwnQuestionById} from "../actions";
 import {addNewOwnQuestion} from "../actions";
 import {updateRemovedOwnQuestionById} from "../actions";
 import {updateEditingContest} from "../actions";
+import {showMiniLoading} from "../actions";
+import {hideMiniLoading} from "../actions";
 
 const answerSchema = {
     answers: {
@@ -218,7 +220,7 @@ export function* postQuestionSaga({payload}) {
     const {question, onSuccess, onError} = payload;
     try {
         console.log('postQuestionSaga: ', question);
-        yield put(showLoading());
+        yield put(showMiniLoading());
         let requestParams = denormalize(question, answerSchema);
         console.log('request params: ', requestParams);
         requestParams.content = convertFromEditorStateToString(question.content);
@@ -238,7 +240,7 @@ export function* postQuestionSaga({payload}) {
         console.log('postQuestionSaga failed: ', error);
         onError && onError(error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideMiniLoading());
     }
 }
 
@@ -246,7 +248,7 @@ export function* putQuestionSaga({payload}) {
     const {question, onSuccess, onError} = payload;
     try {
         console.log('putQuestionSaga: ', payload);
-        yield put(showLoading());
+        yield put(showMiniLoading());
         const requestParams = {
             ...question,
             content: convertFromEditorStateToString(question.content),
@@ -268,7 +270,7 @@ export function* putQuestionSaga({payload}) {
         onError && onError(error);
         console.log('putQuestionSaga failed: ', error);
     } finally {
-        yield put(hideLoading());
+        yield put(hideMiniLoading());
     }
 }
 

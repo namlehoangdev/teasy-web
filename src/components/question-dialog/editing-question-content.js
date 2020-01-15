@@ -142,7 +142,7 @@ export default function EditingQuestionContent(props) {
         return (<InputBase multiline value={explanation}
                            className={classes.inputBase}
                            fullWidth
-                           placeholder='Chú thích câu hỏi (hiển thị khi xem đáp án)'
+                           placeholder='Thêm giải thích (Hiện thị lúc nộp bài)'
                            variant="outlined"
                            onChange={(event) => onChange({explanation: event.target.value})}
         />)
