@@ -132,7 +132,7 @@ export default function AdminTestsPage() {
         console.log('prepare update: ', test);
         dispatch(clearEditingTest());
         dispatch(updateEditingTest(test));
-        dispatch(setOpenAdminFullscreenDialog(true));
+        //dispatch(setOpenAdminFullscreenDialog(true));
         history.push(`${PAGE_PATHS.editTest}`);
     }
 

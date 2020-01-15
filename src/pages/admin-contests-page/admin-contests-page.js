@@ -180,7 +180,7 @@ export default function AdminContestPage() {
     function handleShowAllResultsIconClick(id) {
         const contest = contests.byHash[id];
         console.log('prepare update: ', contest);
-        dispatch(setOpenAdminFullscreenDialog(true));
+        //dispatch(setOpenAdminFullscreenDialog(true));
         history.push({pathname: `${PAGE_PATHS.contestResults}`, state: {contestId: id}});
     }
 

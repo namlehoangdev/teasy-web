@@ -10,7 +10,7 @@ import {Route, Switch, useLocation} from "react-router";
 import {
     AdminContestsPage, AdminQuestionsPage, AdminTestsPage,
     CreateContestPage, CreateQuestionPage, CreateTestPage,
-    EditContestPage, EditQuestionPage, EditTestPage,
+    EditContestPage, EditQuestionPage, EditTestPage, PlaygroundCompetePage,
 } from "../index";
 import {
     Menu as MenuIcon,
@@ -122,20 +122,20 @@ export default function AdminHomePage() {
     const openCreatePop = Boolean(createPopAnchorEl);
     const createPopID = openCreatePop ? 'create-pop-id' : null;
 
-    history.listen((location, action) => {
-        if (action === 'POP') {
-            switch (currentFullscreenPath) {
-                case PAGE_PATHS.createQuestion:
-                case PAGE_PATHS.createTest:
-                case PAGE_PATHS.createContest:
-                case PAGE_PATHS.editTest:
-                case PAGE_PATHS.editContest:
-                case PAGE_PATHS.editQuestion:
-                case PAGE_PATHS.contestResults:
-                    dispatch(setOpenAdminFullscreenDialog(false));
-            }
-        }
-    });
+    // history.listen((location, action) => {
+    //     if (action === 'POP') {
+    //         switch (currentFullscreenPath) {
+    //             case PAGE_PATHS.createQuestion:
+    //             case PAGE_PATHS.createTest:
+    //             case PAGE_PATHS.createContest:
+    //             case PAGE_PATHS.editTest:
+    //             case PAGE_PATHS.editContest:
+    //             case PAGE_PATHS.editQuestion:
+    //             case PAGE_PATHS.contestResults:
+    //                 dispatch(setOpenAdminFullscreenDialog(false));
+    //         }
+    //     }
+    // });
 
     useEffect(() => {
         //TODO: remove these lines
@@ -144,7 +144,7 @@ export default function AdminHomePage() {
         // setCurrentFullscreenPath(PAGE_PATHS.createContest);
         // history.push(`${path}/${PAGE_PATHS.createContest}`);
         //dispatch(openCreateTest());
- 
+
         const item = listNavItemMap[0];
         setSelectedIndex(item.key);
         setAppBarTitle(item.name);
@@ -176,7 +176,7 @@ export default function AdminHomePage() {
                 break;
         }
         if (item.key !== 2) {
-            dispatch(setOpenAdminFullscreenDialog(true));
+            //dispatch(setOpenAdminFullscreenDialog(true));
             setCreatePopAnchorEl(null);
             setCurrentFullscreenPath(item.path);
             history.push(`${path}/${item.path}`);
@@ -209,72 +209,81 @@ export default function AdminHomePage() {
         </ListItem>)
     }
 
-    return (
-
-        <div className={classes.root}>
-            <CssBaseline/>
-            <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
-                <Toolbar>
-                    <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start"
-                                className={clsx(classes.menuButton, openDrawer && classes.hide)}>
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" noWrap>{appBarTitle}</Typography>
-                </Toolbar>
-            </AppBar>
-            <Drawer className={classes.drawer} classes={{paper: classes.drawerPaper}}
-                    variant="persistent" anchor="left" open={openDrawer}>
-                <div className={classes.drawerHeader}>
-                    <Typography variant="h6" noWrap align='left'>{TEXT.appName}</Typography>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-                    </IconButton>
-                </div>
-                <Divider/>
-                <List>
-                    <div>
-                        <Fab variant="extended" aria-label="delete" className={classes.fab}
-                             onClick={(event) => setCreatePopAnchorEl(event.currentTarget)}>
-                            <AddIcon className={classes.extendedIcon}/> {TEXT.create}
-                        </Fab>
-                        <Popover id={createPopID} open={openCreatePop} anchorEl={createPopAnchorEl}
-                                 onClose={() => setCreatePopAnchorEl(null)}
-                                 anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                                 transformOrigin={{vertical: 'top', horizontal: 'left'}}>
-                            {listCreateButtonMap.map(renderCreateButton)}
-                        </Popover>
+    function renderMainAdminHome() {
+        return (
+            <div className={classes.root}>
+                <CssBaseline/>
+                <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
+                    <Toolbar>
+                        <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start"
+                                    className={clsx(classes.menuButton, openDrawer && classes.hide)}>
+                            <MenuIcon/>
+                        </IconButton>
+                        <Typography variant="h6" noWrap>{appBarTitle}</Typography>
+                    </Toolbar>
+                </AppBar>
+                <Drawer className={classes.drawer} classes={{paper: classes.drawerPaper}}
+                        variant="persistent" anchor="left" open={openDrawer}>
+                    <div className={classes.drawerHeader}>
+                        <Typography variant="h6" noWrap align='left'>{TEXT.appName}</Typography>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                        </IconButton>
                     </div>
-                    {listNavItemMap.map(renderNavButton)}
-                </List>
-                <Button className={classes.goback} onClick={() => {
-                    history.replace('/');
-                }}>
-                    <ArrowBackIcon className={classes.extendedIcon}/>
-                    Quay lại
-                </Button>
-            </Drawer>
-            <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
-                <div className={classes.drawerHeader}/>
-                <Switch>
-                    <Route exact path={`${path}/${PAGE_PATHS.questions}`} component={AdminQuestionsPage}/>
-                    <Route exact path={`${path}/${PAGE_PATHS.tests}`} component={AdminTestsPage}/>
-                    <Route exact path={`${path}/${PAGE_PATHS.contest}`} component={AdminContestsPage}/>
-                </Switch>
-            </main>
+                    <Divider/>
+                    <List>
+                        <div>
+                            <Fab variant="extended" aria-label="delete" className={classes.fab}
+                                 onClick={(event) => setCreatePopAnchorEl(event.currentTarget)}>
+                                <AddIcon className={classes.extendedIcon}/> {TEXT.create}
+                            </Fab>
+                            <Popover id={createPopID} open={openCreatePop} anchorEl={createPopAnchorEl}
+                                     onClose={() => setCreatePopAnchorEl(null)}
+                                     anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                                     transformOrigin={{vertical: 'top', horizontal: 'left'}}>
+                                {listCreateButtonMap.map(renderCreateButton)}
+                            </Popover>
+                        </div>
+                        {listNavItemMap.map(renderNavButton)}
+                    </List>
+                    <Button className={classes.goback} onClick={() => {
+                        history.replace('/');
+                    }}>
+                        <ArrowBackIcon className={classes.extendedIcon}/>
+                        Quay lại
+                    </Button>
+                </Drawer>
+                <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
+                    <div className={classes.drawerHeader}/>
+                    <Switch>
+                        <Route exact path={`${path}/${PAGE_PATHS.questions}`} component={AdminQuestionsPage}/>
+                        <Route exact path={`${path}/${PAGE_PATHS.tests}`} component={AdminTestsPage}/>
+                        <Route exact path={`${path}/${PAGE_PATHS.contest}`} component={AdminContestsPage}/>
+                    </Switch>
+                </main>
 
-            <Dialog fullScreen open={isOpenAdminFullscreenDialog} TransitionComponent={Transition}
-                    onClose={() => dispatch(setOpenAdminFullscreenDialog(false))}>
-                <Switch>
-                    <Route path={`${path}/${PAGE_PATHS.createQuestion}`} component={CreateQuestionPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.createTest}`} component={CreateTestPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.createContest}`} component={CreateContestPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.editQuestion}`} component={EditQuestionPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.editTest}`} component={CreateTestPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.editContest}`} component={CreateContestPage}/>
-                    <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={AdminContestResultsPage}/>
-                </Switch>
-            </Dialog>
-            <EditingQuestionDialog/>
+                <Dialog fullScreen open={isOpenAdminFullscreenDialog} TransitionComponent={Transition}
+                        onClose={() => dispatch(setOpenAdminFullscreenDialog(false))}>
+                    <Switch>
+                        <Route path={`${path}/${PAGE_PATHS.createQuestion}`} component={CreateQuestionPage}/>
+                        <Route path={`${path}/${PAGE_PATHS.editQuestion}`} component={EditQuestionPage}/>
+                    </Switch>
+                </Dialog>
+                <EditingQuestionDialog/>
+            </div>
+        );
+    }
+
+    return (
+        <div className={classes.root}>
+            <Switch>
+                <Route path={`${path}/${PAGE_PATHS.createTest}`} component={CreateTestPage}/>
+                <Route path={`${path}/${PAGE_PATHS.createContest}`} component={CreateContestPage}/>
+                <Route path={`${path}/${PAGE_PATHS.editTest}`} component={CreateTestPage}/>
+                <Route path={`${path}/${PAGE_PATHS.editContest}`} component={CreateContestPage}/>
+                <Route path={`${path}/${PAGE_PATHS.contestResults}`} component={AdminContestResultsPage}/>
+                <Route render={renderMainAdminHome}/>
+            </Switch>
         </div>
     );
 }

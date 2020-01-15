@@ -58,10 +58,18 @@ import {CopyRoomCodeButton} from '../../components';
 //TODO: change to permitted Users from array to map
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        display: 'flex',
+        flex:1
+    },
     appBar: {
-        position: 'relative',
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
     },
     layout: {
+        alignSelf: 'center',
         width: 'auto',
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2),
@@ -220,8 +228,9 @@ export default function CreateContestPage() {
     }, [isPublic, permittedUsers]);
 
     function handleClose() {
+
         history.goBack();
-        dispatch(setOpenAdminFullscreenDialog(false));
+        //dispatch(setOpenAdminFullscreenDialog(false));
     }
 
 
@@ -382,7 +391,8 @@ export default function CreateContestPage() {
         dispatch(setOpenAdminFullscreenDialog(false));
     }
 
-    return (<div>
+    return (
+        <div className={classes.root}>
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -390,7 +400,8 @@ export default function CreateContestPage() {
                     </IconButton>
                     {
                         id ? (<Typography variant="h6"
-                                          className={classes.title}>{`${TEXT.edit} ${TEXT.contest}`}</Typography>) :
+                                          className={classes.title}>{`${
+                                <TEXT></TEXT>.edit} ${TEXT.contest}`}</Typography>) :
                             (<Typography variant="h6"
                                          className={classes.title}>{`${TEXT.create} ${TEXT.contest}`}</Typography>)}
                 </Toolbar>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import _ from 'lodash';
 import "./create-test-page.scss";
 import {
@@ -18,9 +18,9 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    DialogActions
+    DialogActions, Drawer, Divider, Chip, ExpansionPanelDetails
 } from "@material-ui/core";
-import {Close as CloseIcon} from "@material-ui/icons";
+import {ChevronRight as ChevronRightIcon, Close as CloseIcon, Menu as MenuIcon} from "@material-ui/icons";
 import {
     COMPETING_CONTEST_STATE,
     QUESTION_TYPE_CODES,
@@ -49,14 +49,82 @@ import {disabledStyleWrapper} from "../../utils";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ChooseTestDialog from "../create-contest-page/choose-tests-dialog";
 import ChooseQuestionDialog from "./choose-questions-dialog";
+import clsx from "clsx";
+import scrollToComponent from "react-scroll-to-component";
 
+const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
-    appBar: {position: "relative"},
+    root: {
+        display: 'flex',
+    },
+    appBar: {
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: drawerWidth,
+    },
+    title: {
+        flexGrow: 1,
+    },
+    hide: {
+        display: 'none',
+    },
+    drawer: {
+        alignSelf: 'flex-end',
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    paper: {
+        padding: theme.spacing(3)
+    },
+    drawerHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: theme.spacing(0, 1),
+        ...theme.mixins.toolbar,
+        justifyContent: 'flex-start',
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create(['margin,width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        width: '90vw',
+        marginRight: -drawerWidth,
+        paddingTop: theme.spacing(10),
+        alignSelf: 'center',
+        marginLeft: '2vw'
+    },
+    contentShift: {
+        transition: theme.transitions.create(['margin,width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        width: `calc(90vw - ${drawerWidth}px)`,
+
+        marginRight: 0,
+    },
+    heading: {
+        marginLeft: theme.spacing(1)
+    },
     title: {marginLeft: theme.spacing(2), flex: 1},
     testTitle: {...theme.typography.h5, marginBottom: theme.spacing(2)},
     description: {...theme.typography.h6, marginBottom: theme.spacing(2)},
     contentContainer: {padding: theme.spacing(2)},
-    paper: {padding: theme.spacing(2)},
+    questionItem: {marginTop: theme.spacing(2)},
     addNewButton: {alignSelf: "flex-end", marginRight: theme.spacing(1), marginTop: theme.spacing(2)}
 }));
 
@@ -76,6 +144,8 @@ export default function CreateTestPage() {
     const [isOpenDialog, setIsOpenDialog] = useState(false);
     const [isOpenSelectQuestion, setOpenSelectQuestion] = useState(false);
     const [isCallLoadQuestions, setIsCallLoadQuestion] = useState(false);
+    const [openDrawer, setOpenDrawer] = React.useState(true);
+    let questionRefs = useRef(new Map);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -83,7 +153,7 @@ export default function CreateTestPage() {
 
     function handleClose() {
         history.goBack();
-        dispatch(setOpenAdminFullscreenDialog(false));
+        //dispatch(setOpenAdminFullscreenDialog(false));
     }
 
     function onSaveSuccess() {
@@ -129,10 +199,12 @@ export default function CreateTestPage() {
         );
     }
 
-    function renderCreatingQuestions(questionId) {
+    function renderCreatingQuestions(questionId, index) {
         return (
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid item xs={12} sm={12} md={12} className={classes.questionItem}
+                  ref={inst => inst === null ? questionRefs.current.delete(questionId) : questionRefs.current.set(questionId, inst)}>
                 <Paper elevation={3} key={questionId} className={classes.paper}>
+                    <Chip label={`Câu ${index + 1}`} style={{marginTop: 10, marginBottom: 10}}/>
                     <EditingQuestionContent
                         data={questions.byHash[questionId]}
                         onRemove={handleRemoveQuestion}
@@ -216,8 +288,33 @@ export default function CreateTestPage() {
     const addNewPopperId = openAddNewPopper ? "transitions-popper" : undefined;
     const selectedQuestionIds = _.get(editingTest, "questions.byId", []);
 
+    function handleNavigateToQuestion(id) {
+        console.log('handleNavigateToQuestion', id);
+        console.log('ref: ', questionRefs);
+        console.log('ref ele: ', questionRefs.current.get(id));
+        scrollToComponent(questionRefs.current.get(id), {offset: -90, align: 'top', duration: 10})
+        //scrollToRef(questionRefs.current.get(id))
+        //questionContainerRef.current.getScrollableNode().children[0].scrollTop = questionRefs.current.get(id).offsetTop;
+        //window.scrollTo(0, questionContainerRef.current.offsetTop);
+        //console.log('questionContainerRef: ', questionContainerRef);
+    }
+
+    function renderDrawerBlock() {
+        return <div>
+            <Typography className={classes.heading}>Danh sách câu hỏi</Typography>
+            <Grid container wrap>
+                {questions && questions.byId && questions.byId.map((item, index) => {
+                    return (
+                        <Button
+                            onClick={() => handleNavigateToQuestion(item)}
+                            size='small' key={index.toString()}><b>{index + 1}</b></Button>)
+                })}
+            </Grid>
+        </div>
+    }
+
     return (
-        <div>
+        <div className={classes.root}>
             <ChooseQuestionDialog
                 open={isOpenSelectQuestion}
                 questions={questionsFromBank}
@@ -243,49 +340,68 @@ export default function CreateTestPage() {
                             {TEXT.save}
                         </Button>
                     )}
+                    <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)}
+                                edge="end" className={clsx(classes.menuButton, openDrawer && classes.hide)}>
+                        <MenuIcon/>
+                    </IconButton>
                 </Toolbar>
+
             </AppBar>
 
-            <Grid
-                container
-                className={classes.contentContainer}
-                style={disabledStyleWrapper(
-                    isSaved,
-                    {},
-                    {opacity: isShowCircleLoading ? 0 : 1}
-                )}
-            >
-                <Grid item xs={12} sm={12} md={12}>
-                    <Input
-                        placeholder="Nhập tên đề thi"
-                        fullWidth
-                        className={classes.testTitle}
-                        onChange={handleTestNameChange}
-                        value={name || ""}
-                        inputProps={{"aria-label": "description"}}
-                    />
-                </Grid>
-                <Box m={2}/>
-                {questions.byId.map(renderCreatingQuestions)}
-                <Grid item xs={12} sm={12} md={12}>
-                    <Button
-                        className={classes.addNewButton}
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleAddNewQuestionButtonClick}
+            <main className={clsx(classes.content, {[classes.contentShift]: openDrawer})}>
+                <Box spacing={3}>
+                    <Grid
+                        container
+                        className={classes.contentContainer}
+                        style={disabledStyleWrapper(
+                            isSaved,
+                            {},
+                            {opacity: isShowCircleLoading ? 0 : 1}
+                        )}
                     >
-                        Thêm câu hỏi
-                    </Button>
-                    <Button
-                        className={classes.addNewButton}
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleAddQuestionFromBankClick}
-                    >
-                        Thêm câu hỏi từ kho
-                    </Button>
-                </Grid>
-            </Grid>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <Input
+                                placeholder="Nhập tên đề thi"
+                                fullWidth
+                                className={classes.testTitle}
+                                onChange={handleTestNameChange}
+                                value={name || ""}
+                                inputProps={{"aria-label": "description"}}
+                            />
+                        </Grid>
+                        <Box m={2}/>
+                        {questions.byId.map(renderCreatingQuestions)}
+                        <Grid item xs={12} sm={12} md={12}>
+                            <Button
+                                className={classes.addNewButton}
+                                variant="outlined"
+                                color="primary"
+                                onClick={handleAddNewQuestionButtonClick}
+                            >
+                                Thêm câu hỏi
+                            </Button>
+                            <Button
+                                className={classes.addNewButton}
+                                variant="outlined"
+                                color="primary"
+                                onClick={handleAddQuestionFromBankClick}
+                            >
+                                Thêm câu hỏi từ kho
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </main>
+            <Drawer className={classes.drawer} variant="persistent" anchor="right"
+                    open={openDrawer} classes={{paper: classes.drawerPaper}}>
+                <div className={classes.drawerHeader}>
+                    <IconButton onClick={() => setOpenDrawer(false)}>
+                        <ChevronRightIcon/>
+                    </IconButton>
+                </div>
+                <Divider/>
+                {renderDrawerBlock()}
+            </Drawer>
             <Popper
                 id={addNewPopperId}
                 open={openAddNewPopper}
@@ -323,7 +439,7 @@ export default function CreateTestPage() {
                         (<React.Fragment>
                             <DialogTitle id="form-dialog-title">Vui lòng chờ</DialogTitle>
                             <DialogContent>
-                                <div style={{ display: 'flex', flexDirection: 'row'}}>
+                                <div style={{display: 'flex', flexDirection: 'row'}}>
                                     <CircularProgress/>
                                     <DialogContentText className={classes.title}>Đang {testId ? 'Chỉnh sửa' : 'Tạo'} đề
                                         thi</DialogContentText>
