@@ -677,13 +677,11 @@ export default function CreateContestPage() {
                         (<React.Fragment>
                             <DialogTitle id="form-dialog-title">Vui lòng chờ</DialogTitle>
                             <DialogContent>
-                                <span style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center'
-                                }}><CircularProgress/>
-                                <DialogContentText>   Đang {id ? 'Chỉnh sửa' : 'Tạo'} cuộc thi</DialogContentText>
-                                </span>
+                                <div style={{display: 'flex', flexDirection: 'row'}}>
+                                    <CircularProgress/>
+                                    <DialogContentText className={classes.title}> Đang {id ? 'Chỉnh sửa' : 'Tạo'} cuộc
+                                        thi</DialogContentText>
+                                </div>
                             </DialogContent>
                         </React.Fragment>)
                         :

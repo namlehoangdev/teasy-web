@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     description: {...theme.typography.h6, marginBottom: theme.spacing(2)},
     contentContainer: {padding: theme.spacing(2)},
     paper: {padding: theme.spacing(2)},
-    addNewButton: {alignSelf: "flex-end", marginRight:theme.spacing(1), marginTop:theme.spacing(2)}
+    addNewButton: {alignSelf: "flex-end", marginRight: theme.spacing(1), marginTop: theme.spacing(2)}
 }));
 
 export default function CreateTestPage() {
@@ -101,6 +101,7 @@ export default function CreateTestPage() {
             return;
         }
         setAlertText('');
+        setIsOpenDialog(true);
         if (testId) {
             dispatch(putTest({...editingTest, ownerId, ownerName}, onSaveSuccess));
         } else {
@@ -322,9 +323,11 @@ export default function CreateTestPage() {
                         (<React.Fragment>
                             <DialogTitle id="form-dialog-title">Vui lòng chờ</DialogTitle>
                             <DialogContent>
-                                <span style={{display: 'flex', flexDirection: 'row'}}><CircularProgress/>
-                                <DialogContentText>Đang {testId ? 'Chỉnh sửa' : 'Tạo'} cuộc thi</DialogContentText>
-                                </span>
+                                <div style={{ display: 'flex', flexDirection: 'row'}}>
+                                    <CircularProgress/>
+                                    <DialogContentText className={classes.title}>Đang {testId ? 'Chỉnh sửa' : 'Tạo'} đề
+                                        thi</DialogContentText>
+                                </div>
                             </DialogContent>
                         </React.Fragment>)
                         : (
