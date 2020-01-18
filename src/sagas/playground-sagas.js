@@ -178,7 +178,7 @@ export function* getAnonymousContestBydIdSaga({payload}) {
 export function* postContestResultSaga({payload}) {
     try {
         yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.SUBMIT}));
-        const {params, hasFullAnswers} = payload;
+        const {params, hasFullAnswers, isShownAnswers} = payload;
 
         console.log('payload: ', payload);
         yield put(showCircleLoading());
@@ -191,7 +191,7 @@ export function* postContestResultSaga({payload}) {
                 newExplanations = normalizer(explanations, 'questionId');
             }
             yield put(updateCompetingContest({explanations: newExplanations}));
-            if (hasFullAnswers) {
+            if (hasFullAnswers && isShownAnswers) {
                 yield put(getMarkedContestResult(id));
             } else {
                 yield put(updateCompetingContest({
@@ -244,7 +244,12 @@ export function* getMarkedContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedContestResultAPI, resultId);
         console.log('getMarkedContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, explanations, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
+
+            let newExplanations = new DefaultNormalizer();
+            if (explanations) {
+                newExplanations = normalizer(explanations, 'questionId');
+            }
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
@@ -275,7 +280,8 @@ export function* getMarkedContestResultSaga({payload}) {
                     testRightQuestionIds: newTestRightQuestionIds,
                     rightAnswerIds: newRightAnswerIds,
                     fillBlankRightAnswers: newFillBlankRightAnswers,
-                    matchingRightAnswers: newMatchingRightAnswers
+                    matchingRightAnswers: newMatchingRightAnswers,
+                    explanations: newExplanations
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));
@@ -295,7 +301,11 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
         const response = yield call(APIs.getMarkedAnonymousContestResultAPI, resultId);
         console.log('getMarkedAnonymousContestResultSaga succeed: ', response);
         if (response && response.data) {
-            const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
+            const {testRightAnswerIds, rightAnswerIds, explanations, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
+            let newExplanations = new DefaultNormalizer();
+            if (explanations) {
+                newExplanations = normalizer(explanations, 'questionId');
+            }
             const newTestRightAnswerIds = {};
             testRightAnswerIds.forEach((item) => {
                 newTestRightAnswerIds[item] = true;
@@ -316,6 +326,7 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
             let newMatchingRightAnswers = new DefaultNormalizer();
             if (matchingRightAnswers) {
                 newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
+
             }
             console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
 
@@ -326,7 +337,8 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
                     testRightQuestionIds: newTestRightQuestionIds,
                     rightAnswerIds: newRightAnswerIds,
                     fillBlankRightAnswers: newFillBlankRightAnswers,
-                    matchingRightAnswers: newMatchingRightAnswers
+                    matchingRightAnswers: newMatchingRightAnswers,
+                    explanations: newExplanations
                 },
                 state: COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER
             }));

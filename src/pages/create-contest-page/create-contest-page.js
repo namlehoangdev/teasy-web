@@ -173,7 +173,7 @@ const useStyles = makeStyles(theme => ({
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
-    const {id, isPublic, isShuffled, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
+    const {id, isPublic,isShownAnswers, isShuffled, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
@@ -252,6 +252,10 @@ export default function CreateContestPage() {
 
     function handleIsShuffledChange(event) {
         dispatch(updateEditingContest({isShuffled: event.target.value === 'true'}));
+    }
+
+    function handleIsShownAnswersChange(event) {
+        dispatch(updateEditingContest({isShownAnswers: event.target.value === 'true'}));
     }
 
     function handleSecurityChange(event) {
@@ -549,7 +553,7 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Trộn câu hỏi</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Đổi thứ tự câu hỏi</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="isPublic-radio" value={isShuffled ? 'true' : 'false'}
@@ -575,6 +579,35 @@ export default function CreateContestPage() {
                             </Grid>
                         </Grid>
 
+
+                        <Grid item xs={12} sm={12} mt={3} className={classes.item}>
+                            <Grid container>
+                                <Grid item xs={3} sm={3}>
+                                    <Typography variant='body2' align='flex-end'><b>Hiện đáp án sau khi thi</b></Typography>
+                                </Grid>
+                                <Grid item xs={9} sm={9}>
+                                    <RadioGroup name="isPublic-radio" value={isShownAnswers ? 'true' : 'false'}
+                                                className={classes.radioGroup}
+                                                aria-label="startAtRadio"
+                                                onChange={handleIsShownAnswersChange}>
+                                        <FormControlLabel value={'true'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Có'/>
+                                        <FormControlLabel value={'false'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Không'/>
+                                    </RadioGroup>
+                                </Grid>
+                            </Grid>
+                        </Grid>
 
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
