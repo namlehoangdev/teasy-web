@@ -62,11 +62,16 @@ export const updateAllContestById = (id, contest) => action(UPDATE_ALL_CONTEST_B
 
 export const updateCompetingResult = (result) => action(UPDATE_COMPETING_RESULT, {result});
 
-export const postContestResult = (params, hasFullAnswers) => action(POST_CONTEST_RESULT, {params, hasFullAnswers});
-
-export const postAnonymousContestResult = (params, hasFullAnswers) => action(POST_ANONYMOUS_CONTEST_RESULT, {
+export const postContestResult = (params, hasFullAnswers, isShownAnswers) => action(POST_CONTEST_RESULT, {
     params,
-    hasFullAnswers
+    hasFullAnswers,
+    isShownAnswers
+});
+
+export const postAnonymousContestResult = (params, hasFullAnswers, isShownAnswers) => action(POST_ANONYMOUS_CONTEST_RESULT, {
+    params,
+    hasFullAnswers,
+    isShownAnswers
 });
 
 export const getMarkedContestResult = (resultId) => action(GET_MARKED_CONTEST_RESULT, resultId);

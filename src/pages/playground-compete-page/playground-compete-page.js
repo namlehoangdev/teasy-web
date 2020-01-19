@@ -199,6 +199,7 @@ export default function PlaygroundCompetePage() {
         testIds, name: contestName,
         ownerId, ownerName,
         hasFullAnswers,
+        isShownAnswers,
         state,
         markedResults = {},
         startAt,
@@ -297,9 +298,12 @@ export default function PlaygroundCompetePage() {
             };
             setIsOpenResultDialog(true);
             if (isAnonymous) {
-                dispatch(postAnonymousContestResult({...params, displayName: displayName}, hasFullAnswers));
+                dispatch(postAnonymousContestResult({
+                    ...params,
+                    displayName: displayName
+                }, hasFullAnswers, isShownAnswers));
             } else {
-                dispatch(postContestResult(params, hasFullAnswers));
+                dispatch(postContestResult(params, hasFullAnswers, isShownAnswers));
             }
         }
     }
