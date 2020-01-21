@@ -203,9 +203,9 @@ export default function PlaygroundCompetePage() {
         state,
         markedResults = {},
         startAt,
-        explanations
+
     } = competingContest;
-    const {testRightAnswerIds, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = markedResults;
+    const {testRightAnswerIds,explanations, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = markedResults;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);

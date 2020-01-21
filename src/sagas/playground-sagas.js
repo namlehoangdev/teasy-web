@@ -271,7 +271,7 @@ export function* getMarkedContestResultSaga({payload}) {
             if (matchingRightAnswers) {
                 newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
             }
-            console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
+            console.log('newExplanations', newExplanations);
 
             yield put(updateCompetingContest({
                 markedResults: {
@@ -328,7 +328,7 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
                 newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
 
             }
-            console.log('newFillBlankRightAnswers', newFillBlankRightAnswers);
+            console.log('newExplanations', newExplanations);
 
             yield put(updateCompetingContest({
                 markedResults: {
