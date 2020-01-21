@@ -171,7 +171,16 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(1)
     },
     explanation: {
-        wordWrap: 'break-word'
+        wordWrap: 'break-word',
+        marginTop:'auto',
+        marginLeft: theme.spacing(2),
+        maxWidth:'40vw'
+    },
+    chippp:{
+      display:'flex',
+      flexDirection:'row',
+      // justifyContent:'center',
+      
     }
 }));
 
@@ -381,12 +390,14 @@ export default function PlaygroundCompetePage() {
                      ref={inst => inst === null ? questionRefs.current.delete(questionId) : questionRefs.current.set(questionId, inst)}>
                     <Box key={questionId} className={classes.question}
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
-                        <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
                         <br/>
-                        {explanationContent &&
-                        <div className={classes.explanation}>
-                            <Typography variant='p'>{explanationContent}</Typography>
-                        </div>}
+                        <div className={classes.chippp}>
+                          <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
+                          {explanationContent &&
+                          <div className={classes.explanation}>
+                              <Typography variant='p'>{'Giải thích: ' + explanationContent}</Typography>
+                          </div>}
+                        </div>                       
                         <RichEditor editorState={content} readOnly={true}/>
                         {renderQuestionByType(questionId, extraProps)}
                         <Divider className={classes.divider} variant="middle"/>

@@ -24,7 +24,14 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'row',
         flexWrap: 'wrap'
     },
-    inlineToolbar: {}
+    inlineToolbar: {},
+    more:{
+      marginTop: theme.spacing(-0.5),
+      marginLeft:theme.spacing(1)
+    },
+    img:{
+      marginLeft:theme.spacing(2)
+    }
 }))
 
 export default function RichEditor(props) {
@@ -98,7 +105,10 @@ export default function RichEditor(props) {
                 <BlockStyleControls editorState={editorState} onToggle={toggleBlockType}/>
                 <InlineStyleControls className={classes.InlineToolbar} editorState={editorState}
                                      onToggle={toggleInlineStyle}/>
-                {renderMoreOptions()}
+                <div className={classes.more}>
+                  {renderMoreOptions()}
+                </div>
+
                 <ImageUpload
                     onUploaded={(url) => {
                         onChange(plugins[5].addImage(editorState, url));
@@ -106,6 +116,8 @@ export default function RichEditor(props) {
                     category="Question"
                     userId={userId}
                     buttonLabel="Chèn ảnh"/>
+                
+                
             </div>}
             <div className={className}>
                 <Editor

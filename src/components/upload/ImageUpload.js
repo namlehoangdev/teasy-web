@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
         '& > * + *': {
             marginTop: theme.spacing(2),
         },
+        marginLeft:theme.spacing(2)
     },
     "@keyframes fadeAnimation": {
         from: {opacity: 0},

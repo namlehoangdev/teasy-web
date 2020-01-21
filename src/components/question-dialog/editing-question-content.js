@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
         },
         "&:active": {}
     },
+    chuthich:{
+      // marginBotom: theme.spacing(5),
+    }
 }));
 
 export default function EditingQuestionContent(props) {
@@ -130,9 +133,11 @@ export default function EditingQuestionContent(props) {
     function renderExplanationCheckbox() {
         return (<FormControlLabel
             control={
-                <Checkbox onChange={handleExplanationChange}/>
+                <Checkbox 
+                className={classes.chuthich}
+                onChange={handleExplanationChange}/>
             }
-            label="Chú thích"
+            label="Thêm giải thích"
         />)
     }
 
@@ -142,7 +147,7 @@ export default function EditingQuestionContent(props) {
         return (<InputBase multiline value={explanation}
                            className={classes.inputBase}
                            fullWidth
-                           placeholder='Thêm giải thích (Hiện thị lúc nộp bài)'
+                           placeholder='Giải thích đáp án (hiển thị lúc nộp bài)'
                            variant="outlined"
                            onChange={(event) => onChange({explanation: event.target.value})}
         />)

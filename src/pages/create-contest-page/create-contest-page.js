@@ -553,7 +553,7 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Đổi thứ tự câu hỏi</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Xáo trộn thứ tự câu hỏi</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="isPublic-radio" value={isShuffled ? 'true' : 'false'}
@@ -583,7 +583,7 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Hiện đáp án sau khi thi</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Hiển thị đáp án khi nộp bài</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="isPublic-radio" value={isShownAnswers ? 'true' : 'false'}
@@ -612,7 +612,7 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Mật khẩu</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Mật khẩu cuộc thi</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="isSecuredRadio-radio"
