@@ -247,14 +247,10 @@ export default function PlaygroundCompetePage() {
 
 
     useMemo(() => {
-        console.log('vao day');
         if (checkLength(testIds) && testByHash) {
-            // console.log('vao day 2', testByHash);
-            // console.log('testIds', testIds);
             const {name, questions} = testByHash[Object.keys(testByHash)[0]] || {};
             name && setTestName(name);
             questions && setQuestionsById(questions);
-            console.log('questions: ', questions);
             if (moment(startAt).year() === 1) {
                 setDurationCompetition(competingContest.duration)
             } else {
@@ -284,7 +280,6 @@ export default function PlaygroundCompetePage() {
     }
 
     function handleNavigateToResultsPage() {
-        console.log('navigate to results page');
         if (isAnonymous) {
             history.replace("/");
         } else {
@@ -295,14 +290,11 @@ export default function PlaygroundCompetePage() {
 
     function handleSubmit() {
         if (checkLength(testIds)) {
-            console.log('testIds', testIds);
             const reqResults = denormalizer(results);
-            //const {name=''}=profile;
             const params = {
                 competitionId: contestId,
                 testId: testIds[0],
                 ownerId,
-                //displayName:name ,
                 results: reqResults
             };
             setIsOpenResultDialog(true);
@@ -354,7 +346,6 @@ export default function PlaygroundCompetePage() {
                         return {questionState};
                     }
                     const {options2: realOptions2 = []} = matchingRightAnswers.byHash[questionId];
-                    console.log('realOptions:', realOptions2);
                     return {questionState, realOptions2};
                 }
                 break;
@@ -381,7 +372,6 @@ export default function PlaygroundCompetePage() {
             let explanationContent = null;
             if ((state === COMPETING_CONTEST_STATE.RESPONSE_OF_HAS_FULL_ANSWER || state === COMPETING_CONTEST_STATE.RESPONSE_OF_NOT_FULL_ANSWER)
                 && explanations && explanations.byHash && explanations.byHash[questionId]) {
-                console.log('get explanations', explanations);
                 explanationContent = explanations.byHash[questionId].explanationContent;
             }
 
@@ -442,14 +432,7 @@ export default function PlaygroundCompetePage() {
     }
 
     function handleNavigateToQuestion(id) {
-        console.log('handleNavigateToQuestion', id);
-        console.log('ref: ', questionRefs);
-        console.log('ref ele: ', questionRefs.current.get(id));
         scrollToComponent(questionRefs.current.get(id), {offset: -90, align: 'top', duration: 10})
-        //scrollToRef(questionRefs.current.get(id))
-        //questionContainerRef.current.getScrollableNode().children[0].scrollTop = questionRefs.current.get(id).offsetTop;
-        //window.scrollTo(0, questionContainerRef.current.offsetTop);
-        //console.log('questionContainerRef: ', questionContainerRef);
     }
 
     function renderStartContestButton() {

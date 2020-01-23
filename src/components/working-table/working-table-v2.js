@@ -231,7 +231,6 @@ export default function WorkingTableV2(props) {
             return renderLoadingSkeleton();
         }
         const skeletonRows = Array.from(new Array(numberOfSkeletonRows), (val, index) => index);
-        console.log(skeletonRows);
         const skeletonColumns = Array.from(new Array(numberOfColumns), (val, index) => index);
         return skeletonRows.map((item, index) =>
             (<TableRow key={`skeleton-row${index}`}>

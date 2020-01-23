@@ -73,7 +73,6 @@ export default function playgroundReducer(state = initialState, action) {
                 return;
             }
             case UPDATE_COMPETING_CONTEST: {
-                console.log('payload: ', payload);
                 draft.competingContest = {...draft.competingContest, ...payload};
                 return;
             }
@@ -82,7 +81,7 @@ export default function playgroundReducer(state = initialState, action) {
                 return;
             }
             case UPDATE_OWN_CONTEST_RESULT_BY_ID: {
-                console.log('payload: ', payload);
+
                 draft.results = {...draft.results, ...payload};
                 return;
             }
@@ -91,7 +90,6 @@ export default function playgroundReducer(state = initialState, action) {
                 const {result} = payload;
                 let questionId = result.questionId;
                 let newResults = {...draft.competingContest.results} || new DefaultNormalizer();
-                console.log('new results: ', newResults);
                 if (!draft.competingContest.results) {
                     const obj = new DefaultNormalizer();
                     addToNormalizedList(obj, result, 'questionId');

@@ -159,7 +159,6 @@ export default function AdminContestPage() {
 
     function handleEditContestIconClick(id) {
         const contest = contests.byHash[id];
-        console.log('prepare update: ', contest);
         dispatch(clearEditingContest());
         dispatch(updateEditingContest(contest));
         dispatch(setOpenAdminFullscreenDialog(true));
@@ -179,13 +178,10 @@ export default function AdminContestPage() {
 
     function handleShowAllResultsIconClick(id) {
         const contest = contests.byHash[id];
-        console.log('prepare update: ', contest);
-        //dispatch(setOpenAdminFullscreenDialog(true));
         history.push({pathname: `${PAGE_PATHS.contestResults}`, state: {contestId: id}});
     }
 
     function renderFiles(id) {
-        //const labelId = `enhanced-table-checkbox-${index}`;
         const {name, description, startAt, code, isPublic} = contests.byHash[id];
         return (<React.Fragment>
             <TableCell align="left"> </TableCell>

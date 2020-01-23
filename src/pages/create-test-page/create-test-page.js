@@ -289,14 +289,7 @@ export default function CreateTestPage() {
     const selectedQuestionIds = _.get(editingTest, "questions.byId", []);
 
     function handleNavigateToQuestion(id) {
-        console.log('handleNavigateToQuestion', id);
-        console.log('ref: ', questionRefs);
-        console.log('ref ele: ', questionRefs.current.get(id));
         scrollToComponent(questionRefs.current.get(id), {offset: -90, align: 'top', duration: 10})
-        //scrollToRef(questionRefs.current.get(id))
-        //questionContainerRef.current.getScrollableNode().children[0].scrollTop = questionRefs.current.get(id).offsetTop;
-        //window.scrollTo(0, questionContainerRef.current.offsetTop);
-        //console.log('questionContainerRef: ', questionContainerRef);
     }
 
     function renderDrawerBlock() {

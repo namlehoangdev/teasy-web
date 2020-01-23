@@ -148,13 +148,11 @@ function LandingPage() {
 
   function handleFacebookCallback(data) {
     if (data && data.accessToken) {
-      console.log(data);
       dispatch(postLoginByThirdParty({ ...data, thirdParty: THIRD_PARTY.facebook }));
     }
   }
 
   function handleGoogleSuccess(data) {
-    console.log('google login success: ', data);
     dispatch(postLoginByThirdParty({ ...data, thirdParty: THIRD_PARTY.google }));
   }
 
@@ -164,7 +162,6 @@ function LandingPage() {
 
   function handleThirdPartyClick(data) {
     dispatch(showMiniLoading());
-    console.log(data);
   }
 
   function handleGoBack() {

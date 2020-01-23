@@ -139,7 +139,6 @@ export default function ChooseQuestionDialog(props) {
 
     function handleSelectAll(event) {
         if (event.target.checked) {
-            console.log('selected all: ', questions.byId);
             setSelectedQuestionIds(questions.byId);
             return;
         }

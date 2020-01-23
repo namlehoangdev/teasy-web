@@ -114,7 +114,6 @@ export default function PlaygroundWaitingRoomPage() {
 
 
     useEffect(() => {
-        console.log('did mount playground waiting room page: ', history);
         if (queryToken) {
             dispatch(postLoginByThirdParty({isTokenOnly: true, token: queryToken, thirdPartyId}))
         } else {
@@ -135,7 +134,6 @@ export default function PlaygroundWaitingRoomPage() {
     }
 
     function onGetContestError(error) {
-        console.log('error: ', error);
         if (_.get(error, 'data.errorContent', '') === 'Password is not correct') {
             setErrorPasswordText('Mật khẩu không hợp lệ');
         }
@@ -166,7 +164,6 @@ export default function PlaygroundWaitingRoomPage() {
     function renderStartContestButton() {
         const diff = moment(startAt).diff(moment.utc(), "ms");
 
-        //console.log("diff: ", diff);
         if (diff > 0) {
             return (<div className={classes.center}>
                 <Typography gutterBottom variant="h6" component="h2" color="secondary">

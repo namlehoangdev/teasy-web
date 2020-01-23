@@ -68,12 +68,10 @@ export default function EditingQuestionContent(props) {
 
 
     function handleChangeQuestionType(event) {
-        console.log('event.target.value', event);
         onChange({type: event.target.value});
     }
 
     function handleQuestionLevelChange(event) {
-        console.log('event.target.value', event);
         onChange({level: event.target.value});
     }
 
@@ -90,14 +88,12 @@ export default function EditingQuestionContent(props) {
     }
 
     function handleExplanationChange(event) {
-        console.log('event.target.checked: ', event.target.checked);
         setExplChecked(event.target.checked);
         if (!event.target.checked) {
             onChange({explanation: null});
         } else {
             onChange({explanation: ''})
         }
-        //onChange({...newData});
     }
 
     function handleRemoveQuestion() {

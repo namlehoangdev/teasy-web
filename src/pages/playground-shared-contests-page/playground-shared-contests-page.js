@@ -92,7 +92,6 @@ export default function PlaygroundAllContestsPage() {
     }
 
     function handleStartContestClick(item) {
-        console.log(item);
         dispatch(setOpenPlaygroundFullscreenDialog(true));
         history.push({pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`, state: {contestId: item.id}});
     }
@@ -128,7 +127,6 @@ export default function PlaygroundAllContestsPage() {
         const {startAt, duration} = item;
 
         const diff = moment(startAt).diff(moment.utc(), 'ms');
-        console.log('diff: ', diff);
         if (diff > 0) {
             return (<Countdown autoStart={true} date={Date.now() + diff} renderer={renderCountDown}
                                onStart={() => setEndCountDown(false)} onComplete={() => setEndCountDown(true)}/>);

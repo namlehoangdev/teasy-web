@@ -43,7 +43,6 @@ export function* getOwnContestResultsSaga() {
     try {
         yield put(showCircleLoading());
         const response = yield call(APIs.getOwnContestResultsAPI);
-        console.log('getPublicContestsSaga: ', response);
         if (response) {
             const results = normalizer(response.data) || null;
             yield put(updateOwnContestResults(results));
@@ -61,7 +60,6 @@ export function* getContestMetadataByCodeSaga({payload}) {
     try {
         yield put(showMiniLoading());
         const response = yield call(APIs.getContestMetadataAPI, code);
-        console.log('getContestMetadataByCodeSaga: ', response);
         if (response) {
             onSuccess && onSuccess(response);
             yield put(updateCompetingContest(response.data));
@@ -79,7 +77,6 @@ export function* getAnonymousContestMetadataSaga({payload}) {
     try {
         yield put(showMiniLoading());
         const response = yield call(APIs.getAnonymousContestMetadataByCodeAPI, code);
-        console.log('getAnonymousContestMetadataByCode: ', response);
         if (response) {
             onSuccess && onSuccess(response);
             yield put(updateCompetingContest(response.data));
@@ -98,7 +95,6 @@ export function* getPublicContestsSaga() {
     try {
         yield put(showCircleLoading());
         const response = yield call(APIs.getPublicContestsAPI);
-        console.log('getPublicContestsSaga: ', response);
         if (response) {
             const contests = normalizer(response.data) || null;
             yield put(updatePublicContests(contests));
@@ -115,7 +111,6 @@ export function* getSharedContestsSaga() {
     try {
         yield put(showCircleLoading());
         const response = yield call(APIs.getSharedContestsAPI);
-        console.log('getSharedContestsSaga: ', response);
         if (response) {
             const contests = normalizer(response.data) || null;
             yield put(updateSharedContests(contests));
@@ -133,7 +128,6 @@ export function* getContestByIdSaga({payload}) {
     try {
         yield put(showCircleLoading());
         const response = yield call(APIs.getContestByIdAPI, id, params);
-        console.log('getContestByIdSaga response: ', response);
         if (response && response.data) {
             const contest = response.data;
             contest.test.questions && contest.test.questions.forEach(function (part, index) {
@@ -179,11 +173,8 @@ export function* postContestResultSaga({payload}) {
     try {
         yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.SUBMIT}));
         const {params, hasFullAnswers, isShownAnswers} = payload;
-
-        console.log('payload: ', payload);
         yield put(showCircleLoading());
         const response = yield call(APIs.postContestResultAPI, params);
-        console.log('postContestResultAPI succeed: ', response);
         if (response && response.data) {
             const {explanations, id} = response.data;
             let newExplanations = new DefaultNormalizer();
@@ -211,8 +202,6 @@ export function* postAnonymousContestResultSaga({payload}) {
     try {
         yield put(updateCompetingContest({state: COMPETING_CONTEST_STATE.SUBMIT}));
         const {params, hasFullAnswers} = payload;
-
-        console.log('payload: ', payload);
         yield put(showCircleLoading());
         const response = yield call(APIs.postAnonymousContestResultAPI, params);
         console.log('postAnonymousContestResultAPI succeed: ', response);
@@ -239,7 +228,6 @@ export function* postAnonymousContestResultSaga({payload}) {
 export function* getMarkedContestResultSaga({payload}) {
     try {
         const resultId = payload;
-        console.log('payload: ', payload);
         yield put(showCircleLoading());
         const response = yield call(APIs.getMarkedContestResultAPI, resultId);
         console.log('getMarkedContestResultSaga succeed: ', response);
@@ -271,7 +259,6 @@ export function* getMarkedContestResultSaga({payload}) {
             if (matchingRightAnswers) {
                 newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
             }
-            console.log('newExplanations', newExplanations);
 
             yield put(updateCompetingContest({
                 markedResults: {
@@ -296,10 +283,8 @@ export function* getMarkedContestResultSaga({payload}) {
 export function* getMarkedAnonymousContestResultSaga({payload}) {
     try {
         const resultId = payload;
-        console.log('payload: ', payload);
         yield put(showCircleLoading());
         const response = yield call(APIs.getMarkedAnonymousContestResultAPI, resultId);
-        console.log('getMarkedAnonymousContestResultSaga succeed: ', response);
         if (response && response.data) {
             const {testRightAnswerIds, rightAnswerIds, explanations, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = response.data;
             let newExplanations = new DefaultNormalizer();
@@ -326,9 +311,7 @@ export function* getMarkedAnonymousContestResultSaga({payload}) {
             let newMatchingRightAnswers = new DefaultNormalizer();
             if (matchingRightAnswers) {
                 newMatchingRightAnswers = normalizer(matchingRightAnswers, 'questionId');
-
             }
-            console.log('newExplanations', newExplanations);
 
             yield put(updateCompetingContest({
                 markedResults: {

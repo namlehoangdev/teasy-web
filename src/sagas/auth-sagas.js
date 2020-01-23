@@ -59,7 +59,6 @@ function* postLoginByThirdPartyEffectSaga({payload}) {
     const {isTokenOnly} = payload;
     const thirdPartyData = mapDataFromThirdParty(payload);
     const {thirdPartyId, token} = isTokenOnly ? payload : thirdPartyData;
-    console.log("third party data: ", thirdPartyData);
     try {
         yield put(showMiniLoading());
         const response = yield call(APIs.postLoginByThirdParty, {
@@ -71,7 +70,6 @@ function* postLoginByThirdPartyEffectSaga({payload}) {
         console.log("Post login by third party failed: ", error);
         const {status} = error;
         if (status === HTTP_STATUS_CODES.unauthorized) {
-            console.log("prepare to call register");
             yield put(postRegisterThirdParty(payload));
         }
     } finally {
@@ -80,9 +78,7 @@ function* postLoginByThirdPartyEffectSaga({payload}) {
 }
 
 export function* postRegisterThirdPartySaga({payload}) {
-    console.log(payload);
     const thirdPartyData = mapDataFromThirdParty(payload);
-    console.log("third party data: ", thirdPartyData);
     const {thirdPartyId, token, name, email, avatarUrl} = thirdPartyData;
     try {
         yield put(showMiniLoading());

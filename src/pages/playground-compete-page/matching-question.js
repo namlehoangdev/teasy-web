@@ -65,12 +65,10 @@ export default function MatchingQuestion(props) {
 
 
     function handleMatchingResultsChange(event, index) {
-        console.log('resultsMatching: ', resultsMatching);
         let newResultsMatching = [...resultsMatching];
         if (newResultsMatching.length < options1.length) {
             newResultsMatching = new Array(options1.length).fill(DEFAULT_VALUE);
         }
-        console.log('event.target.value: ', event.target.value);
         newResultsMatching[index] = event.target.value;
         let result = {
             questionId: question.id,

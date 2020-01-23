@@ -61,7 +61,6 @@ export default function AdminContestResultsPage() {
     const classes = useStyles();
     const history = useHistory();
     useEffect(() => {
-        console.log('get contest results by id: ', contestId);
         dispatch(getContestResultsById(contestId));
     }, []);
 

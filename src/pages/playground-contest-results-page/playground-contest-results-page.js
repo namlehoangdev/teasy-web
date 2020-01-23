@@ -57,7 +57,6 @@ export default function AdminTestsPage() {
     const dispatch = useDispatch();
     const classes = useStyles();
     useEffect(() => {
-        console.log('admin test page didmount before get: ', results);
         dispatch(getOwnContestResults());
     }, []);
 

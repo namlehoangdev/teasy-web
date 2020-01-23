@@ -13,7 +13,6 @@ export function* getAllUsersSaga() {
     try {
         yield put(showLoading());
         const response = yield call(APIs.getAllUsers);
-        console.log(response);
         if (!response.error) {
             yield put(updateAllUsers(response.data));
         }

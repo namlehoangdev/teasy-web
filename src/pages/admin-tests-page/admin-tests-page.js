@@ -105,7 +105,6 @@ export default function AdminTestsPage() {
     const classes = useStyles();
     const [searchValue, setSearchValue] = useState('');
     useEffect(() => {
-        console.log('admin test page didmount before get: ', tests);
         dispatch(getOwnTests());
     }, []);
 
@@ -129,10 +128,8 @@ export default function AdminTestsPage() {
 
     function handleEditTestIconClick(id) {
         const test = tests.byHash[id];
-        console.log('prepare update: ', test);
         dispatch(clearEditingTest());
         dispatch(updateEditingTest(test));
-        //dispatch(setOpenAdminFullscreenDialog(true));
         history.push(`${PAGE_PATHS.editTest}`);
     }
 

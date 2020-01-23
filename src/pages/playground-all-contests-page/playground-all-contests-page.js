@@ -163,9 +163,7 @@ export default function PlaygroundAllContestsPage() {
     }, [contests.byId]);
 
     function handleItemClick(id) {
-        // console.log('history: ', history);
         history.push(`${PAGE_PATHS.waiting}?contestId=${id}`);
-        //history.push({pathname: `${PAGE_PATHS.playground} /${PAGE_PATHS.compete}`, state: {contestId: id}});
     }
 
 
@@ -182,7 +180,7 @@ export default function PlaygroundAllContestsPage() {
     return (<Link underline={(item===selectedCate) ? 'always' : 'hover'} onClick={()=>{handleCateClicked(item)}}>{item}</Link>)
     }
 
-    
+
     const settings = {
       dots: true,
       infinite: true,
@@ -239,12 +237,12 @@ export default function PlaygroundAllContestsPage() {
                 <Grid item xs={2} >
                     <Typography gutterBottom className={classes.searchContainer} variant="h5" component="h5">
                           Sắp xếp
-                     </Typography> 
+                     </Typography>
                     <div className={classes.cateContainer}>
                       {['Mới nhất', 'Hot nhất','Sắp diễn ra'].map((item) => renderCateContest(item))}
                     </div>
                 </Grid>
-                
+
             </Grid>
         </Container>
     </div>)

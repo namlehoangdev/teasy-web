@@ -104,7 +104,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
     const [errorPasswordText, setErrorPasswordText] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState(null);
-    const [isCompeleted, setIsCompeleted] = useState(false);  
+    const [isCompeleted, setIsCompeleted] = useState(false);
 
     function onGetContestSuccess() {
         dispatch(setOpenPlaygroundFullscreenDialog(true));
@@ -115,7 +115,6 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
     }
 
     function onGetContestError(error) {
-        console.log('error: ', error);
         if (_.get(error, 'data.errorContent', '') === 'Password is not correct') {
             setErrorPasswordText('Mật khẩu không hợp lệ');
         }
@@ -157,7 +156,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
 
     function renderStartContestButton() {
         const diff = moment(startAt).diff(moment.utc(), "ms");
-  
+
         if (diff > 0) {
             return (<div className={classes.center}>
                 <Typography gutterBottom variant="h6" component="h2" color="secondary">
@@ -219,7 +218,7 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
                                   <TableCell className={classes.detailCell}>
                                       Thời gian bắt đầu
                                   </TableCell>
-                                  
+
                                   <TableCell className={classes.detailCell}>
                                       {isoToLocalDateString(startAt)}
                                   </TableCell>

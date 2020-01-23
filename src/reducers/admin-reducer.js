@@ -111,23 +111,16 @@ export default function adminReducer(state = initialState, action) {
             }
             case UPDATE_OWN_CONTEST_BY_ID: {
                 const {id, contest} = payload;
-                console.log("UPDATE_OWN_CONTEST_BY_ID", payload);
-                console.log("draft contests : ", draft.contests);
-                //draft.contests = payload.contests;
                 draft.contests.byHash[id] = contest;
                 return;
             }
             case UPDATE_REMOVED_CONTEST_BY_ID: {
-                console.log("UPDATE_REMOVED_CONTEST_BY_ID", payload);
                 removeFromNormalizedList(draft.contests, payload);
-                console.log("draft contests: ", draft.contests);
                 return;
             }
 
             case UPDATE_REMOVED_TEST_BY_ID: {
-                console.log("UPDATE_REMOVED_TEST_BY_ID", payload);
                 removeFromNormalizedList(draft.tests, payload);
-                console.log("draft contests: ", draft.tests);
                 return;
             }
 

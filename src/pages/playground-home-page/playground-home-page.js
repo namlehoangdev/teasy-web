@@ -147,12 +147,6 @@ export default function PlaygroundHomePage() {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     useEffect(() => {
-        // dispatch(setOpenPlaygroundFullscreenDialog(true));
-        // history.push({
-        //     pathname: `${PAGE_PATHS.playground}/${PAGE_PATHS.compete}`,
-        //     state: {contestId: '5ddeeb25439d7d1054b28a41'}
-        // });
-        console.log('did mount playground home : ', location, path);
         if (location.pathname === '/playground') {
             setSelectedIndex(0);
             setAppBarTitle(listNavItemMap[0].name);
@@ -164,9 +158,9 @@ export default function PlaygroundHomePage() {
     const handleMenuItemClick = (event, index) => {
         setSelectedAvatarOptions(index);
         if (index === 1) {
-            console.log('Doi profile');
+            //Doi profile
         } else if (index === 0) {
-            console.log('Dang xuat');
+            //Dang xuat
             dispatch(logout())
         }
         setAnchorEl(false);
@@ -174,7 +168,6 @@ export default function PlaygroundHomePage() {
 
     const handleToggle = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
-        //setOpen(prevOpen => !prevOpen);
     };
 
     const handleClose = event => {

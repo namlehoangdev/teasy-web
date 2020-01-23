@@ -263,12 +263,10 @@ export default function CreateContestPage() {
     }
 
     function handleClosePermittedUsersDialog() {
-        console.log('close', openChosePermittedUserDialog);
         setOpenChosePermittedUserDialog(false);
     }
 
     function handleCloseChooseTestDialog() {
-        console.log('close', setOpenChooseTestsDialog);
         setOpenChooseTestsDialog(false);
     }
 
@@ -303,12 +301,10 @@ export default function CreateContestPage() {
     }
 
     function handleStartDateChange(event) {
-        console.log('start date change: ', event);
         dispatch(updateEditingContest({startAt: new Date(event).toISOString()}));
     }
 
     function handleDurationChange(event) {
-        console.log('duration: ', event);
         setDuration(event);
         const temp = new Date(event);
         dispatch(updateEditingContest({duration: temp.getHours() * 3600000 + temp.getMinutes() * 60000}));
