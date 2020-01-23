@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useRef} from "react";
 import _ from 'lodash';
 import "./create-test-page.scss";
 import {
@@ -18,11 +18,10 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    DialogActions, Drawer, Divider, Chip, ExpansionPanelDetails
+    DialogActions, Drawer, Divider, Chip,
 } from "@material-ui/core";
 import {ChevronRight as ChevronRightIcon, Close as CloseIcon, Menu as MenuIcon} from "@material-ui/icons";
 import {
-    COMPETING_CONTEST_STATE,
     QUESTION_TYPE_CODES,
     QUESTION_TYPE_TEXT,
     TEXT
@@ -31,10 +30,8 @@ import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getOwnQuestions,
-    openCreateQuestionDialog,
     postTest,
     putTest,
-    setOpenAdminFullscreenDialog,
     updateEditingTest
 } from "../../actions";
 import {
@@ -47,7 +44,6 @@ import produce from "immer";
 import {EditorState} from "draft-js";
 import {disabledStyleWrapper} from "../../utils";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ChooseTestDialog from "../create-contest-page/choose-tests-dialog";
 import ChooseQuestionDialog from "./choose-questions-dialog";
 import clsx from "clsx";
 import scrollToComponent from "react-scroll-to-component";

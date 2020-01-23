@@ -23,10 +23,13 @@ import {
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import RichEditor from "../../components/rich-editor/rich-editor";
 import {useSnackbar} from "notistack";
-import { QUESTION_LEVEL_TEXT } from '../../consts/index';
+import {QUESTION_LEVEL_TEXT} from '../../consts/index';
 
 const useStyles = makeStyles(theme => ({
-    root: {},
+    root: {
+        display: 'flex',
+        flex: 1,
+    },
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
@@ -95,7 +98,6 @@ export default function AdminQuestionsPage() {
         setActionItemId(id);
         setOpenRemoveDialog(true);
     }
-
 
 
     function renderFiles(id) {

@@ -1,29 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Container, Grid, makeStyles, Paper, TableCell, Typography, IconButton, Popover, Button,
-    List, ListItem, ListItemText, Dialog, DialogActions, DialogContentText, DialogContent, DialogTitle,fade, InputBase
+    makeStyles, Paper, TableCell, Typography, IconButton, Button,
+    Dialog, DialogActions, DialogContentText, DialogContent, DialogTitle, fade, InputBase
 } from "@material-ui/core";
 import {
-    Folder as FolderIcon, MoreVert as MoreVertIcon, Edit as EditIcon, Delete as DeleteIcon, ShowChart as ShowChartIcon
+    Folder as FolderIcon, Edit as EditIcon, Delete as DeleteIcon, ShowChart as ShowChartIcon
 } from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearEditingContest,
     deleteOwnContest,
-    getOwnContests, setOpenAdminFullscreenDialog, setOpenPlaygroundFullscreenDialog, updateEditingContest,
+    getOwnContests, setOpenAdminFullscreenDialog, updateEditingContest,
     updateOwnContestById,
     updateOwnContests
 } from "../../actions";
 import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {isoToLocalDateString, trimSign} from "../../utils";
 import {PAGE_PATHS} from "../../consts/page-paths-conts";
-import {useHistory, useRouteMatch} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import moment from "moment"
 import {CopyRoomCodeButton} from "../../components";
 import {Search as SearchIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
-    root: {},
+    root: {
+        display: 'flex',
+        flex: 1
+    },
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
@@ -84,10 +87,10 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    searchContainer:{
-      display:'flex',
-      alignSelf:'center',
-      marginTop: theme.spacing(2)
+    searchContainer: {
+        display: 'flex',
+        alignSelf: 'center',
+        marginTop: theme.spacing(2)
     },
 }));
 
@@ -97,7 +100,6 @@ export default function AdminContestPage() {
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
     const [actionItemId, setActionItemId] = useState(null);
     const history = useHistory();
-    const {path} = useRouteMatch();
     const dispatch = useDispatch();
 
     const [searchValue, setSearchValue] = useState('');
@@ -115,10 +117,6 @@ export default function AdminContestPage() {
             }
         }
     }, [contests]);
-
-    function handleCreateNewFolderClick() {
-        console.log('create new folder');
-    }
 
 
     function renderFolders(folder) {
@@ -177,7 +175,6 @@ export default function AdminContestPage() {
     }
 
     function handleShowAllResultsIconClick(id) {
-        const contest = contests.byHash[id];
         history.push({pathname: `${PAGE_PATHS.contestResults}`, state: {contestId: id}});
     }
 
@@ -188,7 +185,8 @@ export default function AdminContestPage() {
             <TableCell align="left">{name}</TableCell>
             <TableCell align="left">{description || '.....'}</TableCell>
             <TableCell align="left">{moment(startAt).year() === 1 ? 'không' : isoToLocalDateString(startAt)}</TableCell>
-            {isPublic ? <TableCell align="center"><CopyRoomCodeButton code={code}/></TableCell>: <TableCell align="center">...</TableCell>}
+            {isPublic ? <TableCell align="center"><CopyRoomCodeButton code={code}/></TableCell> :
+                <TableCell align="center">...</TableCell>}
             <TableCell align="left">
                 <IconButton onClick={() => handleEditContestIconClick(id)}>
                     <EditIcon/>
@@ -211,22 +209,22 @@ export default function AdminContestPage() {
             <Paper elevation={3} className={classes.paper}>
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý cuộc thi</Typography>
-                    <div className={classes.searchContainer}>
-                  <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                        <SearchIcon/>
+                <div className={classes.searchContainer}>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon/>
+                        </div>
+                        <InputBase
+                            placeholder="Tìm kiếm cuộc thi…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{'aria-label': 'search'}}
+                            value={searchValue}
+                            onChange={handleSearchInputChange}
+                        />
                     </div>
-                    <InputBase
-                        placeholder="Tìm kiếm cuộc thi…"
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                        }}
-                        inputProps={{'aria-label': 'search'}}
-                        value={searchValue}
-                        onChange={handleSearchInputChange}
-                    />
-                  </div>
                 </div>
                 <WorkingTableV2 filesByHash={contests.byHash}
                                 numberOfColumns={5}

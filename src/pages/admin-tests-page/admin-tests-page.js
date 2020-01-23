@@ -2,22 +2,20 @@ import React, {useEffect, useState} from 'react';
 import './admin-tests-page.scss';
 import {
     Button,
-    Container,
     Dialog, DialogActions, DialogContent, DialogContentText,
     DialogTitle,
-    Grid,
     IconButton,
     makeStyles,
     Paper,
     TableCell,
-    Typography,fade, InputBase
+    Typography, fade, InputBase
 } from "@material-ui/core";
 import {Delete as DeleteIcon, Edit as EditIcon, Folder as FolderIcon} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    clearEditingContest, clearEditingTest,
-    deleteOwnContest, deleteOwnTest,
-    getOwnTests, setOpenAdminFullscreenDialog, updateEditingContest, updateEditingTest,
+    clearEditingTest,
+    deleteOwnTest,
+    getOwnTests, updateEditingTest,
     updateOwnTestById,
     updateOwnTests
 } from "../../actions";
@@ -25,15 +23,19 @@ import WorkingTableV2 from "../../components/working-table/working-table-v2";
 import {PAGE_PATHS} from "../../consts";
 import {useHistory} from "react-router";
 import {Search as SearchIcon} from '@material-ui/icons';
-import { trimSign } from 'utils';
+import {trimSign} from 'utils';
 
 const useStyles = makeStyles(theme => ({
-    root: {},
+    root: {
+        display: 'flex',
+        flex: 1,
+    },
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
     },
     container: {
+        flex: 1,
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
@@ -88,10 +90,10 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    searchContainer:{
-      display:'flex',
-      alignSelf:'center',
-      marginTop: theme.spacing(2)
+    searchContainer: {
+        display: 'flex',
+        alignSelf: 'center',
+        marginTop: theme.spacing(2)
     },
 }));
 
@@ -200,22 +202,22 @@ export default function AdminTestsPage() {
             <Paper elevation={3} className={classes.paper}>
                 <Typography gutterBottom variant="h6"
                             component="h2" color="primary">Quản lý đề thi</Typography>
-                             <div className={classes.searchContainer}>
-                  <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                        <SearchIcon/>
+                <div className={classes.searchContainer}>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon/>
+                        </div>
+                        <InputBase
+                            placeholder="Tìm kiếm đề thi…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{'aria-label': 'search'}}
+                            value={searchValue}
+                            onChange={handleSearchInputChange}
+                        />
                     </div>
-                    <InputBase
-                        placeholder="Tìm kiếm đề thi…"
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                        }}
-                        inputProps={{'aria-label': 'search'}}
-                        value={searchValue}
-                        onChange={handleSearchInputChange}
-                    />
-                  </div>
                 </div>
                 <WorkingTableV2 filesByHash={tests.byHash}
                                 numberOfColumns={5}
