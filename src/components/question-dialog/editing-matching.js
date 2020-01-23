@@ -148,10 +148,10 @@ export default function EditingMatching(props) {
 
 
     return (<FormControl className={classes.formControl}>
-        <Typography variant="p" className={classes.hintTitle}>Các đáp án (nếu có) </Typography>
+        {/* <Typography variant="p" className={classes.hintTitle}>Thêm cặp đáp án tương ứng</Typography> */}
         {options1 && options1 && options1.map(renderOptions)}
         <div>
-            <Button color={"primary"} onClick={handleAddMoreAnswerClick}>Thêm cặp câu trả lời</Button>
+            <Button color={"primary"} onClick={handleAddMoreAnswerClick}>Thêm cặp đáp án tương ứng với nhau</Button>
         </div>
     </FormControl>);
 }

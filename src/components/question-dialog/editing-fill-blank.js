@@ -145,7 +145,7 @@ export default function EditingFillBlank(props) {
 
 
     return (<FormControl className={classes.formControl}>
-        <Typography variant="p" className={classes.hintTitle}>Các đáp án (nếu có) </Typography>
+        {/* <Typography variant="p" className={classes.hintTitle}>Thêm đáp án (nếu có)</Typography> */}
         {answers && answers.byId && answers.byId.map(renderAnswers)}
         <div>
             <Button color={"primary"} onClick={handleAddMoreAnswerClick}>{TEXT.addMoreAnswer}</Button>

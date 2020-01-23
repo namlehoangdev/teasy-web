@@ -48,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
     },
     chuthich:{
       // marginBotom: theme.spacing(5),
+    },
+    inputt:{
+      border: '1px solid #ced4da',
+      paddingLeft: theme.spacing(1),
+      paddingTop: theme.spacing(0.5),
     }
 }));
 
@@ -158,6 +163,7 @@ export default function EditingQuestionContent(props) {
                             onChange={handleChangeQuestionType}
                             displayEmpty
                             disableUnderline
+                            className={classes.inputt}
                             inputProps={{
                                 name: 'question-type-selector', id: 'question-type-selector',
                             }}>
@@ -172,6 +178,7 @@ export default function EditingQuestionContent(props) {
                             onChange={handleQuestionLevelChange}
                             displayEmpty
                             disableUnderline
+                            className={classes.inputt}
                             inputProps={{
                                 name: 'question-level-selector', id: 'question-level-selector',
                             }}>

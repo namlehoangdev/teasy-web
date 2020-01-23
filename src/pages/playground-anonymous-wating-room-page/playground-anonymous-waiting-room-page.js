@@ -204,9 +204,9 @@ export default function PlaygroundAnonymousWaitingRoomPage() {
                                 <TableCell className={classes.detailCell}>{description}</TableCell>
                             </TableRow>}
                             <TableRow>
-                                <TableCell className={classes.detailCell}>Trạng thái</TableCell>
+                                <TableCell className={classes.detailCell}>Trạng thái truy cập</TableCell>
                                 <TableCell className={classes.detailCell}>
-                                    {isPublic ? "công khai" : "riêng tư"}
+                                    {isPublic ? "Mọi người" : "Riêng tư"}
                                 </TableCell>
                             </TableRow>
                             <TableRow>

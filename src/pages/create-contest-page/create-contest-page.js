@@ -205,7 +205,8 @@ export default function CreateContestPage() {
                 duration: 1 * 3600000 + 30 * 60000,
                 startAt: null,
                 isPublic: true,
-                isShuffled: true,
+                isShuffled: false,
+                isShownAnswers:true,
                 type: CONTEST_TYPE_CODE.ELSE
             }));
             setDuration(new Date(1997, 10, 3, 1, 30));
@@ -448,7 +449,7 @@ export default function CreateContestPage() {
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <Input required
-                                           placeholder='Ví dụ: Cuộc thi A'
+                                           placeholder='Ví dụ: Cuộc thi học sinh giỏi Tiếng Anh'
                                            fullWidth
                                            onChange={handleNameChange}
                                            value={name}/>
@@ -490,7 +491,7 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container xs={12}>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Thời gian bắt đầu</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Thời gian bắt đầu thi</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="startAt-radio"
@@ -536,20 +537,49 @@ export default function CreateContestPage() {
                                                                               className={clsx(classes.icon, classes.checkedIcon)}/>}
                                                                           icon={<span className={classes.icon}/>}
                                                                           className={classes.radio}/>}
-                                                          label='Công khai'/>
+                                                          label='Mọi người'/>
                                         <FormControlLabel value={'share'}
                                                           control={<Radio size='small' disableRipple
                                                                           checkedIcon={<span
                                                                               className={clsx(classes.icon, classes.checkedIcon)}/>}
                                                                           icon={<span className={classes.icon}/>}
                                                                           className={classes.radio}/>}
-                                                          label='Chia sẻ với'/>
+                                                          label='Chỉ chia sẻ với'/>
                                         {!isPublic && renderPermittedUsers()}
                                     </RadioGroup>
                                 </Grid>
                             </Grid>
                         </Grid>
 
+                        <Grid item xs={12} sm={12} mt={3} className={classes.item}>
+                            <Grid container>
+                                <Grid item xs={3} sm={3}>
+                                    <Typography variant='body2' align='flex-end'><b>Hiển thị đáp án khi nộp
+                                        bài (Đề phải có đủ đáp án)</b></Typography>
+                                </Grid>
+                                <Grid item xs={9} sm={9}>
+                                    <RadioGroup name="isPublic-radio" value={isShownAnswers ? 'true' : 'false'}
+                                                className={classes.radioGroup}
+                                                aria-label="startAtRadio"
+                                                onChange={handleIsShownAnswersChange}>
+                                        <FormControlLabel value={'true'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Có'/>
+                                        <FormControlLabel value={'false'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Không'/>
+                                    </RadioGroup>
+                                </Grid>
+                            </Grid>
+                        </Grid>
 
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
@@ -581,37 +611,6 @@ export default function CreateContestPage() {
                             </Grid>
                         </Grid>
 
-
-                        <Grid item xs={12} sm={12} mt={3} className={classes.item}>
-                            <Grid container>
-                                <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Hiển thị đáp án khi nộp
-                                        bài</b></Typography>
-                                </Grid>
-                                <Grid item xs={9} sm={9}>
-                                    <RadioGroup name="isPublic-radio" value={isShownAnswers ? 'true' : 'false'}
-                                                className={classes.radioGroup}
-                                                aria-label="startAtRadio"
-                                                onChange={handleIsShownAnswersChange}>
-                                        <FormControlLabel value={'true'}
-                                                          control={<Radio size='small' disableRipple
-                                                                          checkedIcon={<span
-                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
-                                                                          icon={<span className={classes.icon}/>}
-                                                                          className={classes.radio}/>}
-                                                          label='Có'/>
-                                        <FormControlLabel value={'false'}
-                                                          control={<Radio size='small' disableRipple
-                                                                          checkedIcon={<span
-                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
-                                                                          icon={<span className={classes.icon}/>}
-                                                                          className={classes.radio}/>}
-                                                          label='Không'/>
-                                    </RadioGroup>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
@@ -623,13 +622,6 @@ export default function CreateContestPage() {
                                                 className={classes.radioGroup}
                                                 aria-label="startAtRadio"
                                                 onChange={handleSecurityChange}>
-                                        <FormControlLabel value={'notSecured'}
-                                                          control={<Radio size='small' disableRipple
-                                                                          checkedIcon={<span
-                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
-                                                                          icon={<span className={classes.icon}/>}
-                                                                          className={classes.radio}/>}
-                                                          label='Không'/>
                                         <FormControlLabel value={'isSecured'}
                                                           control={<Radio size='small' disableRipple
                                                                           checkedIcon={<span
@@ -637,6 +629,13 @@ export default function CreateContestPage() {
                                                                           icon={<span className={classes.icon}/>}
                                                                           className={classes.radio}/>}
                                                           label='Có'/>
+                                         <FormControlLabel value={'notSecured'}
+                                                          control={<Radio size='small' disableRipple
+                                                                          checkedIcon={<span
+                                                                              className={clsx(classes.icon, classes.checkedIcon)}/>}
+                                                                          icon={<span className={classes.icon}/>}
+                                                                          className={classes.radio}/>}
+                                                          label='Không'/>                  
                                         {isSecured && (<FormControl className={classes.passwordContainer}>
                                             {/*<InputLabel htmlFor="standard-adornment-password">Mật khẩu</InputLabel>*/}
                                             <Input id="standard-adornment-password"
@@ -689,6 +688,7 @@ export default function CreateContestPage() {
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <TextField multiline fullWidth
+                                               placeholder='Ví dụ: Cuộc thi thường niên do bộ giáo dục tổ chức..'
                                                value={description} onChange={handleDescriptionChange}/>
                                 </Grid>
                             </Grid>
