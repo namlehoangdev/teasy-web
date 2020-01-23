@@ -44,7 +44,6 @@ import produce from "immer";
 import {EditorState} from "draft-js";
 import {disabledStyleWrapper} from "../../utils";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ChooseTestDialog from "../create-contest-page/choose-tests-dialog";
 import ChooseQuestionDialog from "./choose-questions-dialog";
 import clsx from "clsx";
 import scrollToComponent from "react-scroll-to-component";
@@ -67,9 +66,6 @@ const useStyles = makeStyles(theme => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
         marginRight: drawerWidth,
-    },
-    title: {
-        flexGrow: 1,
     },
     hide: {
         display: 'none',
@@ -216,7 +212,7 @@ export default function CreateTestPage() {
         setAddNewAnchorEl(event.currentTarget);
     }
 
-    function handleAddQuestionFromBankClick(event) {
+    function handleAddQuestionFromBankClick() {
         setOpenSelectQuestion(true);
         if (isCallLoadQuestions || (questionsFromBank && questionsFromBank.byId && questionsFromBank.byId.length > 0)) {
             return;
@@ -312,7 +308,7 @@ export default function CreateTestPage() {
                 selectedQuestionIds={selectedQuestionIds}
 
             />
-            <AppBar className={classes.appBar}>
+            <AppBar position="fixed" className={clsx(classes.appBar, {[classes.appBarShift]: openDrawer})}>
                 <Toolbar>
                     <IconButton
                         edge="start"
@@ -326,7 +322,8 @@ export default function CreateTestPage() {
                         testId ? TEXT.edit : TEXT.create
                     } ${TEXT.test}`}</Typography>
                     {!isSaved && (
-                        <Button color="inherit" onClick={handleSave}>
+                        <Button color="secondary" variant="contained" edge="end"
+                                style={{marginLeft: 'auto'}} onClick={handleSave}>
                             {TEXT.save}
                         </Button>
                     )}
