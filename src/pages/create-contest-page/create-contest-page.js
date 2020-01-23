@@ -1,56 +1,55 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './create-contest-page.scss'
 import clsx from 'clsx';
 import {
     AppBar,
-    Button,
-    IconButton,
-    makeStyles,
-    Toolbar,
-    FormLabel,
-
-    Typography,
-    Paper,
-    TextField,
-    Grid,
-    Chip,
-    Tooltip,
     Avatar,
-    InputAdornment,
+    Button,
+    CardActionArea,
+    CardMedia,
+    Chip,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    FormControl,
     FormControlLabel,
-    RadioGroup, Radio,
-    Card, CardActionArea, CardMedia,
-    CardContent, CardActions, DialogTitle, Dialog, CircularProgress
+    Grid,
+    IconButton,
+    InputAdornment,
+    makeStyles,
+    Paper,
+    Radio,
+    RadioGroup,
+    TextField,
+    Toolbar,
+    Typography
 } from "@material-ui/core";
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
+    AddCircleOutline as AddCircleOutlineIcon,
     Close as CloseIcon,
     Visibility as VisibilityIcon,
-    VisibilityOff as VisibilityOffIcon,
-    AddCircleOutline as AddCircleOutlineIcon,
-    FileCopy as FileCopyIcon
+    VisibilityOff as VisibilityOffIcon
 } from "@material-ui/icons";
-import {CONTEST_TYPE_CODE, CONTEST_TYPE_TEXT, CONTEST_TYPE_TEXT_ARR, TEXT} from "../../consts";
+import {CONTEST_TYPE_CODE, CONTEST_TYPE_TEXT, TEXT} from "../../consts";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
 import {DateTimePicker, TimePicker} from "@material-ui/pickers";
 import {
-    setOpenAdminFullscreenDialog,
     getAllUsers,
-    updateEditingContest,
-    getOwnTests, postContest, putContest
+    getOwnTests,
+    postContest,
+    putContest,
+    setOpenAdminFullscreenDialog,
+    updateEditingContest
 } from "../../actions";
 import produce from "immer";
 import ChooseUserDialog from "./choose-users-dialog";
 import ChooseTestDialog from "./choose-tests-dialog";
-import {FormControl} from "@material-ui/core";
 import Input from "@material-ui/core/Input";
-import {isDate} from "moment";
-import {disabledStyleWrapper, isDateObject, msToTime} from "../../utils";
+import {msToTime} from "../../utils";
 import ImageUpload from '../../components/upload/ImageUpload';
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import ElevationScroll from "../../components/elevation-scroll";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -60,7 +59,7 @@ import {CopyRoomCodeButton} from '../../components';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-        flex:1
+        flex: 1
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -173,7 +172,7 @@ const useStyles = makeStyles(theme => ({
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
-    const {id, isPublic,isShownAnswers, isShuffled, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
+    const {id, isPublic, isShownAnswers, isShuffled, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
@@ -286,6 +285,10 @@ export default function CreateContestPage() {
     }
 
     function handleDeleteSelectedTestClick(testId) {
+        if (id) {
+            setAlertText('Không thể xóa đề thi của cuộc thi đang diễn ra');
+            return;
+        }
         dispatch(updateEditingContest(produce(editingContest, draft => {
                 draft.testIds = editingContest.testIds.filter(id => id !== testId);
             }
@@ -375,7 +378,13 @@ export default function CreateContestPage() {
                         color='primary'
                         size='small'
                         style={{marginLeft: 2}}
-                        onClick={() => setOpenChooseTestsDialog(true)}>
+                        onClick={() => {
+                            if (id) {
+                                setAlertText('Không thể thêm đề vào cuộc thi đang diễn ra');
+                                return;
+                            }
+                            setOpenChooseTestsDialog(true)
+                        }}>
                 <AddCircleOutlineIcon/>
             </IconButton>
         </div>)
@@ -398,12 +407,8 @@ export default function CreateContestPage() {
                     <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                         <CloseIcon/>
                     </IconButton>
-                    {
-                        id ? (<Typography variant="h6"
-                                          className={classes.title}>{`${
-                                <TEXT></TEXT>.edit} ${TEXT.contest}`}</Typography>) :
-                            (<Typography variant="h6"
-                                         className={classes.title}>{`${TEXT.create} ${TEXT.contest}`}</Typography>)}
+                    <Typography variant="h6"
+                                className={classes.title}>{`${id ? TEXT.edit : TEXT.create} ${TEXT.contest}`}</Typography>
                 </Toolbar>
             </AppBar>
             <ChooseUserDialog open={openChosePermittedUserDialog}
@@ -549,7 +554,8 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Xáo trộn thứ tự câu hỏi</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Xáo trộn thứ tự câu
+                                        hỏi</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="isPublic-radio" value={isShuffled ? 'true' : 'false'}
@@ -579,7 +585,8 @@ export default function CreateContestPage() {
                         <Grid item xs={12} sm={12} mt={3} className={classes.item}>
                             <Grid container>
                                 <Grid item xs={3} sm={3}>
-                                    <Typography variant='body2' align='flex-end'><b>Hiển thị đáp án khi nộp bài</b></Typography>
+                                    <Typography variant='body2' align='flex-end'><b>Hiển thị đáp án khi nộp
+                                        bài</b></Typography>
                                 </Grid>
                                 <Grid item xs={9} sm={9}>
                                     <RadioGroup name="isPublic-radio" value={isShownAnswers ? 'true' : 'false'}

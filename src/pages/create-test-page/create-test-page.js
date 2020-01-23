@@ -44,6 +44,7 @@ import produce from "immer";
 import {EditorState} from "draft-js";
 import {disabledStyleWrapper} from "../../utils";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ChooseTestDialog from "../create-contest-page/choose-tests-dialog";
 import ChooseQuestionDialog from "./choose-questions-dialog";
 import clsx from "clsx";
 import scrollToComponent from "react-scroll-to-component";
