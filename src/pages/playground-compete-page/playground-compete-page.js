@@ -1,37 +1,39 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
-    Grid,
-    makeStyles,
-    Paper,
-    useTheme,
-    Toolbar,
-    Typography,
     AppBar,
-    Drawer,
-    IconButton,
-    Chip,
     Box,
     Button,
-    Divider,
-    Dialog,
-    DialogTitle,
-    DialogContent,
+    Chip,
     CircularProgress,
-    DialogContentText,
+    Dialog,
     DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    Drawer,
     ExpansionPanel,
-    ExpansionPanelSummary,
     ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    Grid,
+    IconButton,
+    makeStyles,
+    Paper,
     Slider,
-    Snackbar
+    Toolbar,
+    Typography,
+    useTheme
 } from "@material-ui/core";
 import clsx from "clsx";
-import {Menu as MenuIcon, ChevronRight as ChevronRightIcon} from "@material-ui/icons";
+import {ChevronRight as ChevronRightIcon, Menu as MenuIcon} from "@material-ui/icons";
+import ReactAudioPlayer from 'react-audio-player';
 import scrollToComponent from 'react-scroll-to-component';
 import {useDispatch, useSelector} from "react-redux";
 import {
-    clearCompetingContest, postAnonymousContestResult,
-    postContestResult, setOpenAdminFullscreenDialog,
+    clearCompetingContest,
+    postAnonymousContestResult,
+    postContestResult,
+    setOpenAdminFullscreenDialog,
     updateCompetingResult
 } from "../../actions";
 import {useHistory, useLocation} from 'react-router';
@@ -41,7 +43,7 @@ import QuizQuestion from "./quiz-question";
 import {denormalizer} from "../../utils/byid-utils";
 import Calculator from '../../components/calculator/component/App';
 import {snackColors} from "../../consts/color";
-import {COMPETING_CONTEST_STATE, QUESTION_TYPE_CODES, TEXT, QUESTION_STATE} from "../../consts";
+import {COMPETING_CONTEST_STATE, QUESTION_STATE, QUESTION_TYPE_CODES} from "../../consts";
 import GradientIcon from '@material-ui/icons/Gradient';
 import Countdown from 'react-countdown-now';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
@@ -50,7 +52,6 @@ import TimelapseIcon from '@material-ui/icons/Timelapse';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import RichEditor from 'components/rich-editor/rich-editor';
 import {CountdownRenderer} from "../../components";
-import CloseIcon from '@material-ui/icons/Close';
 import FillBlankQuestion from "./fill-blank-question";
 import moment from 'moment'
 import {useSnackbar} from 'notistack';
@@ -172,15 +173,15 @@ const useStyles = makeStyles(theme => ({
     },
     explanation: {
         wordWrap: 'break-word',
-        marginTop:'auto',
+        marginTop: 'auto',
         marginLeft: theme.spacing(2),
-        maxWidth:'40vw'
+        maxWidth: '40vw'
     },
-    chippp:{
-      display:'flex',
-      flexDirection:'row',
-      // justifyContent:'center',
-      
+    chippp: {
+        display: 'flex',
+        flexDirection: 'row',
+        // justifyContent:'center',
+
     }
 }));
 
@@ -212,9 +213,8 @@ export default function PlaygroundCompetePage() {
         state,
         markedResults = {},
         startAt,
-
     } = competingContest;
-    const {testRightAnswerIds,explanations, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = markedResults;
+    const {testRightAnswerIds, explanations, rightAnswerIds, fillBlankRightAnswers, testRightQuestionIds, matchingRightAnswers} = markedResults;
     const dispatch = useDispatch();
     const {state: locationState} = useLocation();
     const [questionsById, setQuestionsById] = useState([]);
@@ -222,6 +222,7 @@ export default function PlaygroundCompetePage() {
     const [difff, setDifff] = useState(0);
     const [isOpenResultDialog, setIsOpenResultDialog] = useState(false);
     const [expanded, setExpanded] = React.useState('panel1');
+    const [mediaUrl, setMediaUrl] = useState(null);
     const [durationCompetition, setDurationCompetition] = React.useState(0);
     const {contestId, isAnonymous, displayName} = locationState;
     const history = useHistory();
@@ -248,14 +249,15 @@ export default function PlaygroundCompetePage() {
 
     useMemo(() => {
         if (checkLength(testIds) && testByHash) {
-            const {name, questions} = testByHash[Object.keys(testByHash)[0]] || {};
+            const {name, questions, mediaUrl} = testByHash[Object.keys(testByHash)[0]] || {};
             name && setTestName(name);
             questions && setQuestionsById(questions);
+            mediaUrl && setMediaUrl(mediaUrl);
             if (moment(startAt).year() === 1) {
                 setDurationCompetition(competingContest.duration)
             } else {
                 const diff = moment.utc().diff(moment(startAt), "ms");
-                setDifff(diff)
+                setDifff(diff);
                 setDurationCompetition(competingContest.duration - diff)
             }
         }
@@ -382,12 +384,12 @@ export default function PlaygroundCompetePage() {
                          style={disabledStyleWrapper(isResponseFullAnswer, {}, {opacity: 1})}>
                         <br/>
                         <div className={classes.chippp}>
-                          <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
-                          {explanationContent &&
-                          <div className={classes.explanation}>
-                              <Typography variant='p'>{'Giải thích: ' + explanationContent}</Typography>
-                          </div>}
-                        </div>                       
+                            <Chip label={`Câu ${index + 1}`} style={chipStyle}/>
+                            {explanationContent &&
+                            <div className={classes.explanation}>
+                                <Typography variant='p'>{'Giải thích: ' + explanationContent}</Typography>
+                            </div>}
+                        </div>
                         <RichEditor editorState={content} readOnly={true}/>
                         {renderQuestionByType(questionId, extraProps)}
                         <Divider className={classes.divider} variant="middle"/>
@@ -551,6 +553,13 @@ export default function PlaygroundCompetePage() {
                         <Typography variant="h6" noWrap align='center'>{description}</Typography>
                         <Typography variant="subtitle1" noWrap align='center'>Số câu: {questionsById.length} - Thời
                             gian làm bài: {durationArray[0]} giờ {durationArray[1]} phút</Typography>
+                        {mediaUrl &&
+                        <div style={disabledStyleWrapper(true, {
+                            alignSelf: 'center',
+                            display: 'flex', justifyContent: 'center', alignItems: 'center'
+                        })}>
+                            <ReactAudioPlayer src={mediaUrl} controls autoPlay/>
+                        </div>}
                         {renderQuestions()}
                     </Paper>
                 </Box>
