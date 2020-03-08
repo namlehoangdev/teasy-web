@@ -359,7 +359,7 @@ export default function CreateTestPage() {
                             category="Test"
                             userId={ownerId}
                             onUploaded={handleAudioUploaded}
-                            buttonLabel={mediaUrl ? "Chỉnh sửa tập tin âm thanh" : "Thêm tập tin âm thanh"}/>
+                            buttonLabel={mediaUrl ? "Chỉnh sửa tập tin âm thanh" : "Thêm âm thanh (cho đề Tiếng Anh)"}/>
                         {mediaUrl && <ReactAudioPlayer src={mediaUrl} controls/>}
                         <Box m={2}/>
                         {questions.byId.map(renderCreatingQuestions)}
