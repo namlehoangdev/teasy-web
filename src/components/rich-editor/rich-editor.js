@@ -116,8 +116,8 @@ export default function RichEditor(props) {
                     category="Question"
                     userId={userId}
                     buttonLabel="Chèn ảnh"/>
-                
-                
+
+
             </div>}
             <div className={className}>
                 <Editor

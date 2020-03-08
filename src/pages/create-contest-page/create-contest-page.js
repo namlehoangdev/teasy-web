@@ -635,7 +635,7 @@ export default function CreateContestPage() {
                                                                               className={clsx(classes.icon, classes.checkedIcon)}/>}
                                                                           icon={<span className={classes.icon}/>}
                                                                           className={classes.radio}/>}
-                                                          label='Không'/>                  
+                                                          label='Không'/>
                                         {isSecured && (<FormControl className={classes.passwordContainer}>
                                             {/*<InputLabel htmlFor="standard-adornment-password">Mật khẩu</InputLabel>*/}
                                             <Input id="standard-adornment-password"

@@ -3,7 +3,7 @@ import {Button, IconButton, Input, makeStyles, Typography} from '@material-ui/co
 import storage from "../../Firebase/index";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import PropTypes from 'prop-types';
-import {AddAPhoto as AddAPhotoIcon} from "@material-ui/icons";
+import {CloudUpload as CloudUploadIcon} from "@material-ui/icons";
 import CloudDoneIcon from '@material-ui/icons/CloudDone';
 import CancelIcon from '@material-ui/icons/Cancel';
 import uuidv4 from 'uuid/v4';
@@ -72,7 +72,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function ImageUpload(props) {
-    const {category, onUploaded, userId, buttonLabel} = props;
+    const {
+        category, onUploaded = () => {
+        }, userId, buttonLabel
+    } = props;
     const classes = useStyles();
     const [imageFile, setImageFile] = useState({name: ''});
     const [url, setUrl] = useState('');
@@ -82,8 +85,7 @@ function ImageUpload(props) {
     //const [imageId, setImageId] = useState(uuidv4());
 
     function handleChange(e) {
-        console.log('on image upload change: ', e);
-        console.log('e.target.files[0]', e.target.files[0]);
+        console.log('event on change: ', e);
         setProgress(0);
         if (e.target.files[0]) {
             const image = e.target.files[0];
@@ -144,7 +146,7 @@ function ImageUpload(props) {
                         color="default"
                     //onClick={progress === 0 && imageFile.name !== '' && handleUpload}
                         startIcon={progress === 100 ? <CloudDoneIcon color="action"/> :
-                            <AddAPhotoIcon color="action"/>}
+                            <CloudUploadIcon color="action"/>}
                 >
                     {(imageFile.name === '' || progress === 100) && <Input
                         className={classes.input}
@@ -152,7 +154,7 @@ function ImageUpload(props) {
                         onChange={handleChange}
                         disableUnderline={true}
                         style={{display: "none"}}
-                        inputProps={{ accept: 'image/*' }}
+                        inputProps={{accept: 'audio/*'}}
                     />}
                     {imageFile.name === '' && buttonLabel}
                     {progress === 100 && "Tải thành công"}

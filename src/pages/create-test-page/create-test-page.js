@@ -1,44 +1,35 @@
-import React, {useState, useRef} from "react";
+import React, {useRef, useState} from "react";
 import _ from 'lodash';
 import "./create-test-page.scss";
+import ReactAudioPlayer from 'react-audio-player';
 import {
     AppBar,
-    Button,
-    IconButton,
-    makeStyles,
-    Input,
-    Toolbar,
-    Typography,
-    Grid,
-    Paper,
-    Popper,
-    Fade,
     Box,
+    Button,
+    Chip,
     Dialog,
-    DialogTitle,
+    DialogActions,
     DialogContent,
     DialogContentText,
-    DialogActions, Drawer, Divider, Chip,
+    DialogTitle,
+    Divider,
+    Drawer,
+    Fade,
+    Grid,
+    IconButton,
+    Input,
+    makeStyles,
+    Paper,
+    Popper,
+    Toolbar,
+    Typography,
 } from "@material-ui/core";
 import {ChevronRight as ChevronRightIcon, Close as CloseIcon, Menu as MenuIcon} from "@material-ui/icons";
-import {
-    QUESTION_TYPE_CODES,
-    QUESTION_TYPE_TEXT,
-    TEXT
-} from "../../consts";
+import {QUESTION_TYPE_CODES, QUESTION_TYPE_TEXT, TEXT} from "../../consts";
 import {useHistory} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    getOwnQuestions,
-    postTest,
-    putTest,
-    updateEditingTest
-} from "../../actions";
-import {
-    addToNormalizedList,
-    DefaultNormalizer,
-    removeFromNormalizedList
-} from "../../utils/byid-utils";
+import {getOwnQuestions, postTest, putTest, updateEditingTest} from "../../actions";
+import {addToNormalizedList, DefaultNormalizer, removeFromNormalizedList} from "../../utils/byid-utils";
 import EditingQuestionContent from "../../components/question-dialog/editing-question-content";
 import produce from "immer";
 import {EditorState} from "draft-js";
@@ -47,6 +38,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import ChooseQuestionDialog from "./choose-questions-dialog";
 import clsx from "clsx";
 import scrollToComponent from "react-scroll-to-component";
+import AudioUpload from "../../components/upload/AudioUpload";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -128,7 +120,8 @@ export default function CreateTestPage() {
     const {
         id: testId,
         questions = new DefaultNormalizer(),
-        name = ""
+        mediaUrl,
+        name = "",
     } = editingTest;
     const [alertText, setAlertText] = useState('');
     const [addNewAnchorEl, setAddNewAnchorEl] = useState(null);
@@ -137,7 +130,7 @@ export default function CreateTestPage() {
     const [isOpenDialog, setIsOpenDialog] = useState(false);
     const [isOpenSelectQuestion, setOpenSelectQuestion] = useState(false);
     const [isCallLoadQuestions, setIsCallLoadQuestion] = useState(false);
-    const [openDrawer, setOpenDrawer] = React.useState(true);
+    const [openDrawer, setOpenDrawer] = useState(true);
     let questionRefs = useRef(new Map);
 
     const history = useHistory();
@@ -245,6 +238,10 @@ export default function CreateTestPage() {
                 })
             })
         );
+    }
+
+    function handleAudioUploaded(url) {
+        dispatch(updateEditingTest({mediaUrl: url}));
     }
 
     function handlePopperItemClick(questionTypeCode) {
@@ -356,6 +353,14 @@ export default function CreateTestPage() {
                                 inputProps={{"aria-label": "description"}}
                             />
                         </Grid>
+                        <Box m={2}/>
+                        <AudioUpload
+                            //onUploaded={}
+                            category="Test"
+                            userId={ownerId}
+                            onUploaded={handleAudioUploaded}
+                            buttonLabel={mediaUrl ? "Chỉnh sửa tập tin âm thanh" : "Thêm tập tin âm thanh"}/>
+                        {mediaUrl && <ReactAudioPlayer src={mediaUrl} controls/>}
                         <Box m={2}/>
                         {questions.byId.map(renderCreatingQuestions)}
                         <Grid item xs={12} sm={12} md={12}>

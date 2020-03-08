@@ -1,43 +1,50 @@
-import React, {useEffect} from 'react';
+import React, {useRef} from 'react';
 import ReactDOM from 'react-dom';
-import {Switch, Route, Router} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import {ConnectedRouter} from "connected-react-router";
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
-import {SnackbarProvider, useSnackbar} from 'notistack';
+import {SnackbarProvider} from 'notistack';
 
-import {Provider, useDispatch} from 'react-redux';
+
+import {Provider, useDispatch, useSelector} from 'react-redux';
 import {
-    LandingPage,
     AdminHomePage,
-    PlaygroundHomePage,
+    LandingPage,
     NotFoundPage,
     PlaygroundAnonymousWaitingRoomPage,
+    PlaygroundHomePage,
     PlaygroundWaitingRoomPage
 } from './pages';
 import {PersistGate} from 'redux-persist/integration/react'
-import {MuiThemeProvider} from '@material-ui/core';
+import {Button, MuiThemeProvider} from '@material-ui/core';
 import themes from './themes';
-import {history, store, persistor} from './configurations';
+import {history, persistor, store} from './configurations';
 import * as serviceWorker from './serviceWorker';
 import './index.scss';
 import {PAGE_PATHS} from "./consts";
-import {useSelector} from 'react-redux';
 import {UnauthorizedDialog} from "./components";
+import ReactAudioPlayer from 'react-audio-player';
+
 import {logout} from "./actions";
 import 'moment/locale/vi'
+import {disabledStyleWrapper} from "./utils";
 
 
 function App() {
     const {isDark} = useSelector(state => state.settingReducer);
     const {isOpenUnauthorizedDialog} = useSelector(state => state.authReducer);
     const dispatch = useDispatch();
+    const audioRef = useRef(null);
 
     function handleLogout() {
         dispatch(logout());
     }
 
     return <MuiThemeProvider theme={isDark ? themes.dark : themes.default}>
+        <div style={disabledStyleWrapper(true)}>
+
+        </div>
         <ConnectedRouter history={history}>
             <Switch>
                 <Route exact path={PAGE_PATHS.landing} component={LandingPage}/>
