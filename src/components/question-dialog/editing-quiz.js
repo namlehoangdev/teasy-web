@@ -1,23 +1,18 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    Radio,
-    RadioGroup,
-    FormControl,
     Button,
+    FormControl,
     FormControlLabel,
+    Grid,
+    IconButton,
     makeStyles,
-    TextField,
-    InputAdornment,
-    IconButton, Grid
+    Radio,
+    RadioGroup
 } from "@material-ui/core";
 import {TEXT} from "../../consts/text-consts";
 import {Close as CloseIcon} from "@material-ui/icons";
 import produce from "immer";
-import {
-    addToNormalizedList,
-    DefaultNormalizer,
-    removeFromNormalizedList
-} from "../../utils/byid-utils";
+import {addToNormalizedList, DefaultNormalizer, removeFromNormalizedList} from "../../utils/byid-utils";
 import PropTypes from 'prop-types';
 import InputBase from "@material-ui/core/InputBase";
 
@@ -149,7 +144,7 @@ export default function EditingQuiz(props) {
         onChange({
             answers: produce(answers, draftState => {
                 draftState.byId.map(id => {
-                    draftState.byHash[id].isTrue = id === answersId;
+                    draftState.byHash[id].isTrue = id.toString() === answersId;
                 })
 
             })

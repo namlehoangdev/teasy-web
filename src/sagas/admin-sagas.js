@@ -159,7 +159,6 @@ export function* putTestSaga({payload}) {
         const response = yield call(APIs.putTestAPI, requestParams);
         onSuccess && onSuccess(response);
         if (response && response.data) {
-
             yield put(updateOwnContestById(test.id, test));
         }
     } catch (error) {
