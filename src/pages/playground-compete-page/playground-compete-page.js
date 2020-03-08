@@ -296,6 +296,10 @@ export default function PlaygroundCompetePage() {
     }
 
     function handleSubmit() {
+      if (audioRef && audioRef.current && audioRef.current.audioEl) {
+                audioRef.current.audioEl.pause();
+                audioRef.current.audioEl.currentTime = 0;
+            }
         if (checkLength(testIds)) {
             const reqResults = denormalizer(results);
             const params = {
