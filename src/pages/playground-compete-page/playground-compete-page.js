@@ -231,6 +231,7 @@ export default function PlaygroundCompetePage() {
     let questionRefs = useRef(new Map);
     const questionContainerRef = useRef(null);
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const audioRef = useRef(null);
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -267,6 +268,10 @@ export default function PlaygroundCompetePage() {
     useEffect(() => {
         return () => {
             dispatch(clearCompetingContest());
+            if (audioRef && audioRef.current && audioRef.current.audioEl) {
+                audioRef.current.audioEl.pause();
+                audioRef.current.audioEl.currentTime = 0;
+            }
         }
     }, []);
 
@@ -558,7 +563,7 @@ export default function PlaygroundCompetePage() {
                             alignSelf: 'center',
                             display: 'flex', justifyContent: 'center', alignItems: 'center'
                         })}>
-                            <ReactAudioPlayer src={mediaUrl} controls autoPlay/>
+                            <ReactAudioPlayer ref={audioRef} src={mediaUrl} controls autoPlay/>
                         </div>}
                         {renderQuestions()}
                     </Paper>
