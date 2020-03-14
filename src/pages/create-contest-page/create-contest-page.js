@@ -172,7 +172,7 @@ const useStyles = makeStyles(theme => ({
 export default function CreateContestPage() {
     const {editingContest, tests} = useSelector(state => state.adminReducer);
     const {isShowCircleLoading} = useSelector(state => state.uiEffectReducer);
-    const {id, isPublic, isShownAnswers, isShuffled, type, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
+    const {id, isPublic, isShownAnswers, isShuffled, category, permittedUsers, testIds, isSecured, code, password, name, description, startAt, duration, backgroundUrl} = editingContest;
     const [prevIsPublic, setPrevIsPublic] = useState(isPublic);
     const [openChosePermittedUserDialog, setOpenChosePermittedUserDialog] = useState(false);
     const [openChooseTestsDialog, setOpenChooseTestsDialog] = useState(false);
@@ -207,7 +207,7 @@ export default function CreateContestPage() {
                 isPublic: true,
                 isShuffled: false,
                 isShownAnswers:true,
-                type: CONTEST_TYPE_CODE.ELSE
+                category: CONTEST_TYPE_CODE.ELSE
             }));
             setDuration(new Date(1997, 10, 3, 1, 30));
         }
@@ -336,9 +336,9 @@ export default function CreateContestPage() {
         }
     }
 
-    function handleCategoryChange(event) {
+    function handleCategoryChange(event) {    
         if (event.target && event.target.value) {
-            dispatch(updateEditingContest({type: event.target.value}));
+            dispatch(updateEditingContest({category: event.target.value}));
         }
     }
 
@@ -668,7 +668,7 @@ export default function CreateContestPage() {
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={type}
+                                        value={category}
                                         onChange={handleCategoryChange}
                                     >
                                         {Object.values(CONTEST_TYPE_CODE).map((value) => {
@@ -743,7 +743,7 @@ export default function CreateContestPage() {
                                   </Typography>
                                 <CopyRoomCodeButton code={code}/>
                                 </span>
-                                <Typography variant={'p'}>(Mã thi nhanh giúp vào phòng thi nhanh trong khi đăng nhập
+                                <Typography variant={'p'}>(Mã thi nhanh - tham gia nhanh cuộc thi mà không cần đăng nhập
                                     )</Typography>
                             </DialogContent>}
                             <DialogActions>

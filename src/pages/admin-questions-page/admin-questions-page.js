@@ -154,7 +154,7 @@ export default function AdminQuestionsPage() {
 
         <Paper elevation={3} className={classes.paper}>
             <Typography gutterBottom variant="h6"
-                        component="h2" color="primary">Quản lý đề thi</Typography>
+                        component="h2" color="primary">Quản lý câu hỏi</Typography>
             <WorkingTableV2 filesByHash={questions.byHash}
                             isLoading={isShowCircleLoading}
                             numberOfColumns={5}
