@@ -202,6 +202,21 @@ export default function PlaygroundAllContestsPage() {
         return moment(contests.byHash[b].startAt).diff(contests.byHash[a].startAt, "ms")
     }
 
+    function filterContests(element, index){
+      if(selectedCate === 'Toán')
+        return contests.byHash[element].category === 0
+      else if(selectedCate === 'Lý')
+        return contests.byHash[element].category === 1
+      else if(selectedCate === 'Hoá')
+        return contests.byHash[element].category === 2
+      else if(selectedCate === 'Anh Văn')
+        return contests.byHash[element].category === 3
+      else if(selectedCate === 'IT')
+        return contests.byHash[element].category === 4
+      else
+        return contests
+    }
+
     return (<div className={classes.root}>
         <Container maxWidth="lg" className={classes.container}>
                {/* <Typography style={{marginTop: -50}} gutterBottom className={classes.searchContainer} variant="h5" component="h5">
@@ -231,7 +246,7 @@ export default function PlaygroundAllContestsPage() {
                     {isShowCircleLoading && <CircularProgress/>}
                 </Grid>
                 <Grid item xs={10} >
-                    {[...contests.byId].filter(id => trimSign(contests.byHash[id].name.toLowerCase()).includes(trimSign(searchValue.toLowerCase()))).sort((a,b) => sortContests(a,b)).map(renderContest)}
+                    {[...contests.byId].filter(id => trimSign(contests.byHash[id].name.toLowerCase()).includes(trimSign(searchValue.toLowerCase()))).sort((a,b) => sortContests(a,b)).filter((element, index)=>filterContests(element,index)).map(renderContest)}
                 </Grid>
 
                 <Grid item xs={2} >
@@ -239,7 +254,7 @@ export default function PlaygroundAllContestsPage() {
                           Sắp xếp
                      </Typography>
                     <div className={classes.cateContainer}>
-                      {['Mới nhất', 'Hot nhất','Sắp diễn ra'].map((item) => renderCateContest(item))}
+                      {['Mới nhất', 'Hot nhất','Sắp diễn ra', 'Toán', 'Lý', 'Hoá' , 'Anh Văn', 'IT'].map((item) => renderCateContest(item))}
                     </div>
                 </Grid>
 
